@@ -29,7 +29,7 @@ import com.example.triptracks.databinding.ActivityMainBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener {
+public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener {
 
     public static final String KEY_ITINERARY = "itinerary";
     public static final int RESULT_DELETE = 1;
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements ItineraryAdapter.
 
     void detalle_actividad(Itinerary itinerary) {
         Intent intent = new Intent(this, ItineraryDetailActivity.class);
-        intent.putExtra(MainActivity.KEY_ITINERARY, itinerary);
+        intent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
         myStartActivityForResult.launch(intent);
     }
 
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements ItineraryAdapter.
                         for (State state : selectedCountry.getStates()) {
                             stateNames.add(state.getName());
                         }
-                        ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, stateNames);
+                        ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(ItinActivity.this, android.R.layout.simple_spinner_item, stateNames);
                         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinnerState.setAdapter(stateAdapter);
                     }
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements ItineraryAdapter.
                                 break;
                             }
                         }
-                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, cityNames);
+                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(ItinActivity.this, android.R.layout.simple_spinner_item, cityNames);
                         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinnerCity.setAdapter(cityAdapter);
                     }
@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements ItineraryAdapter.
         if (selectedPosition != RecyclerView.NO_POSITION) {
             if (id == R.id.info) {
                 Intent intent = new Intent(this, ItineraryDetailActivity.class);
-                intent.putExtra(MainActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
+                intent.putExtra(ItinActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
                 myStartActivityForResult.launch(intent);
                 selectedPosition = RecyclerView.NO_POSITION;
                 return true;
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements ItineraryAdapter.
     public void onContextMenuClick(int position) {
         Itinerary selectedItinerary = mItineraryList.get(position);
         Intent intent = new Intent(this, ItineraryDetailActivity.class);
-        intent.putExtra(MainActivity.KEY_ITINERARY, selectedItinerary);
+        intent.putExtra(ItinActivity.KEY_ITINERARY, selectedItinerary);
         myStartActivityForResult.launch(intent);
     }
 

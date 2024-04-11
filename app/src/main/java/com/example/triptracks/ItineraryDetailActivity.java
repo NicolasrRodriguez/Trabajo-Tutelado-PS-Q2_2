@@ -23,7 +23,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         binding = ItineraryTileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        article = getIntent().getParcelableExtra(MainActivity.KEY_ITINERARY);
+        article = getIntent().getParcelableExtra(ItinActivity.KEY_ITINERARY);
         binding.tileTitleTv.setText(article.getItineraryTitle());
         binding.subtitle.setText(article.getCountry());
         binding.description.setText(article.getState());
@@ -63,8 +63,8 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         binding.butBorrar.setOnClickListener(v -> {
             Intent resultIntent = new Intent();
             resultIntent.putExtra("ACTION", "DELETE");
-            resultIntent.putExtra(MainActivity.KEY_ITINERARY, article);
-            setResult(MainActivity.RESULT_DELETE, resultIntent);
+            resultIntent.putExtra(ItinActivity.KEY_ITINERARY, article);
+            setResult(ItinActivity.RESULT_DELETE, resultIntent);
             finish();
         });
 
@@ -83,8 +83,8 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             article.setCountry(editedCountry);
             article.setState(editedState);
             article.setCity(editedCity);
-            resultIntent.putExtra(MainActivity.KEY_ITINERARY, article);
-            setResult(MainActivity.RESULT_UPDATE, resultIntent);
+            resultIntent.putExtra(ItinActivity.KEY_ITINERARY, article);
+            setResult(ItinActivity.RESULT_UPDATE, resultIntent);
             finish();
         });
     }

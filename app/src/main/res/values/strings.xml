@@ -31,4 +31,8 @@
     <string name="select_state">Selecciona la región</string>
     <string name="select_city">Selecciona la ciudad</string>
     <string name="region">Región</string>
+    <string name="Email">Email</string>
+    <string name="Contraseña">Contraseña</string>
+    <string name="log_in">Log In</string>
+    <string name="sing_up">Sing Up</string>
 </resources>

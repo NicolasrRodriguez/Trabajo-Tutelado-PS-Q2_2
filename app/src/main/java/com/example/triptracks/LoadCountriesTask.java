@@ -7,9 +7,9 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {
-    private WeakReference<MainActivity> activityReference;
+    private WeakReference<ItinActivity> activityReference;
 
-    public LoadCountriesTask(MainActivity context) {
+    public LoadCountriesTask(ItinActivity context) {
         this.activityReference = new WeakReference<>(context);
     }
 
@@ -22,7 +22,7 @@ public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {
     @Override
     protected void onPostExecute(List<Country> countries) {
         super.onPostExecute(countries);
-        MainActivity activity = activityReference.get();
+        ItinActivity activity = activityReference.get();
         if (activity != null && !activity.isFinishing()) {
             activity.onCountriesLoaded(countries);
         }

@@ -44,7 +44,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
 
             binding.getRoot().setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                 menu.add(Menu.NONE, R.id.info, Menu.NONE, "Info").setOnMenuItemClickListener(item -> {
-                    MainActivity.selectedPosition = getAdapterPosition();
+                    ItinActivity.selectedPosition = getAdapterPosition();
                     return false;
                 });
             });
