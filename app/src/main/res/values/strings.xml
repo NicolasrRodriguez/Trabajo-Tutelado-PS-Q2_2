@@ -35,4 +35,5 @@
     <string name="Contraseña">Contraseña</string>
     <string name="log_in">Log In</string>
     <string name="sing_up">Sing Up</string>
+    <string name="CerarSesion">Cerrar Sesion</string>
 </resources>

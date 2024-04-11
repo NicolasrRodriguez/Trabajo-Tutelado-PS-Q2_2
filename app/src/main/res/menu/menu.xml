@@ -4,4 +4,9 @@
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/str_opcion1"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/menu_opcion_cerrarSesion"
+        android:icon="@android:drawable/ic_input_add"
+        android:title="@string/CerarSesion"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -26,6 +26,8 @@ import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
 import com.example.triptracks.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,8 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     public static final String KEY_ITINERARY = "itinerary";
     public static final int RESULT_DELETE = 1;
     public static final int RESULT_UPDATE = 2;
+
+    private String UserEmail;
 
     private ActivityMainBinding binding;
 
@@ -49,6 +53,11 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            UserEmail = intent.getStringExtra("UserEmail");
+        }
 
         mAdapter = new ItineraryAdapter(mItineraryList, this, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -90,10 +99,16 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        Intent resultIntent = new Intent();
+        setResult(AuthActivity.RESULT_SESION_CLOSED,resultIntent);
         if (id == R.id.menu_opcion_1) {
             showDialog();
             return true;
+        }
+
+        else if( id == R.id.menu_opcion_cerrarSesion){
+            FirebaseAuth.getInstance().signOut();
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

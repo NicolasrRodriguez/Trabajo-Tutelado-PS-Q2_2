@@ -1,16 +1,28 @@
 package com.example.triptracks;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import com.example.triptracks.databinding.ActivityAuthBinding;
 import com.example.triptracks.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class AuthActivity extends AppCompatActivity implements View.OnClickListener {
     private ActivityAuthBinding binding;
+
+    public static final int RESULT_SESION_CLOSED = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,13 +40,43 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("_AUTHTAG", "Pulsado Log In");
         }
         else if(v == binding.SingUpBut){
+
             Log.d("_AUTHTAG", "Pulsado Sing Up");
-            if(!binding.EmailEdit.getText().toString().isEmpty() && !binding.PassEdit.getText().toString().isEmpty()){
-                Log.d("_AUTHTAG", "Se puede registrar");
+            String email = binding.EmailEdit.getText().toString();
+            String pass = binding.PassEdit.getText().toString();
+
+            if(!email.isEmpty() && !pass.isEmpty()){
+                Log.d("_AUTHTAG", "Registrando a: " + email);
+
+                Intent intent = new Intent(this, ItinActivity.class);
+                intent.putExtra("UserEmail" , email);
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            Log.d("_AUTHTAG",  email + " registrado Correctamente");
+
+                            myStartActivityForResult.launch(intent);
+                        }
+                        else{
+                            Log.d("_AUTHTAG", "No se pudo registrar " + email );
+                        }
+                    }
+                });
+
             }
             else{
-                Log.d("_AUTHTAG", "No se puede registrar");
+                Log.d("_AUTHTAG", "Se deben cubrir todos los campos");
             }
         }
     }
+
+    ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_SESION_CLOSED) {
+                    Log.d("_AUTHTAG", "Se ha cerrado la sesion");
+                }
+            }
+    );
 }
