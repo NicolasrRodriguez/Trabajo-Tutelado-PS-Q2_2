@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/dialog_background"
+    android:elevation="4dp">
+
+    <EditText
+    android:id="@+id/inputItineraryName"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="@string/hint_itinerary_name"
+    android:inputType="text"
+    android:layout_marginBottom="16dp"/>
+
+    <Spinner
+    android:id="@+id/spinnerCountry"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:prompt="@string/select_country"
+    android:layout_marginBottom="8dp"/>
+
+    <Spinner
+    android:id="@+id/spinnerState"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:prompt="@string/select_state"
+    android:layout_marginBottom="8dp"/>
+
+    <Spinner
+    android:id="@+id/spinnerCity"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:prompt="@string/select_city" />
+    </LinearLayout>

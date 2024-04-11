@@ -1,3 +1,34 @@
 <resources>
-    <string name="app_name">TripTracks</string>
+    <string name="app_name">Mis itinerarios</string>
+    <string name="str_but_añadir">Añadir elementos</string>
+    <string name="str_but_borrar">Borrar elementos</string>
+    <string name="str_borrar">Borrar Articulo</string>
+    <string name="str_but_OK">OK</string>
+    <string name="str_but_editar">Editar</string>
+    <string name="str_mensaje_dialog">Añadir Itinerario</string>
+    <string name="str_OK_dialog">OK</string>
+    <string name="str_Cancel_dialog">Cancel</string>
+    <string name="str_Articulo_id">Articulo</string>
+    <string name="str_Titulo">"Titulo del articulo "</string>
+    <string name="str_Subtitulo_art">"Subtitulo del articulo "</string>
+    <string name="str_descripcion">"Descripcion del articulo "</string>
+    <string name="hint_itinerary_name">Nombre del itinerario</string>
+    <string name="hint_city">Ciudad</string>
+    <string name="hint_country">País</string>
+    <string name="ciudad">Ciudad: </string>
+    <string name="pa_s">País: </string>
+    <string name="str_opcion1">opcion 1</string>
+    <string name="str_opcion_2">opcion 2</string>
+    <string name="str_opcion3">opcion 3</string>
+    <string name="str_opcion_4">opcion 4</string>
+    <string name="Información">Info</string>
+    <string name="Borrar">Borrar</string>
+    <string name="error_message">Error</string>
+    <string name="error_nombre_itinerario">Nombre del itinerario sin completar</string>
+    <string name="error_nombre_ciudad">Nombre de la ciudad sin completar</string>
+    <string name="error_nombre_pais">Nombre del país sin completar</string>
+    <string name="select_country">Selecciona un país</string>
+    <string name="select_state">Selecciona la región</string>
+    <string name="select_city">Selecciona la ciudad</string>
+    <string name="region">Región</string>
 </resources>
