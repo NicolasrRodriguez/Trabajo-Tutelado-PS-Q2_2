@@ -36,34 +36,25 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        String email = binding.EmailEdit.getText().toString();
+        String pass = binding.PassEdit.getText().toString();
         if(v == binding.LogInBut){
             Log.d("_AUTHTAG", "Pulsado Log In");
+
+            if(!email.isEmpty() && !pass.isEmpty()){
+                LogIn(email,pass);
+            }
+            else{
+                Log.d("_AUTHTAG", "Se deben cubrir todos los campos");
+            }
+
         }
         else if(v == binding.SingUpBut){
 
             Log.d("_AUTHTAG", "Pulsado Sing Up");
-            String email = binding.EmailEdit.getText().toString();
-            String pass = binding.PassEdit.getText().toString();
 
             if(!email.isEmpty() && !pass.isEmpty()){
-                Log.d("_AUTHTAG", "Registrando a: " + email);
-
-                Intent intent = new Intent(this, ItinActivity.class);
-                intent.putExtra("UserEmail" , email);
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Log.d("_AUTHTAG",  email + " registrado Correctamente");
-
-                            myStartActivityForResult.launch(intent);
-                        }
-                        else{
-                            Log.d("_AUTHTAG", "No se pudo registrar " + email );
-                        }
-                    }
-                });
-
+                Register(email,pass);
             }
             else{
                 Log.d("_AUTHTAG", "Se deben cubrir todos los campos");
@@ -79,4 +70,44 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
     );
+
+    private void Register(String email, String pass){
+        Log.d("_AUTHTAG", "Registrando a: " + email);
+
+        Intent intent = new Intent(this, ItinActivity.class);
+        intent.putExtra("UserEmail" , email);
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Log.d("_AUTHTAG",  email + " registrado Correctamente");
+
+                    myStartActivityForResult.launch(intent);
+                }
+                else{
+                    Log.d("_AUTHTAG", "No se pudo registrar " + email );
+                }
+            }
+        });
+    }
+
+    private void LogIn(String email, String pass){
+        Log.d("_AUTHTAG", "Iniciando Sesion de: " + email);
+
+        Intent intent = new Intent(this, ItinActivity.class);
+        intent.putExtra("UserEmail" , email);
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Log.d("_AUTHTAG",  email + " Sesion iniciada correctamente");
+
+                    myStartActivityForResult.launch(intent);
+                }
+                else{
+                    Log.d("_AUTHTAG", "No se pudo iniciar sesion" + email );
+                }
+            }
+        });
+    }
 }
