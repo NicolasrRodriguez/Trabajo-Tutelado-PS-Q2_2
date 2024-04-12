@@ -1,3 +1,4 @@
+
 package com.example.triptracks;
 
 import android.os.AsyncTask;
@@ -28,5 +29,3 @@ public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {
         }
     }
 }
-
-

@@ -15,6 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TripTracks"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDEOfNtdi5CEB1Fq3UlDRvbRKyVwCkv9OM"/>
+
         <activity
             android:name=".AuthActivity"
             android:exported="true">

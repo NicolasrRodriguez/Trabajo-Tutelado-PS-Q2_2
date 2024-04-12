@@ -1,3 +1,4 @@
+
 package com.example.triptracks;
 
 import android.os.Parcel;
@@ -27,7 +28,6 @@ public class Itinerary implements Parcelable {
         city = in.readString();
 
     }
-
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

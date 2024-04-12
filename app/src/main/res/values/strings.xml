@@ -2,7 +2,7 @@
     <string name="app_name">Mis itinerarios</string>
     <string name="str_but_añadir">Añadir elementos</string>
     <string name="str_but_borrar">Borrar elementos</string>
-    <string name="str_borrar">Borrar Articulo</string>
+    <string name="str_borrar">Borrar</string>
     <string name="str_but_OK">OK</string>
     <string name="str_but_editar">Editar</string>
     <string name="str_mensaje_dialog">Añadir Itinerario</string>
@@ -36,4 +36,6 @@
     <string name="log_in">Log In</string>
     <string name="sing_up">Sing Up</string>
     <string name="CerarSesion">Cerrar Sesion</string>
+    <string name="str_but_volver">Volver</string>
+
 </resources>

@@ -1,7 +1,6 @@
 
 package com.example.triptracks;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,7 +26,6 @@ import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
 import com.example.triptracks.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +37,13 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
 
     private String UserEmail;
 
+
     private ActivityMainBinding binding;
 
-    private ItineraryAdapter mAdapter;
+    public static ItineraryAdapter mAdapter;
     private ArrayList<Itinerary> mItineraryList = new ArrayList<>();
 
-    private List<Country> mCountries = new ArrayList<>();
+    public static List<Country> mCountries = new ArrayList<>();
 
     public static int selectedPosition = RecyclerView.NO_POSITION;
 
@@ -57,16 +56,18 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         Intent intent = getIntent();
         if (intent != null) {
             UserEmail = intent.getStringExtra("UserEmail");
-        }
 
+        }
         mAdapter = new ItineraryAdapter(mItineraryList, this, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.categoriesRv.setLayoutManager(linearLayoutManager);
         binding.categoriesRv.setAdapter(mAdapter);
         registerForContextMenu(binding.categoriesRv);
-        mAdapter.setShowFirstButtonsOnly(true);
+        mAdapter.mostrarbotones(true);
         new LoadCountriesTask(this).execute();
     }
+
+
 
 
     ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
@@ -302,9 +303,12 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
 
     @Override
     public void onItemClick(int position) {
-        Itinerary itinerary = mItineraryList.get(position);
-        detalle_actividad(itinerary);
+        if (position != RecyclerView.NO_POSITION) {
+            Itinerary selectedItinerary = mAdapter.getItem(position);
+            detalle_actividad(selectedItinerary);
+        }
     }
+
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
