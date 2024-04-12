@@ -1,7 +1,6 @@
 
 package com.example.triptracks;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -37,10 +36,10 @@ public class MainActivity extends AppCompatActivity implements ItineraryAdapter.
 
     private ActivityMainBinding binding;
 
-    private ItineraryAdapter mAdapter;
+    public static ItineraryAdapter mAdapter;
     private ArrayList<Itinerary> mItineraryList = new ArrayList<>();
 
-    private List<Country> mCountries = new ArrayList<>();
+    public static List<Country> mCountries = new ArrayList<>();
 
     public static int selectedPosition = RecyclerView.NO_POSITION;
 
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements ItineraryAdapter.
         binding.categoriesRv.setLayoutManager(linearLayoutManager);
         binding.categoriesRv.setAdapter(mAdapter);
         registerForContextMenu(binding.categoriesRv);
-        mAdapter.setShowFirstButtonsOnly(true);
+        mAdapter.mostrarbotones(true);
         new LoadCountriesTask(this).execute();
     }
 
@@ -287,9 +286,12 @@ public class MainActivity extends AppCompatActivity implements ItineraryAdapter.
 
     @Override
     public void onItemClick(int position) {
-        Itinerary itinerary = mItineraryList.get(position);
-        detalle_actividad(itinerary);
+        if (position != RecyclerView.NO_POSITION) {
+            Itinerary selectedItinerary = mAdapter.getItem(position);
+            detalle_actividad(selectedItinerary);
+        }
     }
+
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {

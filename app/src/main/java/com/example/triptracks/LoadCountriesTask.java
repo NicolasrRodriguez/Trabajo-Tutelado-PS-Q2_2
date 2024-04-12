@@ -28,5 +28,3 @@ public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {
         }
     }
 }
-
-

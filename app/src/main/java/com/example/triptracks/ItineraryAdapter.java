@@ -40,23 +40,18 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
             super(binding.getRoot());
             this.binding = binding;
 
-
-
-            binding.getRoot().setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+            binding.itineraryTitle.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                 menu.add(Menu.NONE, R.id.info, Menu.NONE, "Info").setOnMenuItemClickListener(item -> {
                     MainActivity.selectedPosition = getAdapterPosition();
                     return false;
                 });
             });
-
-
         }
 
         public void bind(Itinerary itinerary) {
             binding.element.setText(itinerary.getElement());
-            binding.tileTitleTv.setText(itinerary.getItineraryTitle());
-            binding.subtitle.setText(itinerary.getCountry());
-
+            binding.itineraryTitle.setText(itinerary.getItineraryTitle());
+            binding.itineraryCountry.setText(itinerary.getCountry());
         }
     }
 
@@ -73,30 +68,25 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
         Itinerary itinerary = mDataset.get(position);
         holder.bind(itinerary);
         holder.binding.element.setVisibility(View.GONE);
-        holder.binding.tileTitleTv.setVisibility(View.VISIBLE);
-        holder.binding.subtitle.setVisibility(View.GONE);
-        holder.binding.description.setVisibility(View.GONE);
-        holder.binding.description2.setVisibility(View.GONE);
+        holder.binding.itineraryTitle.setVisibility(View.VISIBLE);
+        holder.binding.itineraryCountry.setVisibility(View.GONE);
+        holder.binding.itineraryState.setVisibility(View.GONE);
+        holder.binding.itineraryCity.setVisibility(View.GONE);
 
         if (showFirstButtonsOnly) {
             holder.binding.butBorrar.setVisibility(View.GONE);
             holder.binding.butEdit.setVisibility(View.GONE);
             holder.binding.butOk.setVisibility(View.GONE);
+            holder.binding.butVolver.setVisibility(View.GONE);
+            holder.binding.mapContainer.setVisibility(View.GONE);
         } else {
 
             holder.binding.butBorrar.setVisibility(View.VISIBLE);
             holder.binding.butEdit.setVisibility(View.VISIBLE);
             holder.binding.butOk.setVisibility(View.VISIBLE);
+            holder.binding.butVolver.setVisibility(View.VISIBLE);
+            holder.binding.mapContainer.setVisibility(View.VISIBLE);
         }
-
-
-        holder.itemView.setOnLongClickListener(v -> {
-            if (contextMenuClickListener != null) {
-                contextMenuClickListener.onContextMenuClick(position);
-                return true;
-            }
-            return false;
-        });
 
     }
 
@@ -151,8 +141,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
         }
     }
 
-    public void setShowFirstButtonsOnly(boolean showFirstButtonsOnly) {
+    public void mostrarbotones(boolean showFirstButtonsOnly) {
         this.showFirstButtonsOnly = showFirstButtonsOnly;
     }
-
 }

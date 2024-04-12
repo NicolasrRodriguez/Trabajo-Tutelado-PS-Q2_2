@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:background="@android:color/black">
 
@@ -31,10 +32,16 @@
             android:text="@string/str_but_OK"
             android:layout_marginStart="8dp" />
 
+        <Button
+            android:id="@+id/but_volver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_but_volver"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 
     <EditText
-        android:id="@+id/tile_title_tv"
+        android:id="@+id/itineraryTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonLayout"
@@ -48,7 +55,7 @@
         android:id="@+id/element"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tile_title_tv"
+        android:layout_below="@id/itineraryTitle"
         android:layout_marginTop="8dp"
         tools:text="Element" />
 
@@ -71,7 +78,7 @@
             android:textColor="@android:color/white"/>
 
         <EditText
-            android:id="@+id/subtitle"
+            android:id="@+id/itineraryCountry"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -79,6 +86,18 @@
             android:background="@drawable/background"
             android:gravity="center"
             android:layout_marginStart="8dp"/>
+        <Spinner
+            android:id="@+id/spinnerCountryAct2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/background"
+            android:gravity="center"
+            android:visibility="gone"
+            android:prompt="@string/select_country"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -100,7 +119,7 @@
             android:textColor="@android:color/white"/>
 
         <EditText
-            android:id="@+id/description"
+            android:id="@+id/itineraryState"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -108,8 +127,19 @@
             android:background="@drawable/background"
             android:gravity="center"
             android:layout_marginStart="8dp"/>
-    </LinearLayout>
 
+        <Spinner
+            android:id="@+id/spinnerStateAct2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/background"
+            android:gravity="center"
+            android:visibility="gone"
+            android:prompt="@string/select_state"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutCity"
@@ -130,7 +160,7 @@
             android:textColor="@android:color/white"/>
 
         <EditText
-            android:id="@+id/description2"
+            android:id="@+id/itineraryCity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -138,6 +168,35 @@
             android:background="@drawable/background"
             android:gravity="center"
             android:layout_marginStart="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerCityAct2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/background"
+            android:gravity="center"
+            android:visibility="gone"
+            android:prompt="@string/select_city"/>
     </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/mapContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="32dp"
+        android:layout_below="@id/layoutCity"
+        android:visibility="gone"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="0dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true" >
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</androidx.cardview.widget.CardView>
 
 </RelativeLayout>

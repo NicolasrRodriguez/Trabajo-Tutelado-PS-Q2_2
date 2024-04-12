@@ -2,7 +2,7 @@
     <string name="app_name">Mis itinerarios</string>
     <string name="str_but_añadir">Añadir elementos</string>
     <string name="str_but_borrar">Borrar elementos</string>
-    <string name="str_borrar">Borrar Articulo</string>
+    <string name="str_borrar">Borrar</string>
     <string name="str_but_OK">OK</string>
     <string name="str_but_editar">Editar</string>
     <string name="str_mensaje_dialog">Añadir Itinerario</string>
@@ -31,4 +31,5 @@
     <string name="select_state">Selecciona la región</string>
     <string name="select_city">Selecciona la ciudad</string>
     <string name="region">Región</string>
+    <string name="str_but_volver">Volver</string>
 </resources>
