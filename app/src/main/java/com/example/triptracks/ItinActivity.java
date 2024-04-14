@@ -1,11 +1,11 @@
 
 package com.example.triptracks;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +26,8 @@ import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
 import com.example.triptracks.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
 
     private String UserEmail;
 
-
+    private ItineraryHandler itineraryHandler;
     private ActivityMainBinding binding;
 
     public static ItineraryAdapter mAdapter;
@@ -52,22 +54,23 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         Intent intent = getIntent();
         if (intent != null) {
             UserEmail = intent.getStringExtra("UserEmail");
-
         }
         mAdapter = new ItineraryAdapter(mItineraryList, this, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.categoriesRv.setLayoutManager(linearLayoutManager);
         binding.categoriesRv.setAdapter(mAdapter);
         registerForContextMenu(binding.categoriesRv);
+
         mAdapter.mostrarbotones(true);
         new LoadCountriesTask(this).execute();
+
+        itineraryHandler = new ItineraryHandler(this::updateItineraryList);
+
+
     }
-
-
 
 
     ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
@@ -78,7 +81,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
 
                     if (data != null) {
                         Itinerary deletedItinerary = data.getParcelableExtra(KEY_ITINERARY);
-                        String elemento = deletedItinerary.getElement();
+                        String elemento = deletedItinerary.getId();
                         mAdapter.eliminar_por_id(elemento);
                     }
                 } else if (result.getResultCode() == RESULT_UPDATE) {
@@ -101,13 +104,11 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         Intent resultIntent = new Intent();
-        setResult(AuthActivity.RESULT_SESION_CLOSED,resultIntent);
+        setResult(AuthActivity.RESULT_SESION_CLOSED, resultIntent);
         if (id == R.id.menu_opcion_1) {
             showDialog();
             return true;
-        }
-
-        else if( id == R.id.menu_opcion_cerrarSesion){
+        } else if (id == R.id.menu_opcion_cerrarSesion) {
             FirebaseAuth.getInstance().signOut();
             finish();
         }
@@ -222,7 +223,6 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{getString(R.string.select_state)});
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerState.setAdapter(stateAdapter);
-
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{getString(R.string.select_city)});
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCity.setAdapter(cityAdapter);
@@ -294,12 +294,16 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
 
 
     private void addItems(String itineraryName, String countryName, String stateName, String cityName) {
-        String elemento = "ID_" + (mAdapter.getItemCount() + 1);
-        Log.d("_TAG", cityName);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").
+                child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",")).child("itineraries");
+        String itineraryId = databaseReference.push().getKey();
+        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName);
         ArrayList<Itinerary> newItineraries = new ArrayList<>();
-        newItineraries.add(new Itinerary(elemento, itineraryName, countryName, stateName, cityName));
+        newItineraries.add(itinerary);
         mAdapter.anadirelem(newItineraries);
+        itineraryHandler.saveItinerary(itinerary);
     }
+
 
     @Override
     public void onItemClick(int position) {
@@ -313,7 +317,6 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (selectedPosition != RecyclerView.NO_POSITION) {
             if (id == R.id.info) {
                 Intent intent = new Intent(this, ItineraryDetailActivity.class);
@@ -339,4 +342,10 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         mCountries = countries;
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void updateItineraryList(ArrayList<Itinerary> itineraries) {
+        mAdapter.updateData(itineraries);
+        mAdapter.notifyDataSetChanged();
+    }
 }

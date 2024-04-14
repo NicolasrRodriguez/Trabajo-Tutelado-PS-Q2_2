@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -25,6 +26,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +44,8 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     private GoogleMap mMap;
     private boolean isEditing = false;
 
+    private ItineraryHandler itineraryHandler;
+    DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +75,8 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 .commit();
 
         mapFragment.getMapAsync(this);
+
+        itineraryHandler = new ItineraryHandler(updatedItineraries -> {});
     }
 
 
@@ -126,6 +135,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
 
         return null;
     }
+
     private void pulsar() {
         if (!isEditing) {
             detailsVisible = !detailsVisible;
@@ -236,8 +246,9 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
             resultIntent.putExtra("ACTION", "DELETE");
             resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
             setResult(ItinActivity.RESULT_DELETE, resultIntent);
-
+            itineraryHandler.deleteItinerary(itinerary);
             finish();
+
         });
 
         binding.butEdit.setOnClickListener(v -> {
@@ -248,7 +259,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         });
 
         binding.butOk.setOnClickListener(v -> {
-            if(isEditing) {
+            if (isEditing) {
                 isEditing = false;
                 EditText titleEditText = getTitleEditText();
                 titleEditText.setFocusable(false);
@@ -302,6 +313,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 findViewById(R.id.spinnerStateAct2).setVisibility(View.GONE);
                 findViewById(R.id.itineraryCity).setVisibility(View.VISIBLE);
                 findViewById(R.id.spinnerCityAct2).setVisibility(View.GONE);
+                itineraryHandler.updateItinerary(itinerary);
             }
         });
     }
@@ -325,4 +337,9 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     public EditText getTitleEditText() {
         return binding.itineraryTitle;
     }
+
+
+
+
+
 }

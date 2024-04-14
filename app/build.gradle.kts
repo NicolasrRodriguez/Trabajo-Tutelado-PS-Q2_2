@@ -49,6 +49,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     //Dependencias FireBase:
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation ("com.google.firebase:firebase-database:20.3.1")
+
     //FireBaseAnalitycs
     implementation("com.google.firebase:firebase-analytics")
     //FireBaseAuth

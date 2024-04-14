@@ -5,15 +5,20 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Itinerary implements Parcelable {
-
-    private String element;
+    private String id;
     private String itineraryTitle;
     private String country;
     private String state;
     private String city;
 
-    public Itinerary(String element, String itineraryTitle, String country, String state,String city) {
-        this.element = element;
+
+
+    public Itinerary() {
+    }
+
+    public Itinerary(String id, String itineraryTitle, String country, String state,String city) {
+        this.id = id;
+
         this.itineraryTitle = itineraryTitle;
         this.country = country;
         this.state = state;
@@ -21,7 +26,7 @@ public class Itinerary implements Parcelable {
     }
 
     protected Itinerary(Parcel in) {
-        element = in.readString();
+        id = in.readString();
         itineraryTitle = in.readString();
         country = in.readString();
         state = in.readString();
@@ -31,7 +36,7 @@ public class Itinerary implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(element);
+        dest.writeString(id);
         dest.writeString(itineraryTitle);
         dest.writeString(country);
         dest.writeString(state);
@@ -55,9 +60,9 @@ public class Itinerary implements Parcelable {
         }
     };
 
-    public String getElement() { return element; }
 
-    public void setElement(String element) {this.element = element; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     public String getItineraryTitle() {
         return itineraryTitle;

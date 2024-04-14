@@ -34,7 +34,7 @@
     <string name="Email">Email</string>
     <string name="Contraseña">Contraseña</string>
     <string name="log_in">Log In</string>
-    <string name="sing_up">Sing Up</string>
+    <string name="sign_up">Sign Up</string>
     <string name="CerarSesion">Cerrar Sesion</string>
     <string name="str_but_volver">Volver</string>
 

@@ -1,6 +1,7 @@
 
 package com.example.triptracks;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -50,7 +51,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
         }
 
         public void bind(Itinerary itinerary) {
-            binding.element.setText(itinerary.getElement());
+            binding.element.setText(itinerary.getId());
             binding.itineraryTitle.setText(itinerary.getItineraryTitle());
             binding.itineraryCountry.setText(itinerary.getCountry());
         }
@@ -102,11 +103,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
         notifyItemRangeInserted(startIndex, newItneraries.size());
     }
 
-    public void borrarelems() {
-        int itemCount = mDataset.size();
-        mDataset.clear();
-        notifyItemRangeRemoved(0, itemCount);
-    }
 
     public Itinerary getItem(int position) {
         return mDataset.get(position);
@@ -119,7 +115,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
 
     public void eliminar_por_id(String elemento) {
         for (int i = 0; i < mDataset.size(); i++) {
-            if (mDataset.get(i).getElement().equals(elemento)) {
+            if (mDataset.get(i).getId().equals(elemento)) {
                 mDataset.remove(i);
                 notifyItemRemoved(i);
                 notifyItemRangeChanged(i, mDataset.size());
@@ -131,7 +127,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
     public void actualizar_por_id(Itinerary itinerario_actualizado) {
         for (int i = 0; i < mDataset.size(); i++) {
             Itinerary itinerary = mDataset.get(i);
-            if (itinerary.getElement().equals(itinerario_actualizado.getElement())) {
+            if (itinerary.getId().equals(itinerario_actualizado.getId())) {
                 itinerary.setItineraryTitle(itinerario_actualizado.getItineraryTitle());
                 itinerary.setCountry(itinerario_actualizado.getCountry());
                 itinerary.setState(itinerario_actualizado.getState());
@@ -144,5 +140,12 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
 
     public void mostrarbotones(boolean showFirstButtonsOnly) {
         this.showFirstButtonsOnly = showFirstButtonsOnly;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateData(ArrayList<Itinerary> itineraries) {
+        mDataset.clear();
+        mDataset.addAll(itineraries);
+        notifyDataSetChanged();
     }
 }
