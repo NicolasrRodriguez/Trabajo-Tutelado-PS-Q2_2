@@ -1,6 +1,7 @@
 package com.example.triptracks;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -8,14 +9,19 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
@@ -94,11 +100,40 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         if (id == R.id.menu_compartir) {
             Log.d("_ITDETTAG", "Compartir itinerario");
             // abrir dialogo para escoger con que usuarios compartir el itineriario
-           itineraryHandler.shareItinerary(itinerary , "juan123456@gmail.com");
+           //itineraryHandler.shareItinerary(itinerary , "juan123456@gmail.com");
+            showDialog();
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.str_compartir);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View dialogView = inflater.inflate(R.layout.compartir_itinerario, null);
+        final EditText Targetemail = dialogView.findViewById(R.id.TEmailEdit);
+
+        builder.setView(dialogView);
+        builder.setPositiveButton(R.string.str_compartir, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String text = Targetemail.getText().toString();//juan123456@gmail.com
+                itineraryHandler.shareItinerary(itinerary , text);
+                Log.d("_ITDETTAG", "Compartiendo con " + text);
+            }
+        });
+        builder.setNegativeButton(R.string.str_cancelar, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                Log.d("_ITDETTAG", "Cancelado compartir");
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     public void onMapReady(GoogleMap googleMap) {
