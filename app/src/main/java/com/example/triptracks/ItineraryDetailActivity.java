@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -79,6 +81,25 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         itineraryHandler = new ItineraryHandler(updatedItineraries -> {});
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.itinirary_detail_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Intent resultIntent = new Intent();
+        setResult(AuthActivity.RESULT_SESION_CLOSED, resultIntent);
+        if (id == R.id.menu_compartir) {
+            Log.d("_ITDETTAG", "Compartir itinerario");
+            // abrir dialogo para escoger con que usuarios compartir el itineriario
+           itineraryHandler.shareItinerary(itinerary , "juan123456@gmail.com");
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

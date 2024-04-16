@@ -76,4 +76,19 @@ public class ItineraryHandler {
                     .addOnFailureListener(e -> Log.e("Firebase", "Fallo al borrar el itinerario", e));
         }
     }
+
+    public void shareItinerary(Itinerary itinerary , String Target){
+        if (itinerary.getId() != null) {
+            String targetUserPath = Target.replace(".", ",");
+            DatabaseReference Targetref = FirebaseDatabase.getInstance().getReference("users")
+                    .child(targetUserPath).child("itineraries");
+            Log.d("Firebase", "Compartierndo Itinerario con " + Target);
+            String key = Targetref.push().getKey();
+            if (key == null) return;
+            itinerary.setId(key);
+            Targetref.child(key).setValue(itinerary)
+                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario guardado"))
+                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al guardar el itinerario", e));
+        }
+    }
 }

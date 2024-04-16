@@ -37,5 +37,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="CerarSesion">Cerrar Sesion</string>
     <string name="str_but_volver">Volver</string>
+    <string name="str_but_compartir">Compartir</string>
+    <string name="str_compartir">Compartir</string>
 
 </resources>
