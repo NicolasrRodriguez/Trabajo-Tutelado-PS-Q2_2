@@ -19,10 +19,11 @@ public class ItineraryHandler {
     private DatabaseReference ref;
     private ArrayList<Itinerary> mItineraryList;
 
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
     private ItineraryHandler() {}
 
     public ItineraryHandler(Consumer<ArrayList<Itinerary>> onItinerariesUpdated) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String userPath = user.getEmail().replace(".", ",");
             ref = FirebaseDatabase.getInstance().getReference("users")
@@ -66,16 +67,21 @@ public class ItineraryHandler {
         if (itinerary.getId() != null) {
             ArrayList<String> colaborators = itinerary.getColaborators();
             for (String colaborator : colaborators) {
+                if(Objects.equals(colaborator, user.getEmail())){
+                    ref.child(itinerary.getId()).setValue(itinerary)
+                            .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario actualizado"))
+                            .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
+                }
+                else{
                     String targetUserPath = colaborator.replace(".", ",");
                     DatabaseReference Targetref = FirebaseDatabase.getInstance().getReference("users")
                             .child(targetUserPath).child("itineraries");
                     Log.d("Firebase", "Actualizando Itinerario de " + colaborator);
-                    String key = Targetref.push().getKey();
-                    if (key == null) return;
-                    itinerary.setId(key);
-                    Targetref.child(key).setValue(itinerary)
+                    Targetref.child(itinerary.getId()).setValue(itinerary)
                             .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario de " + colaborator + "actualizado" ))
                             .addOnFailureListener(e -> Log.e("Firebase", "Fallo al acutaliazar el itinerario", e));
+                }
+
 
             }
         }
@@ -92,21 +98,20 @@ public class ItineraryHandler {
 
     public void shareItinerary(Itinerary itinerary , String Target){
         if (itinerary.getId() != null) {
-            //acutaliza la propia base de datos
-            ref.child(itinerary.getId()).setValue(itinerary)
-                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario actualizado"))
-                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
-            //crea el itinerario para el usuario Target
-            String targetUserPath = Target.replace(".", ",");
-            DatabaseReference Targetref = FirebaseDatabase.getInstance().getReference("users")
-                    .child(targetUserPath).child("itineraries");
-            Log.d("Firebase", "Compartierndo Itinerario con " + Target + "desde:" + itinerary.getAdmin());
-            String key = Targetref.push().getKey();
-            if (key == null) return;
-            itinerary.setId(key);
-            Targetref.child(key).setValue(itinerary)
-                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario compartido con " + Target ))
-                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al compartir el itinerario", e));
+                //acutaliza la propia base de datos
+                ref.child(itinerary.getId()).setValue(itinerary)
+                        .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario actualizado"))
+                        .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
+                //crea el itinerario para el usuario Target
+                String targetUserPath = Target.replace(".", ",");
+                DatabaseReference Targetref = FirebaseDatabase.getInstance().getReference("users")
+                        .child(targetUserPath).child("itineraries");
+                Log.d("Firebase", "Compartierndo Itinerario con " + Target + "desde:" + itinerary.getAdmin());
+                String key = Targetref.push().getKey();
+                Targetref.child(itinerary.getId()).setValue(itinerary)
+                        .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario compartido con " + Target ))
+                        .addOnFailureListener(e -> Log.e("Firebase", "Fallo al compartir el itinerario", e));
+
         }
     }
 }

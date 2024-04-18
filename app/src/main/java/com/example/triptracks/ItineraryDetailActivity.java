@@ -35,12 +35,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ItineraryDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -53,6 +55,8 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     private boolean isEditing = false;
 
     private ItineraryHandler itineraryHandler;
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference ref;
 
     @Override
@@ -125,10 +129,16 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String text = Targetemail.getText().toString();//juan123456@gmail.com
-                colaborators.add(text);
-                itinerary.setColaborators(colaborators);
 
-                itineraryHandler.shareItinerary(itinerary , text);//comparte el itinerario con el usuario elegido
+                if(!colaborators.contains(text) && Objects.equals(user.getEmail(), itinerary.getAdmin())){
+
+                    colaborators.add(text);
+
+                    itinerary.setColaborators(colaborators);
+
+                    itineraryHandler.shareItinerary(itinerary , text);//comparte el itinerario con el usuario elegido
+                }
+
                 Log.d("_ITDETTAG", "Compartiendo con " + text + "por " + itinerary.getAdmin());
             }
         });
