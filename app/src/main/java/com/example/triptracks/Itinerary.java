@@ -4,6 +4,9 @@ package com.example.triptracks;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Itinerary implements Parcelable {
     private String id;
     private String itineraryTitle;
@@ -11,18 +14,26 @@ public class Itinerary implements Parcelable {
     private String state;
     private String city;
 
+    private String Admin;
+
+    private ArrayList<String> Colaborators;
+
+
 
 
     public Itinerary() {
     }
 
-    public Itinerary(String id, String itineraryTitle, String country, String state,String city) {
+    public Itinerary(String id, String itineraryTitle, String country, String state,String city, String admin, ArrayList<String> shared) {
         this.id = id;
 
         this.itineraryTitle = itineraryTitle;
         this.country = country;
         this.state = state;
         this.city = city;
+        this.Admin = admin;
+        this.Colaborators = shared;
+
     }
 
     protected Itinerary(Parcel in) {
@@ -31,6 +42,8 @@ public class Itinerary implements Parcelable {
         country = in.readString();
         state = in.readString();
         city = in.readString();
+        Admin = in.readString();
+        Colaborators = in.createStringArrayList();
 
     }
 
@@ -41,7 +54,10 @@ public class Itinerary implements Parcelable {
         dest.writeString(country);
         dest.writeString(state);
         dest.writeString(city);
+        dest.writeString(Admin);
+        dest.writeStringList(Colaborators);
     }
+
 
     @Override
     public int describeContents() {
@@ -60,6 +76,22 @@ public class Itinerary implements Parcelable {
         }
     };
 
+
+    public String getAdmin() {
+        return Admin;
+    }
+
+    public void setAdmin(String admin) {
+        Admin = admin;
+    }
+
+    public ArrayList<String> getColaborators() {
+        return Colaborators;
+    }
+
+    public void setColaborators(ArrayList<String> colaborators) {
+        Colaborators = colaborators;
+    }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

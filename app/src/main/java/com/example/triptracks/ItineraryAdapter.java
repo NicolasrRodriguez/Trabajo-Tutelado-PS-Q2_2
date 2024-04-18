@@ -132,6 +132,8 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
                 itinerary.setCountry(itinerario_actualizado.getCountry());
                 itinerary.setState(itinerario_actualizado.getState());
                 itinerary.setCity(itinerario_actualizado.getCity());
+                itinerary.setAdmin(itinerario_actualizado.getAdmin());
+                itinerary.setColaborators(itinerario_actualizado.getColaborators());
                 notifyItemChanged(i);
                 return;
             }

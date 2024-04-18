@@ -276,6 +276,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
                 selectedCountryName = selectedCountryName.equals(getString(R.string.select_country)) ? "" : selectedCountryName;
                 selectedStateName = selectedStateName.equals(getString(R.string.select_state)) ? "" : selectedStateName;
 
+
                 if (itineraryName.isEmpty()) {
                     inputItineraryName.setError(getString(R.string.error_nombre_itinerario));
                     inputItineraryName.setBackgroundResource(R.drawable.error_background);
@@ -297,7 +298,9 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").
                 child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",")).child("itineraries");
         String itineraryId = databaseReference.push().getKey();
-        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName);
+        ArrayList<String> shared = new  ArrayList<>();
+        shared.add(UserEmail);
+        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName, UserEmail ,shared );
         ArrayList<Itinerary> newItineraries = new ArrayList<>();
         newItineraries.add(itinerary);
         mAdapter.anadirelem(newItineraries);

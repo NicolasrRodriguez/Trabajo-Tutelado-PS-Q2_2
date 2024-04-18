@@ -100,7 +100,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         if (id == R.id.menu_compartir) {
             Log.d("_ITDETTAG", "Compartir itinerario");
             // abrir dialogo para escoger con que usuarios compartir el itineriario
-           //itineraryHandler.shareItinerary(itinerary , "juan123456@gmail.com");
+           //juan123456@gmail.com email de ejemplo
             showDialog();
         }
 
@@ -117,13 +117,19 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         View dialogView = inflater.inflate(R.layout.compartir_itinerario, null);
         final EditText Targetemail = dialogView.findViewById(R.id.TEmailEdit);
 
+        ArrayList<String > colaborators = itinerary.getColaborators();
+
+
         builder.setView(dialogView);
         builder.setPositiveButton(R.string.str_compartir, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String text = Targetemail.getText().toString();//juan123456@gmail.com
-                itineraryHandler.shareItinerary(itinerary , text);
-                Log.d("_ITDETTAG", "Compartiendo con " + text);
+                colaborators.add(text);
+                itinerary.setColaborators(colaborators);
+
+                itineraryHandler.shareItinerary(itinerary , text);//comparte el itinerario con el usuario elegido
+                Log.d("_ITDETTAG", "Compartiendo con " + text + "por " + itinerary.getAdmin());
             }
         });
         builder.setNegativeButton(R.string.str_cancelar, new DialogInterface.OnClickListener() {
@@ -328,7 +334,8 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 String editedCountry = itinerary.getCountry();
                 String editedState = itinerary.getState();
                 String editedCity = itinerary.getCity();
-
+                String Admin = itinerary.getAdmin();
+                ArrayList<String> colaboratos = itinerary.getColaborators();
                 if (spinnerCountry.getSelectedItem() != null) {
                     String selectedCountry = spinnerCountry.getSelectedItem().toString();
                     if (!selectedCountry.equals(getString(R.string.select_country))) {
@@ -356,6 +363,9 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 itinerary.setCountry(editedCountry);
                 itinerary.setState(editedState);
                 itinerary.setCity(editedCity);
+
+                itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
+                itinerary.setColaborators(colaboratos);
 
                 binding.itineraryTitle.setText(itinerary.getItineraryTitle());
                 binding.itineraryCountry.setText(itinerary.getCountry());

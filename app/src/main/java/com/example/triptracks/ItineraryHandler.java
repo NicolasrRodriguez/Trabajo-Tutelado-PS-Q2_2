@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ItineraryHandler {
@@ -57,16 +58,28 @@ public class ItineraryHandler {
         if (key == null) return;
         itinerary.setId(key);
         ref.child(key).setValue(itinerary)
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario guardado"))
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario guardado por: " + itinerary.getAdmin()))
                 .addOnFailureListener(e -> Log.e("Firebase", "Fallo al guardar el itinerario", e));
     }
 
     public void updateItinerary(Itinerary itinerary) {
         if (itinerary.getId() != null) {
-            ref.child(itinerary.getId()).setValue(itinerary)
-                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario actualizado"))
-                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
+            ArrayList<String> colaborators = itinerary.getColaborators();
+            for (String colaborator : colaborators) {
+                    String targetUserPath = colaborator.replace(".", ",");
+                    DatabaseReference Targetref = FirebaseDatabase.getInstance().getReference("users")
+                            .child(targetUserPath).child("itineraries");
+                    Log.d("Firebase", "Actualizando Itinerario de " + colaborator);
+                    String key = Targetref.push().getKey();
+                    if (key == null) return;
+                    itinerary.setId(key);
+                    Targetref.child(key).setValue(itinerary)
+                            .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario de " + colaborator + "actualizado" ))
+                            .addOnFailureListener(e -> Log.e("Firebase", "Fallo al acutaliazar el itinerario", e));
+
+            }
         }
+
     }
 
     public void deleteItinerary(Itinerary itinerary) {
@@ -79,16 +92,21 @@ public class ItineraryHandler {
 
     public void shareItinerary(Itinerary itinerary , String Target){
         if (itinerary.getId() != null) {
+            //acutaliza la propia base de datos
+            ref.child(itinerary.getId()).setValue(itinerary)
+                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario actualizado"))
+                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
+            //crea el itinerario para el usuario Target
             String targetUserPath = Target.replace(".", ",");
             DatabaseReference Targetref = FirebaseDatabase.getInstance().getReference("users")
                     .child(targetUserPath).child("itineraries");
-            Log.d("Firebase", "Compartierndo Itinerario con " + Target);
+            Log.d("Firebase", "Compartierndo Itinerario con " + Target + "desde:" + itinerary.getAdmin());
             String key = Targetref.push().getKey();
             if (key == null) return;
             itinerary.setId(key);
             Targetref.child(key).setValue(itinerary)
-                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario guardado"))
-                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al guardar el itinerario", e));
+                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario compartido con " + Target ))
+                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al compartir el itinerario", e));
         }
     }
 }
