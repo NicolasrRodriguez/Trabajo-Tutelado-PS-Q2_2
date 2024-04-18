@@ -10,19 +10,23 @@ public class Itinerary implements Parcelable {
     private String country;
     private String state;
     private String city;
+    private String startDate;
+    private String endDate;
 
 
 
     public Itinerary() {
     }
 
-    public Itinerary(String id, String itineraryTitle, String country, String state,String city) {
+    public Itinerary(String id, String itineraryTitle, String country, String state,String city,String startDate, String endDate) {
         this.id = id;
 
         this.itineraryTitle = itineraryTitle;
         this.country = country;
         this.state = state;
         this.city = city;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     protected Itinerary(Parcel in) {
@@ -31,6 +35,8 @@ public class Itinerary implements Parcelable {
         country = in.readString();
         state = in.readString();
         city = in.readString();
+        startDate = in.readString();
+        endDate = in.readString();
 
     }
 
@@ -41,6 +47,8 @@ public class Itinerary implements Parcelable {
         dest.writeString(country);
         dest.writeString(state);
         dest.writeString(city);
+        dest.writeString(startDate);
+        dest.writeString(endDate);
     }
 
     @Override
@@ -94,4 +102,9 @@ public class Itinerary implements Parcelable {
     public void setCity(String city) {
         this.city = city;
     }
+    public String getStartDate() { return startDate; }
+    public void setStartDate(String startDate) { this.startDate = startDate; }
+
+    public String getEndDate() { return endDate; }
+    public void setEndDate(String endDate) { this.endDate = endDate; }
 }

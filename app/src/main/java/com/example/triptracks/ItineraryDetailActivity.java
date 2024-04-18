@@ -1,5 +1,8 @@
 package com.example.triptracks;
 
+
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -8,13 +11,23 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
@@ -26,32 +39,53 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+import static com.example.triptracks.ItinActivity.mAdapter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class ItineraryDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private Itinerary itinerary;
-    private boolean detailsVisible = false;
-    private ItineraryTileBinding binding;
-    private Spinner spinnerCountry, spinnerState, spinnerCity;
-    private GoogleMap mMap;
-    private boolean isEditing = false;
+    Itinerary itinerary;
+    boolean detailsVisible = false;
+    ItineraryTileBinding binding;
+    Spinner spinnerCountry, spinnerState, spinnerCity;
+    GoogleMap mMap;
+    boolean isEditing = false;
 
-    private ItineraryHandler itineraryHandler;
-    DatabaseReference ref;
+    EventDecorator eventDecorator;
 
+    Spinner spinner_evento;
+    ItineraryHandler itineraryHandler;
+    SupportMapFragment fragmentmap;
+    Fragment fragmentcalendar;
+
+    String category;
+    Calendar calendar;
+
+    private CalendarDay selectedDateMin = null;
+    private CalendarDay selectedDateMax = null;
+
+    boolean startDateSelected = false;
+
+    MaterialCalendarView calendarView;
+
+
+    public ItineraryDetailActivity() {
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ItineraryTileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        calendar = new Calendar(this);
 
 
         itinerary = getIntent().getParcelableExtra(ItinActivity.KEY_ITINERARY);
@@ -67,55 +101,120 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         binding.itineraryTitle.setOnClickListener(v -> pulsar());
 
         configurar(binding);
+        binding.layoutmapcontainer.setVisibility(View.GONE);
+        binding.layoutcalendarcontainer.setVisibility(View.GONE);
+        binding.getRoot().setBackgroundResource(R.drawable.fondo);
+
+        itineraryHandler = new ItineraryHandler(updatedItineraries -> {
+        });
+
+        calendarView = findViewById(R.id.calendarView);
+        calendar.configureCalendarView();
+        calendar.loadAndDecorateEvents();
 
 
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mapContainer, mapFragment)
-                .commit();
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
 
-        mapFragment.getMapAsync(this);
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                if (isEditing) {
+                    if (!startDateSelected) {
+                        confirmarFechaInicio(date);
+                    } else {
+                        confirmarFechaFin(date);
+                    }
+                } else {
+                    Event existingEvent = calendar.findEventByDate(date);
+                    if (existingEvent != null) {
+                        calendar.showEventOptionsDialog(existingEvent);
+                    } else {
+                        calendar.promptForActivity(date);
+                    }
+                }
+            }
 
-        itineraryHandler = new ItineraryHandler(updatedItineraries -> {});
+            private void confirmarFechaInicio(CalendarDay date) {
+                new AlertDialog.Builder(ItineraryDetailActivity.this)
+                        .setTitle("Confirmación")
+                        .setMessage("¿Guardar esta fecha como fecha de inicio?")
+                        .setPositiveButton("Ok", (dialog, which) -> {
+                            selectedDateMin = date;
+                            startDateSelected = true;
+                            Toast.makeText(ItineraryDetailActivity.this, "Fecha de inicio seleccionada", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("Cancelar", (dialog, which) -> {
+                        })
+                        .show();
+            }
+
+            private void confirmarFechaFin(CalendarDay date) {
+                new AlertDialog.Builder(ItineraryDetailActivity.this)
+                        .setTitle("Confirmación")
+                        .setMessage("¿Guardar esta fecha como fecha de fin?")
+                        .setPositiveButton("Ok", (dialog, which) -> {
+                            if (selectedDateMin != null && date.getDate().after(selectedDateMin.getDate())) {
+                                selectedDateMax = date;
+                                startDateSelected = false;
+                                Toast.makeText(ItineraryDetailActivity.this, "Fecha de fin seleccionada", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ItineraryDetailActivity.this, "La fecha de fin debe ser posterior a la fecha de inicio", Toast.LENGTH_SHORT).show();
+                                selectedDateMin = null;
+                                selectedDateMax = null;
+                                confirmarFechaInicio(date);
+                            }
+                        })
+                        .setNegativeButton("Cancelar", (dialog, which) -> {
+                        })
+                        .show();
+            }
+        });
+
     }
+
+
 
 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        if (mMap != null) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
+            mMap.clear();
 
-        mMap.clear();
+            String countryName = itinerary.getCountry();
+            String stateName = itinerary.getState();
+            String cityName = itinerary.getCity();
 
-        String countryName = itinerary.getCountry();
-        String stateName = itinerary.getState();
-        String cityName = itinerary.getCity();
+            LatLng location = getLocationFromAddress(countryName, stateName, cityName);
 
-        LatLng location = getLocationFromAddress(countryName, stateName, cityName);
+            float zoomLevel = 1.0f;
+            if (!TextUtils.isEmpty(countryName)) {
+                zoomLevel = 6.0f;
+            }
+            if (!TextUtils.isEmpty(stateName)) {
+                zoomLevel = 8.0f;
+            }
+            if (!TextUtils.isEmpty(cityName)) {
+                zoomLevel = 10.0f;
+            }
 
-        float zoomLevel = 1.0f;
-        if (!TextUtils.isEmpty(countryName)) {
-            zoomLevel = 6.0f;
-        }
-        if (!TextUtils.isEmpty(stateName)) {
-            zoomLevel = 8.0f;
-        }
-        if (!TextUtils.isEmpty(cityName)) {
-            zoomLevel = 10.0f;
-        }
-
-        if (location != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
-            mMap.addMarker(new MarkerOptions()
-                    .position(location)
-                    .title("Location")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-            mMap.getUiSettings().setZoomControlsEnabled(true);
+            if (location != null) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
+                mMap.addMarker(new MarkerOptions()
+                        .position(location)
+                        .title("Location")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                mMap.getUiSettings().setZoomControlsEnabled(true);
+            } else {
+                LatLng centerOfWorld = new LatLng(0, 0);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOfWorld, zoomLevel));
+            }
         } else {
-            LatLng centerOfWorld = new LatLng(0, 0);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOfWorld, zoomLevel));
+
+            Log.e("ItineraryDetailActivity", "GoogleMap is null");
         }
     }
+
 
     private LatLng getLocationFromAddress(String countryName, String stateName, String cityName) {
         Geocoder geocoder = new Geocoder(this);
@@ -152,6 +251,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         findViewById(R.id.layoutState).setVisibility(View.VISIBLE);
         findViewById(R.id.layoutCity).setVisibility(View.VISIBLE);
         findViewById(R.id.mapContainer).setVisibility(View.VISIBLE);
+        findViewById(R.id.calendarContainer).setVisibility(View.VISIBLE);
     }
 
     private void ocultardetalles() {
@@ -159,7 +259,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         findViewById(R.id.layoutCountry).setVisibility(View.GONE);
         findViewById(R.id.layoutState).setVisibility(View.GONE);
         findViewById(R.id.layoutCity).setVisibility(View.GONE);
-        findViewById(R.id.mapContainer).setVisibility(View.GONE);
+
 
     }
 
@@ -296,6 +396,33 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                     }
                 }
 
+                if (selectedDateMin != null && selectedDateMax != null) {
+                    Date startDate = selectedDateMin.getDate();
+                    Date endDate = selectedDateMax.getDate();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    String editedStartDate = dateFormat.format(startDate);
+                    String editedEndDate = dateFormat.format(endDate);
+                    itinerary.setStartDate(editedStartDate);
+                    itinerary.setEndDate(editedEndDate);
+                    calendar.configureCalendarView();
+                    itineraryHandler.deleteEvents(itinerary.getId());
+
+
+                } else if (selectedDateMin!=null && selectedDateMax==null ||selectedDateMin==null && selectedDateMax!=null ) {
+                    Toast.makeText(ItineraryDetailActivity.this, "Edición cancelada: falta una fecha por seleccionar", Toast.LENGTH_LONG).show();
+                    startDateSelected = false;
+                    calendar.loadAndDecorateEvents();
+                    calendar.configureCalendarView();
+                    calendarView.setClickable(false);
+                    calendarView.setLongClickable(false);
+                    calendarView.setEnabled(false);
+
+                } else{
+                    calendar.loadAndDecorateEvents();
+                    calendar.configureCalendarView();
+
+                }
+
                 itinerary.setItineraryTitle(editedTitle);
                 itinerary.setCountry(editedCountry);
                 itinerary.setState(editedState);
@@ -306,7 +433,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 binding.itineraryState.setText(itinerary.getState());
                 binding.itineraryCity.setText(itinerary.getCity());
                 onMapReady(mMap);
-                ItinActivity.mAdapter.actualizar_por_id(itinerary);
+                mAdapter.actualizar_por_id(itinerary);
                 findViewById(R.id.itineraryCountry).setVisibility(View.VISIBLE);
                 findViewById(R.id.spinnerCountryAct2).setVisibility(View.GONE);
                 findViewById(R.id.itineraryState).setVisibility(View.VISIBLE);
@@ -332,14 +459,78 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         findViewById(R.id.spinnerStateAct2).setVisibility(View.VISIBLE);
         findViewById(R.id.itineraryCity).setVisibility(View.GONE);
         findViewById(R.id.spinnerCityAct2).setVisibility(View.VISIBLE);
-    }
+        selectedDateMin = null;
+        selectedDateMax = null;
+        calendarView.setClickable(false);
+        calendarView.setLongClickable(false);
+        calendarView.setEnabled(false);
+        calendarView.clearSelection();
+        calendarView.removeDecorators();
+        calendarView.state().edit()
+                .setMinimumDate((java.util.Calendar) null)
+                .setMaximumDate((java.util.Calendar) null)
+                .commit();
+
+        if (selectedDateMin != null && selectedDateMax != null) {
+            calendarView.state().edit()
+                    .setMinimumDate(selectedDateMin)
+                    .setMaximumDate(selectedDateMax)
+                    .commit();
+        }
+
+        }
+
+
+
+
 
     public EditText getTitleEditText() {
         return binding.itineraryTitle;
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_opciones_itinerarios, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_show_map) {
+            binding.layoutmapcontainer.setVisibility(View.VISIBLE);
+            binding.layoutcalendarcontainer.setVisibility(View.GONE);
+            binding.map.setVisibility(View.VISIBLE);
 
+            showMapFragment();
+            return true;
+        } else if (id == R.id.action_show_calendar) {
+
+            binding.layoutcalendarcontainer.setVisibility(View.VISIBLE);
+            binding.layoutmapcontainer.setVisibility(View.GONE);
+            binding.map.setVisibility(View.GONE);
+            showCalendarFragment();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showMapFragment() {
+        fragmentmap = SupportMapFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mapContainer, fragmentmap)
+                .commit();
+        fragmentmap.getMapAsync(this);
+
+    }
+
+    private void showCalendarFragment() {
+        fragmentcalendar = new Fragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.calendarContainer, fragmentcalendar)
+                .commit();
+    }
 
 }

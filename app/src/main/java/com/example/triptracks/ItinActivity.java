@@ -13,8 +13,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -30,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener {
 
@@ -132,6 +135,14 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         final Spinner spinnerCountry = dialogView.findViewById(R.id.spinnerCountry);
         final Spinner spinnerState = dialogView.findViewById(R.id.spinnerState);
         final Spinner spinnerCity = dialogView.findViewById(R.id.spinnerCity);
+        final DatePicker startDatePicker = dialogView.findViewById(R.id.startDatePicker);
+        final DatePicker endDatePicker = dialogView.findViewById(R.id.endDatePicker);
+
+        startDatePicker.setCalendarViewShown(false);
+        startDatePicker.setSpinnersShown(true);
+        endDatePicker.setCalendarViewShown(false);
+        endDatePicker.setSpinnersShown(true);
+
 
         List<String> countryNames = new ArrayList<>();
         countryNames.add(getString(R.string.select_country));
@@ -281,9 +292,16 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
                     inputItineraryName.setBackgroundResource(R.drawable.error_background);
                     isValid = false;
                 }
+                String startDate = formatDate(startDatePicker);
+                String endDate = formatDate(endDatePicker);
+                if (startDate.compareTo(endDate) > 0) {
+                    Toast.makeText(getApplicationContext(), "La fecha de inicio no puede ser posterior a la fecha de fin.", Toast.LENGTH_LONG).show();
+                    isValid = false;
+                }
+
 
                 if (isValid) {
-                    addItems(itineraryName, selectedCountryName, selectedStateName, selectedCityName);
+                    addItems(itineraryName, selectedCountryName, selectedStateName, selectedCityName,startDate,endDate);
                     dialog.dismiss();
                 }
             });
@@ -293,11 +311,11 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     }
 
 
-    private void addItems(String itineraryName, String countryName, String stateName, String cityName) {
+    private void addItems(String itineraryName, String countryName, String stateName, String cityName,String startDate,String endDate) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").
                 child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",")).child("itineraries");
         String itineraryId = databaseReference.push().getKey();
-        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName);
+        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName,startDate,endDate);
         ArrayList<Itinerary> newItineraries = new ArrayList<>();
         newItineraries.add(itinerary);
         mAdapter.anadirelem(newItineraries);
@@ -347,5 +365,11 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     private void updateItineraryList(ArrayList<Itinerary> itineraries) {
         mAdapter.updateData(itineraries);
         mAdapter.notifyDataSetChanged();
+    }
+    private String formatDate(DatePicker datePicker) {
+        int year = datePicker.getYear();
+        int month = datePicker.getMonth() + 1;
+        int day = datePicker.getDayOfMonth();
+        return String.format(Locale.US, "%04d-%02d-%02d", year, month, day);
     }
 }

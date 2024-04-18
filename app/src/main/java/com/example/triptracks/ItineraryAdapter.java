@@ -74,20 +74,22 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
         holder.binding.itineraryCountry.setVisibility(View.GONE);
         holder.binding.itineraryState.setVisibility(View.GONE);
         holder.binding.itineraryCity.setVisibility(View.GONE);
-
         if (showFirstButtonsOnly) {
             holder.binding.butBorrar.setVisibility(View.GONE);
             holder.binding.butEdit.setVisibility(View.GONE);
             holder.binding.butOk.setVisibility(View.GONE);
             holder.binding.butVolver.setVisibility(View.GONE);
-            holder.binding.mapContainer.setVisibility(View.GONE);
+            holder.binding.layoutmapcontainer.setVisibility(View.GONE);
+            holder.binding.layoutcalendarcontainer.setVisibility(View.GONE);
+
         } else {
 
             holder.binding.butBorrar.setVisibility(View.VISIBLE);
             holder.binding.butEdit.setVisibility(View.VISIBLE);
             holder.binding.butOk.setVisibility(View.VISIBLE);
             holder.binding.butVolver.setVisibility(View.VISIBLE);
-            holder.binding.mapContainer.setVisibility(View.VISIBLE);
+            holder.binding.layoutmapcontainer.setVisibility(View.VISIBLE);
+            holder.binding.layoutcalendarcontainer.setVisibility(View.VISIBLE);
         }
 
     }

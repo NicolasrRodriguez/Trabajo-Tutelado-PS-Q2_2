@@ -12,7 +12,8 @@
     android:layout_height="wrap_content"
     android:hint="@string/hint_itinerary_name"
     android:inputType="text"
-    android:layout_marginBottom="16dp"/>
+    android:layout_marginBottom="16dp"
+    style="@style/DialogTextStyle"/>
 
     <Spinner
     android:id="@+id/spinnerCountry"
@@ -20,7 +21,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:prompt="@string/select_country"
-    android:layout_marginBottom="8dp"/>
+    android:layout_marginBottom="8dp"
+    style="@style/DialogTextStyle"/>
 
     <Spinner
     android:id="@+id/spinnerState"
@@ -28,12 +30,45 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:prompt="@string/select_state"
-    android:layout_marginBottom="8dp"/>
+    android:layout_marginBottom="8dp"
+    style="@style/DialogTextStyle"/>
 
     <Spinner
     android:id="@+id/spinnerCity"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
-    android:prompt="@string/select_city" />
+    android:prompt="@string/select_city"
+    style="@style/DialogTextStyle"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_startdate"
+        android:layout_marginTop="8dp"
+        style="@style/DialogTextStyle"/>
+
+    <DatePicker
+        android:id="@+id/startDatePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:datePickerMode="spinner"
+        style="@style/DialogTextStyle"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_enddate"
+        android:layout_marginTop="8dp"
+        style="@style/DialogTextStyle"/>
+
+    <DatePicker
+        android:id="@+id/endDatePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:datePickerMode="spinner"
+        style="@style/DialogTextStyle"/>
     </LinearLayout>

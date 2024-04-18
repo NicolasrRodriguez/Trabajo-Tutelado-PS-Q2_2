@@ -37,5 +37,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="CerarSesion">Cerrar Sesion</string>
     <string name="str_but_volver">Volver</string>
+    <string name="str_startdate">Fecha de inicio</string>
+    <string name="str_enddate">Fecha de finalización</string>
 
 </resources>
