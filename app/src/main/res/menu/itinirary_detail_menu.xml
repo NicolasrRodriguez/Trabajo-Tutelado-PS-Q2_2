@@ -6,4 +6,16 @@
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/str_compartir"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_show_map"
+        android:title="Mapa"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_show_calendar"
+        android:title="Calendario"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

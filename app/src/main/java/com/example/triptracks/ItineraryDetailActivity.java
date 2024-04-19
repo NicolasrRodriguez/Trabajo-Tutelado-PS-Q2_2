@@ -72,14 +72,13 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     EventDecorator eventDecorator;
 
     Spinner spinner_evento;
-    ItineraryHandler itineraryHandler;
     SupportMapFragment fragmentmap;
     Fragment fragmentcalendar;
 
     String category;
     Calendar calendar;
 
-    private ItineraryHandler itineraryHandler;
+    ItineraryHandler itineraryHandler;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference ref;
@@ -204,6 +203,21 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
             // abrir dialogo para escoger con que usuarios compartir el itineriario
            //juan123456@gmail.com email de ejemplo
             showDialog();
+        }
+        if (id == R.id.action_show_map) {
+            binding.layoutmapcontainer.setVisibility(View.VISIBLE);
+            binding.layoutcalendarcontainer.setVisibility(View.GONE);
+            binding.map.setVisibility(View.VISIBLE);
+
+            showMapFragment();
+            return true;
+        } else if (id == R.id.action_show_calendar) {
+
+            binding.layoutcalendarcontainer.setVisibility(View.VISIBLE);
+            binding.layoutmapcontainer.setVisibility(View.GONE);
+            binding.map.setVisibility(View.GONE);
+            showCalendarFragment();
+            return true;
         }
 
 
@@ -569,33 +583,6 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_opciones_itinerarios, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_show_map) {
-            binding.layoutmapcontainer.setVisibility(View.VISIBLE);
-            binding.layoutcalendarcontainer.setVisibility(View.GONE);
-            binding.map.setVisibility(View.VISIBLE);
-
-            showMapFragment();
-            return true;
-        } else if (id == R.id.action_show_calendar) {
-
-            binding.layoutcalendarcontainer.setVisibility(View.VISIBLE);
-            binding.layoutmapcontainer.setVisibility(View.GONE);
-            binding.map.setVisibility(View.GONE);
-            showCalendarFragment();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     private void showMapFragment() {
         fragmentmap = SupportMapFragment.newInstance();

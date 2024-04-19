@@ -318,8 +318,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         String itineraryId = databaseReference.push().getKey();
         ArrayList<String> shared = new  ArrayList<>();
         shared.add(UserEmail);
-        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName, UserEmail ,shared );
-        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName,startDate,endDate);
+        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName,UserEmail ,shared,startDate,endDate);
         ArrayList<Itinerary> newItineraries = new ArrayList<>();
         newItineraries.add(itinerary);
         mAdapter.anadirelem(newItineraries);

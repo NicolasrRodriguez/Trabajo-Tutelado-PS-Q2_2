@@ -26,8 +26,8 @@ public class Itinerary implements Parcelable {
     public Itinerary() {
     }
 
-    public Itinerary(String id, String itineraryTitle, String country, String state,String city, String admin, ArrayList<String> shared) {
-    public Itinerary(String id, String itineraryTitle, String country, String state,String city,String startDate, String endDate) {
+
+    public Itinerary(String id, String itineraryTitle, String country, String state,String city,String admin, ArrayList<String> shared,String startDate, String endDate) {
         this.id = id;
 
         this.itineraryTitle = itineraryTitle;
