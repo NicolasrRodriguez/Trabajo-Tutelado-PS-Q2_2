@@ -69,8 +69,10 @@ public class ItineraryHandler {
 
     public void updateItinerary(Itinerary itinerary) {
 
-            DatabaseReference itineraryRef = ref.child(itinerary.getId());
-
+        for (String colaborator: itinerary.getColaborators()) {
+            String colaboratorPath = colaborator.replace(".", ",");
+            DatabaseReference itineraryRef = FirebaseDatabase.getInstance().getReference("users")
+                    .child(colaboratorPath).child(itinerary.getId());
             itineraryRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -78,18 +80,18 @@ public class ItineraryHandler {
 
                     if (currentItinerary != null) {
 
-                                if (!currentItinerary.getCountry().equals(itinerary.getCountry()) ||
-                                        !currentItinerary.getState().equals(itinerary.getState())|| !currentItinerary.getCity().equals(itinerary.getCity())) {
-                                    DatabaseReference eventsRef = itineraryRef.child("events");
-                                    eventsRef.removeValue()
-                                            .addOnSuccessListener(aVoid -> {
-                                                Log.d("Firebase", "Eventos eliminados correctamente");
-                                                updateItineraryFields(itineraryRef, itinerary);
-                                            })
-                                            .addOnFailureListener(e -> Log.e("Firebase", "Fallo al eliminar eventos", e));
-                                } else {
-                                    updateItineraryFields(itineraryRef, itinerary);
-                                }
+                        if (!currentItinerary.getCountry().equals(itinerary.getCountry()) ||
+                                !currentItinerary.getState().equals(itinerary.getState())|| !currentItinerary.getCity().equals(itinerary.getCity())) {
+                            DatabaseReference eventsRef = itineraryRef.child("events");
+                            eventsRef.removeValue()
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("Firebase", "Eventos eliminados correctamente");
+                                        updateItineraryFields(itineraryRef, itinerary);
+                                    })
+                                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al eliminar eventos", e));
+                        } else {
+                            updateItineraryFields(itineraryRef, itinerary);
+                        }
 
 
                     }
@@ -100,9 +102,14 @@ public class ItineraryHandler {
                     Log.e("Firebase", "Fallo al obtener el itinerario actual", databaseError.toException());
                 }
             });
+
+        }
+
+
     }
 
     private void updateItineraryFields(DatabaseReference itineraryRef, Itinerary itinerary) {
+
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("id", itinerary.getId());
@@ -134,15 +141,25 @@ public class ItineraryHandler {
                 ref.child(itinerary.getId()).setValue(itinerary)
                         .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario actualizado"))
                         .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
+
+                for (Event event : getLoadedEvents() ) {
+                    saveEvent(event, ref.child(itinerary.getId()).child("events"),event.getId());
+                }
+
+
                 //crea el itinerario para el usuario Target
                 String targetUserPath = Target.replace(".", ",");
                 DatabaseReference Targetref = FirebaseDatabase.getInstance().getReference("users")
                         .child(targetUserPath).child("itineraries");
                 Log.d("Firebase", "Compartierndo Itinerario con " + Target + "desde:" + itinerary.getAdmin());
-                String key = Targetref.push().getKey();
+
                 Targetref.child(itinerary.getId()).setValue(itinerary)
                         .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario compartido con " + Target ))
                         .addOnFailureListener(e -> Log.e("Firebase", "Fallo al compartir el itinerario", e));
+
+                for (Event event : getLoadedEvents()) {
+                    saveEvent(event,Targetref.child(itinerary.getId()).child("events"), event.getId());
+                }
 
         }
     }
@@ -188,23 +205,28 @@ public class ItineraryHandler {
 
     }
 
-    public void updateEvent(String itineraryId, Event event) {
+    public void updateEvent(Itinerary itinerary , Event event) {
+
         if (event.getId() != null) {
-            DatabaseReference eventRef = ref.child(itineraryId).child("events").child(event.getId());
-            eventRef.setValue(event)
-                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Evento actualizado correctamente."))
-                    .addOnFailureListener(e -> Log.e("Firebase", "Error al actualizar el evento.", e));
+            for (String colaborator : itinerary.getColaborators()) {
+                String colaboratorPath = colaborator.replace(".", ",");
+                DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("users")
+                        .child(colaboratorPath).child(itinerary.getId()).child("events").child(event.getId());
+                eventRef.setValue(event)
+                        .addOnSuccessListener(aVoid -> Log.d("Firebase", "Evento actualizado correctamente."))
+                        .addOnFailureListener(e -> Log.e("Firebase", "Error al actualizar el evento.", e));
+                Log.d("_UP", "atualizado en  " + colaborator );
+            }
         } else {
             Log.e("Firebase", "Error: El evento no tiene ID y no puede ser actualizado.");
         }
     }
 
 
-    public void saveEvent(String itineraryId, Event event) {
-        DatabaseReference eventsRef = ref.child(itineraryId).child("Events");
-        String eventId = eventsRef.push().getKey();
-        if (eventId == null) return;
-        eventsRef.child(eventId).setValue(event);
+    public void saveEvent( Event event , DatabaseReference eventsRef , String key) {
+
+        if (key == null) return;
+        eventsRef.child(key).setValue(event);
     }
 
     public void deleteEvents(String itineraryId) {

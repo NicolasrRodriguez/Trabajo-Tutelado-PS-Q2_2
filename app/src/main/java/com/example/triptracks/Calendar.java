@@ -156,8 +156,8 @@ public class Calendar {
                     String category = spinner.getSelectedItem().toString();
                     event.setDescription(description);
                     event.setCategory(category);
-                    it.itineraryHandler.updateEvent(it.itinerary.getId(), event);
-                    it. calendarView.invalidateDecorators();
+                    it.itineraryHandler.updateEvent(it.itinerary, event);
+                    it.calendarView.invalidateDecorators();
 
                 })
                 .setNegativeButton("Cancelar", null)
