@@ -4,6 +4,7 @@ package com.example.triptracks;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,13 +12,16 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -25,6 +29,8 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -39,6 +45,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import static com.example.triptracks.ItinActivity.mAdapter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -46,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 
 public class ItineraryDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -67,6 +79,10 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     String category;
     Calendar calendar;
 
+    private ItineraryHandler itineraryHandler;
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    DatabaseReference ref;
     private CalendarDay selectedDateMin = null;
     private CalendarDay selectedDateMax = null;
 
@@ -173,6 +189,66 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
 
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.itinirary_detail_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Intent resultIntent = new Intent();
+        setResult(AuthActivity.RESULT_SESION_CLOSED, resultIntent);
+        if (id == R.id.menu_compartir) {
+            Log.d("_ITDETTAG", "Compartir itinerario");
+            // abrir dialogo para escoger con que usuarios compartir el itineriario
+           //juan123456@gmail.com email de ejemplo
+            showDialog();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void showDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.str_compartir);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View dialogView = inflater.inflate(R.layout.compartir_itinerario, null);
+        final EditText Targetemail = dialogView.findViewById(R.id.TEmailEdit);
+
+        ArrayList<String > colaborators = itinerary.getColaborators();
+
+
+        builder.setView(dialogView);
+        builder.setPositiveButton(R.string.str_compartir, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String text = Targetemail.getText().toString();//juan123456@gmail.com
+
+                if(!colaborators.contains(text) && Objects.equals(user.getEmail(), itinerary.getAdmin())){
+
+                    colaborators.add(text);
+
+                    itinerary.setColaborators(colaborators);
+
+                    itineraryHandler.shareItinerary(itinerary , text);//comparte el itinerario con el usuario elegido
+                }
+
+                Log.d("_ITDETTAG", "Compartiendo con " + text + "por " + itinerary.getAdmin());
+            }
+        });
+        builder.setNegativeButton(R.string.str_cancelar, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                Log.d("_ITDETTAG", "Cancelado compartir");
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -372,7 +448,8 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 String editedCountry = itinerary.getCountry();
                 String editedState = itinerary.getState();
                 String editedCity = itinerary.getCity();
-
+                String Admin = itinerary.getAdmin();
+                ArrayList<String> colaboratos = itinerary.getColaborators();
                 if (spinnerCountry.getSelectedItem() != null) {
                     String selectedCountry = spinnerCountry.getSelectedItem().toString();
                     if (!selectedCountry.equals(getString(R.string.select_country))) {
@@ -427,6 +504,9 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 itinerary.setCountry(editedCountry);
                 itinerary.setState(editedState);
                 itinerary.setCity(editedCity);
+
+                itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
+                itinerary.setColaborators(colaboratos);
 
                 binding.itineraryTitle.setText(itinerary.getItineraryTitle());
                 binding.itineraryCountry.setText(itinerary.getCountry());

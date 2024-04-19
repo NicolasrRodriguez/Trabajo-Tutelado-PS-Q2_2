@@ -39,5 +39,8 @@
     <string name="str_but_volver">Volver</string>
     <string name="str_startdate">Fecha de inicio</string>
     <string name="str_enddate">Fecha de finalización</string>
+    <string name="str_but_compartir">Compartir</string>
+    <string name="str_compartir">Compartir</string>
+    <string name="str_cancelar">Cancelar</string>
 
 </resources>

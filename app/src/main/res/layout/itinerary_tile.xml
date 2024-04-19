@@ -37,6 +37,9 @@
             android:layout_height="wrap_content"
             android:text="@string/str_but_volver"
             android:layout_marginStart="8dp" />
+
+
+
     </LinearLayout>
 
     <EditText

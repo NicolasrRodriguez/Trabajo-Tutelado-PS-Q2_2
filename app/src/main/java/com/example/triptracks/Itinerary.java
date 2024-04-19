@@ -4,6 +4,9 @@ package com.example.triptracks;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Itinerary implements Parcelable {
     private String id;
     private String itineraryTitle;
@@ -13,11 +16,17 @@ public class Itinerary implements Parcelable {
     private String startDate;
     private String endDate;
 
+    private String Admin;
+
+    private ArrayList<String> Colaborators;
+
+
 
 
     public Itinerary() {
     }
 
+    public Itinerary(String id, String itineraryTitle, String country, String state,String city, String admin, ArrayList<String> shared) {
     public Itinerary(String id, String itineraryTitle, String country, String state,String city,String startDate, String endDate) {
         this.id = id;
 
@@ -27,6 +36,9 @@ public class Itinerary implements Parcelable {
         this.city = city;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.Admin = admin;
+        this.Colaborators = shared;
+
     }
 
     protected Itinerary(Parcel in) {
@@ -37,6 +49,8 @@ public class Itinerary implements Parcelable {
         city = in.readString();
         startDate = in.readString();
         endDate = in.readString();
+        Admin = in.readString();
+        Colaborators = in.createStringArrayList();
 
     }
 
@@ -49,6 +63,8 @@ public class Itinerary implements Parcelable {
         dest.writeString(city);
         dest.writeString(startDate);
         dest.writeString(endDate);
+        dest.writeString(Admin);
+        dest.writeStringList(Colaborators);
     }
 
     @Override
@@ -68,6 +84,22 @@ public class Itinerary implements Parcelable {
         }
     };
 
+
+    public String getAdmin() {
+        return Admin;
+    }
+
+    public void setAdmin(String admin) {
+        Admin = admin;
+    }
+
+    public ArrayList<String> getColaborators() {
+        return Colaborators;
+    }
+
+    public void setColaborators(ArrayList<String> colaborators) {
+        Colaborators = colaborators;
+    }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
