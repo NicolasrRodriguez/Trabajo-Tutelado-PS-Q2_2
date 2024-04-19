@@ -445,6 +445,10 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
             editar_atributos(getTitleEditText());
         });
         binding.butVolver.setOnClickListener(v -> {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("ACTION", "BACK");
+            resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
+            setResult(ItinActivity.RESULT_OK, resultIntent);
             finish();
         });
 

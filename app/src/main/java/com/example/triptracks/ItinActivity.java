@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +40,8 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     public static final String KEY_ITINERARY = "itinerary";
     public static final int RESULT_DELETE = 1;
     public static final int RESULT_UPDATE = 2;
+
+    public static final int RESULT_OK = 3;
 
     private String UserEmail;
 
@@ -93,6 +96,8 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
                         Itinerary updatedItinerary = data.getParcelableExtra(KEY_ITINERARY);
                         mAdapter.actualizar_por_id(updatedItinerary);
                     }
+                } else if (result.getResultCode() == RESULT_OK) {
+                    Log.d("_TAG","Succesfully returned to MainActivity");
                 }
             }
     );
