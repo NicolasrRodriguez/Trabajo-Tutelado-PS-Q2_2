@@ -68,20 +68,25 @@ public class ItineraryHandler {
     }
 
     public void updateItinerary(Itinerary itinerary) {
-
         for (String colaborator: itinerary.getColaborators()) {
             String colaboratorPath = colaborator.replace(".", ",");
-            DatabaseReference itineraryRef = FirebaseDatabase.getInstance().getReference("users")
-                    .child(colaboratorPath).child(itinerary.getId());
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
+                    .child(colaboratorPath);
+
+            DatabaseReference itineraryRef = userRef.child("itineraries").child(itinerary.getId());
+
+
             itineraryRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Itinerary currentItinerary = dataSnapshot.getValue(Itinerary.class);
-
                     if (currentItinerary != null) {
+                        boolean shouldUpdate = !currentItinerary.getCountry().equals(itinerary.getCountry()) ||
+                                !currentItinerary.getState().equals(itinerary.getState()) || !currentItinerary.getCity().equals(itinerary.getCity() );
 
-                        if (!currentItinerary.getCountry().equals(itinerary.getCountry()) ||
-                                !currentItinerary.getState().equals(itinerary.getState())|| !currentItinerary.getCity().equals(itinerary.getCity())) {
+
+                        if (shouldUpdate) {
+                            updateItineraryFields(itineraryRef, itinerary);
                             DatabaseReference eventsRef = itineraryRef.child("events");
                             eventsRef.removeValue()
                                     .addOnSuccessListener(aVoid -> {
@@ -89,11 +94,9 @@ public class ItineraryHandler {
                                         updateItineraryFields(itineraryRef, itinerary);
                                     })
                                     .addOnFailureListener(e -> Log.e("Firebase", "Fallo al eliminar eventos", e));
-                        } else {
+                        }else{
                             updateItineraryFields(itineraryRef, itinerary);
                         }
-
-
                     }
                 }
 
@@ -102,10 +105,7 @@ public class ItineraryHandler {
                     Log.e("Firebase", "Fallo al obtener el itinerario actual", databaseError.toException());
                 }
             });
-
         }
-
-
     }
 
     private void updateItineraryFields(DatabaseReference itineraryRef, Itinerary itinerary) {
