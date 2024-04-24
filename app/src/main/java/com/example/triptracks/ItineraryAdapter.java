@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+
+import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.databinding.ItineraryTileBinding;
 
 public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyViewHolder> {

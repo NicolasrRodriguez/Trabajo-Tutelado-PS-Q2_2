@@ -1,9 +1,11 @@
-package com.example.triptracks;
+package com.example.triptracks.Datos;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.triptracks.Domain.Entities.Event;
+import com.example.triptracks.Domain.Entities.Itinerary;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -15,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ItineraryHandler {

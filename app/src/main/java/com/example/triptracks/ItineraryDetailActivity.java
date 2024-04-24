@@ -19,19 +19,20 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.triptracks.Datos.ItineraryHandler;
+import com.example.triptracks.Domain.Entities.Event;
+import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Presenter.EventDecorator;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.beastwall.localisation.model.City;
@@ -48,7 +49,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import static com.example.triptracks.ItinActivity.mAdapter;
 import java.io.IOException;

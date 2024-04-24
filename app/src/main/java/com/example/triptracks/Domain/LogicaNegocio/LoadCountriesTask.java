@@ -1,9 +1,11 @@
 
-package com.example.triptracks;
+package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.os.AsyncTask;
 import com.beastwall.localisation.Localisation;
 import com.beastwall.localisation.model.Country;
+import com.example.triptracks.ItinActivity;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 

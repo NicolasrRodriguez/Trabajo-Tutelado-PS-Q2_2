@@ -1,4 +1,4 @@
-package com.example.triptracks;
+package com.example.triptracks.Domain.Entities;
 
 public class Event {
     private String id;

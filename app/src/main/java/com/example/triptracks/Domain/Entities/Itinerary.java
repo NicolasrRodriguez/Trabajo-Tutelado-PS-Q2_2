@@ -1,11 +1,10 @@
 
-package com.example.triptracks;
+package com.example.triptracks.Domain.Entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Itinerary implements Parcelable {
     private String id;
