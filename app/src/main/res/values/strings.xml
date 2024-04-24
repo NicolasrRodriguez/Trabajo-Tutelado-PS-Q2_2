@@ -42,5 +42,6 @@
     <string name="str_but_compartir">Compartir</string>
     <string name="str_compartir">Compartir</string>
     <string name="str_cancelar">Cancelar</string>
+    <string name="athu_fail">Fallo al intentar autenticarse</string>
 
 </resources>

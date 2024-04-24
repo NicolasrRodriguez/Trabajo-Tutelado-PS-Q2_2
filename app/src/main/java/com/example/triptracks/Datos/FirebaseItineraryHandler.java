@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,16 +20,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class ItineraryHandler {
+public class FirebaseItineraryHandler implements ItineraryRepository {
     private DatabaseReference ref;
     private ArrayList<Itinerary> mItineraryList;
     private List<Event> loadedEvents = new ArrayList<>();
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    private ItineraryHandler() {}
+    private FirebaseItineraryHandler() {}
 
-    public ItineraryHandler(Consumer<ArrayList<Itinerary>> onItinerariesUpdated) {
+    public FirebaseItineraryHandler(Consumer<ArrayList<Itinerary>> onItinerariesUpdated) {
         if (user != null) {
             String userPath = user.getEmail().replace(".", ",");
             ref = FirebaseDatabase.getInstance().getReference("users")
@@ -59,13 +60,14 @@ public class ItineraryHandler {
     }
 
 
-    public void saveItinerary(Itinerary itinerary) {
+    @Override
+    public void saveItinerary(Itinerary itinerary,OperationCallback callback) {
         String key = ref.push().getKey();
         if (key == null) return;
         itinerary.setId(key);
         ref.child(key).setValue(itinerary)
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario guardado por: " + itinerary.getAdmin()))
-                .addOnFailureListener(e -> Log.e("Firebase", "Fallo al guardar el itinerario", e));
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onFailure);
     }
 
     public void updateItinerary(Itinerary itinerary) {
@@ -128,11 +130,13 @@ public class ItineraryHandler {
                 .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
     }
 
-    public void deleteItinerary(Itinerary itinerary) {
+
+    @Override
+    public void deleteItinerary(Itinerary itinerary,OperationCallback callback) {
         if (itinerary.getId() != null) {
             ref.child(itinerary.getId()).removeValue()
-                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario borrado"))
-                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al borrar el itinerario", e));
+                    .addOnSuccessListener(aVoid -> callback.onSuccess())
+                    .addOnFailureListener(callback::onFailure);
         }
     }
 
@@ -192,7 +196,9 @@ public class ItineraryHandler {
         return new ArrayList<>(loadedEvents);
     }
 
-    public void deleteEvent(String itineraryId, String eventId) {
+
+    @Override
+    public void deleteOneEvent(String itineraryId, String eventId,OperationCallback callback) {
         if (itineraryId == null || eventId == null) {
             Log.e("Firebase", "Error: Itinerary ID or Event ID is null.");
             return;
@@ -200,13 +206,14 @@ public class ItineraryHandler {
 
         DatabaseReference eventRef = ref.child(itineraryId).child("events").child(eventId);
         eventRef.removeValue()
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Evento eliminado correctamente."))
-                .addOnFailureListener(e -> Log.e("Firebase", "Error al eliminar el evento.", e));
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onFailure);
 
 
     }
 
-    public void updateEvent(Itinerary itinerary , Event event) {
+    @Override
+    public void updateEvent(Itinerary itinerary , Event event,OperationCallback callback) {
 
         if (event.getId() != null) {
             for (String colaborator : itinerary.getColaborators()) {
@@ -214,9 +221,8 @@ public class ItineraryHandler {
                 DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("users")
                         .child(colaboratorPath).child(itinerary.getId()).child("events").child(event.getId());
                 eventRef.setValue(event)
-                        .addOnSuccessListener(aVoid -> Log.d("Firebase", "Evento actualizado correctamente."))
-                        .addOnFailureListener(e -> Log.e("Firebase", "Error al actualizar el evento.", e));
-                Log.d("_UP", "atualizado en  " + colaborator );
+                        .addOnSuccessListener(aVoid -> callback.onSuccess())
+                        .addOnFailureListener(callback::onFailure);
             }
         } else {
             Log.e("Firebase", "Error: El evento no tiene ID y no puede ser actualizado.");
@@ -230,11 +236,12 @@ public class ItineraryHandler {
         eventsRef.child(key).setValue(event);
     }
 
-    public void deleteEvents(String itineraryId) {
+    @Override
+    public void deleteAllEvents(String itineraryId,OperationCallback callback) {
         DatabaseReference eventsRef = ref.child(itineraryId).child("events");
         eventsRef.removeValue()
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Eventos eliminados correctamente"))
-                .addOnFailureListener(e -> Log.e("Firebase", "Fallo al eliminar eventos", e));
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onFailure);
     }
 
 }

@@ -27,9 +27,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
-import com.example.triptracks.Datos.ItineraryHandler;
+import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
+import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -48,7 +50,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
 
     private String UserEmail;
 
-    private ItineraryHandler itineraryHandler;
+    private FirebaseItineraryHandler firebaseItineraryHandler;
     private ActivityMainBinding binding;
 
     public static ItineraryAdapter mAdapter;
@@ -57,6 +59,8 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     public static List<Country> mCountries = new ArrayList<>();
 
     public static int selectedPosition = RecyclerView.NO_POSITION;
+
+    CreateItinerary createItinerary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +80,9 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         mAdapter.mostrarbotones(true);
         new LoadCountriesTask(this).execute();
 
-        itineraryHandler = new ItineraryHandler(this::updateItineraryList);
+        firebaseItineraryHandler = new FirebaseItineraryHandler(this::updateItineraryList);
 
+        createItinerary = new CreateItinerary(firebaseItineraryHandler);
 
     }
 
@@ -330,7 +335,19 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         ArrayList<Itinerary> newItineraries = new ArrayList<>();
         newItineraries.add(itinerary);
         mAdapter.anadirelem(newItineraries);
-        itineraryHandler.saveItinerary(itinerary);
+        createItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+
+            }
+
+        });
     }
 
 

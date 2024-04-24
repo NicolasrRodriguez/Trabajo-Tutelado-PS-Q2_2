@@ -23,9 +23,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.triptracks.Datos.ItineraryHandler;
+import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.DeleteAllEvents;
+import com.example.triptracks.Domain.LogicaNegocio.DeleteItinerary;
+import com.example.triptracks.Domain.LogicaNegocio.DeleteOneEvent;
+import com.example.triptracks.Domain.LogicaNegocio.UpdateEvent;
+import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.Presenter.EventDecorator;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -78,7 +83,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     String category;
     Calendar calendar;
 
-    ItineraryHandler itineraryHandler;
+    FirebaseItineraryHandler firebaseItineraryHandler;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference ref;
@@ -88,6 +93,11 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     boolean startDateSelected = false;
 
     MaterialCalendarView calendarView;
+    DeleteItinerary deleteItinerary;
+    DeleteAllEvents deleteEvents;
+    DeleteOneEvent deleteOneEvent;
+    UpdateEvent UpdateEvent;
+
 
 
     public ItineraryDetailActivity() {
@@ -120,7 +130,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         binding.layoutcalendarcontainer.setVisibility(View.GONE);
         binding.getRoot().setBackgroundResource(R.drawable.fondo);
 
-        itineraryHandler = new ItineraryHandler(updatedItineraries -> {
+        firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {
         });
 
         calendarView = findViewById(R.id.calendarView);
@@ -248,7 +258,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
 
                     itinerary.setColaborators(colaborators);
 
-                    itineraryHandler.shareItinerary(itinerary , text);//comparte el itinerario con el usuario elegido
+                    firebaseItineraryHandler.shareItinerary(itinerary , text);//comparte el itinerario con el usuario elegido
                 }
 
                 Log.d("_ITDETTAG", "Compartiendo con " + text + "por " + itinerary.getAdmin());
@@ -436,8 +446,20 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
             resultIntent.putExtra("ACTION", "DELETE");
             resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
             setResult(ItinActivity.RESULT_DELETE, resultIntent);
-            itineraryHandler.deleteItinerary(itinerary);
-            finish();
+            deleteItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+
+
+                        }
+                    });
+
+                finish();
 
         });
 
@@ -500,7 +522,19 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                     itinerary.setStartDate(editedStartDate);
                     itinerary.setEndDate(editedEndDate);
                     calendar.configureCalendarView();
-                    itineraryHandler.deleteEvents(itinerary.getId());
+                    deleteEvents.execute(itinerary.getId(),new ItineraryRepository.OperationCallback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+
+                        }
+
+
+                        });
 
 
                 } else if (selectedDateMin!=null && selectedDateMax==null ||selectedDateMin==null && selectedDateMax!=null ) {
@@ -538,7 +572,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 findViewById(R.id.spinnerStateAct2).setVisibility(View.GONE);
                 findViewById(R.id.itineraryCity).setVisibility(View.VISIBLE);
                 findViewById(R.id.spinnerCityAct2).setVisibility(View.GONE);
-                itineraryHandler.updateItinerary(itinerary);
+                firebaseItineraryHandler.updateItinerary(itinerary);
             }
         });
     }
