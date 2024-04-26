@@ -34,7 +34,7 @@ public class Calendar {
     }
 
 
-    void promptForActivity(CalendarDay date) {
+    public void promptForActivity(CalendarDay date) {
         Event existingEvent = findEventByDate(date);
         if (existingEvent != null) {
             showEventOptionsDialog(existingEvent);
@@ -78,7 +78,7 @@ public class Calendar {
         }
     }
 
-    Event findEventByDate(CalendarDay date) {
+    public Event findEventByDate(CalendarDay date) {
         List<Event> loadedEvents = it.getLoadedEvents.execute();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
         String targetDate = dateFormat.format(date.getDate());
@@ -90,7 +90,7 @@ public class Calendar {
         return null;
     }
 
-    void showEventOptionsDialog(Event event) {
+    public void showEventOptionsDialog(Event event) {
         LinearLayout layout = new LinearLayout(it);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(50, 20, 50, 20);

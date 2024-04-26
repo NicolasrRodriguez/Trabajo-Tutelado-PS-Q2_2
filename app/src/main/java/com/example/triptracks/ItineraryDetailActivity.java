@@ -1,15 +1,10 @@
 package com.example.triptracks;
 
-
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -22,10 +17,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.DateSelectionHandler;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteAllEvents;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteOneEvent;
@@ -35,32 +30,23 @@ import com.example.triptracks.Domain.LogicaNegocio.UpdateEvent;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.getLoadedEvents;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
+import com.example.triptracks.Domain.Service.MapServiceImp;
 import com.example.triptracks.Presenter.EventDecorator;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
 import com.example.triptracks.databinding.ItineraryTileBinding;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-
 import static com.example.triptracks.ItinActivity.mAdapter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,13 +55,13 @@ import java.util.Locale;
 import java.util.Objects;
 
 
-public class ItineraryDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class ItineraryDetailActivity extends AppCompatActivity {
 
     Itinerary itinerary;
     boolean detailsVisible = false;
     ItineraryTileBinding binding;
     Spinner spinnerCountry, spinnerState, spinnerCity;
-    GoogleMap mMap;
+
     boolean isEditing = false;
 
     EventDecorator eventDecorator;
@@ -90,9 +76,9 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     FirebaseItineraryHandler firebaseItineraryHandler;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    DatabaseReference ref;
-    private CalendarDay selectedDateMin = null;
-    private CalendarDay selectedDateMax = null;
+
+     public CalendarDay selectedDateMin = null;
+     public CalendarDay selectedDateMax = null;
 
     boolean startDateSelected = false;
 
@@ -108,6 +94,9 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     getLoadedEvents getLoadedEvents;
 
     UpdateItinerary updateItinerary;
+    MapServiceImp mapServiceImp;
+    DateSelectionHandler dateSelectionHandler;
+
 
 
 
@@ -141,8 +130,8 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         binding.layoutcalendarcontainer.setVisibility(View.GONE);
         binding.getRoot().setBackgroundResource(R.drawable.fondo);
 
-        firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
-
+        firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {
+        });
         shareItinerary = new ShareItinerary(firebaseItineraryHandler);
         deleteItinerary = new DeleteItinerary(firebaseItineraryHandler);
         deleteOneEvent = new DeleteOneEvent(firebaseItineraryHandler);
@@ -152,69 +141,56 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         loadEvents = new LoadEvents(firebaseItineraryHandler);
         getLoadedEvents = new getLoadedEvents(firebaseItineraryHandler);
 
-
         calendarView = findViewById(R.id.calendarView);
         calendar.configureCalendarView();
         calendar.loadAndDecorateEvents();
 
+        mapServiceImp = new MapServiceImp(this, itinerary);
+
+        dateSelectionHandler = new DateSelectionHandler(this, calendar);
 
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
 
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                if (isEditing) {
-                    if (!startDateSelected) {
-                        confirmarFechaInicio(date);
-                    } else {
-                        confirmarFechaFin(date);
-                    }
-                } else {
-                    Event existingEvent = calendar.findEventByDate(date);
-                    if (existingEvent != null) {
-                        calendar.showEventOptionsDialog(existingEvent);
-                    } else {
-                        calendar.promptForActivity(date);
-                    }
-                }
-            }
-
-            private void confirmarFechaInicio(CalendarDay date) {
-                new AlertDialog.Builder(ItineraryDetailActivity.this)
-                        .setTitle("Confirmación")
-                        .setMessage("¿Guardar esta fecha como fecha de inicio?")
-                        .setPositiveButton("Ok", (dialog, which) -> {
-                            selectedDateMin = date;
-                            startDateSelected = true;
-                            Toast.makeText(ItineraryDetailActivity.this, "Fecha de inicio seleccionada", Toast.LENGTH_SHORT).show();
-                        })
-                        .setNegativeButton("Cancelar", (dialog, which) -> {
-                        })
-                        .show();
-            }
-
-            private void confirmarFechaFin(CalendarDay date) {
-                new AlertDialog.Builder(ItineraryDetailActivity.this)
-                        .setTitle("Confirmación")
-                        .setMessage("¿Guardar esta fecha como fecha de fin?")
-                        .setPositiveButton("Ok", (dialog, which) -> {
-                            if (selectedDateMin != null && date.getDate().after(selectedDateMin.getDate())) {
-                                selectedDateMax = date;
-                                startDateSelected = false;
-                                Toast.makeText(ItineraryDetailActivity.this, "Fecha de fin seleccionada", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(ItineraryDetailActivity.this, "La fecha de fin debe ser posterior a la fecha de inicio", Toast.LENGTH_SHORT).show();
-                                selectedDateMin = null;
-                                selectedDateMax = null;
-                                confirmarFechaInicio(date);
-                            }
-                        })
-                        .setNegativeButton("Cancelar", (dialog, which) -> {
-                        })
-                        .show();
+                dateSelectionHandler.handleDateSelection(date, isEditing);
             }
         });
-
     }
+
+    public void showConfirmstartDateDialog(CalendarDay date) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmación")
+                .setMessage("¿Guardar esta fecha como fecha de inicio?")
+                .setPositiveButton("Ok", (dialog, which) -> {
+                    dateSelectionHandler.confirmarFechaInicio(date);
+                    Toast.makeText(this, "Fecha de inicio seleccionada", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {
+                    selectedDateMin = null;
+                    startDateSelected = false;
+                })
+                .show();
+    }
+    public void showConfirmendDateDialog(CalendarDay date) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmación")
+                .setMessage("¿Guardar esta fecha como fecha de fin?")
+                .setPositiveButton("Ok", (dialog, which) -> {
+                    dateSelectionHandler.confirmarFechaFin(date);
+                    Toast.makeText(this, "Fecha de fin seleccionada", Toast.LENGTH_SHORT).show();
+
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {
+                    selectedDateMax = null;
+                    startDateSelected = false;
+
+                })
+                .show();
+    }
+
+
+
 
 
 
@@ -304,66 +280,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         alert.show();
     }
 
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        if (mMap != null) {
-            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-            mMap.clear();
-
-            String countryName = itinerary.getCountry();
-            String stateName = itinerary.getState();
-            String cityName = itinerary.getCity();
-
-            LatLng location = getLocationFromAddress(countryName, stateName, cityName);
-
-            float zoomLevel = 1.0f;
-            if (!TextUtils.isEmpty(countryName)) {
-                zoomLevel = 6.0f;
-            }
-            if (!TextUtils.isEmpty(stateName)) {
-                zoomLevel = 8.0f;
-            }
-            if (!TextUtils.isEmpty(cityName)) {
-                zoomLevel = 10.0f;
-            }
-
-            if (location != null) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
-                mMap.addMarker(new MarkerOptions()
-                        .position(location)
-                        .title("Location")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                mMap.getUiSettings().setZoomControlsEnabled(true);
-            } else {
-                LatLng centerOfWorld = new LatLng(0, 0);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(centerOfWorld, zoomLevel));
-            }
-        } else {
-
-            Log.e("ItineraryDetailActivity", "GoogleMap is null");
-        }
-    }
-
-
-    private LatLng getLocationFromAddress(String countryName, String stateName, String cityName) {
-        Geocoder geocoder = new Geocoder(this);
-        String addressString = cityName + ", " + stateName + ", " + countryName;
-
-        try {
-            List<Address> addresses = geocoder.getFromLocationName(addressString, 1);
-            if (addresses != null && !addresses.isEmpty()) {
-                Address address = addresses.get(0);
-                double latitude = address.getLatitude();
-                double longitude = address.getLongitude();
-                return new LatLng(latitude, longitude);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
     private void pulsar() {
         if (!isEditing) {
@@ -594,7 +511,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 binding.itineraryCountry.setText(itinerary.getCountry());
                 binding.itineraryState.setText(itinerary.getState());
                 binding.itineraryCity.setText(itinerary.getCity());
-                onMapReady(mMap);
+                mapServiceImp.initializeMap();
                 mAdapter.actualizar_por_id(itinerary);
                 findViewById(R.id.itineraryCountry).setVisibility(View.VISIBLE);
                 findViewById(R.id.spinnerCountryAct2).setVisibility(View.GONE);
@@ -615,6 +532,9 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
 
 
                 });
+                calendarView.setClickable(false);
+                calendarView.setLongClickable(false);
+                calendarView.setEnabled(false);
 
             }
         });
@@ -670,7 +590,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.mapContainer, fragmentmap)
                 .commit();
-        fragmentmap.getMapAsync(this);
+        fragmentmap.getMapAsync(mapServiceImp);
 
     }
 
