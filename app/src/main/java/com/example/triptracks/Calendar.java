@@ -68,7 +68,7 @@ public class Calendar {
                                 Event event = new Event(id, date.getDate().toString(), it.category, activity);
                                 databaseReference.child(id).setValue(event);
                                 it.eventDecorator =new EventDecorator(it, Collections.singleton(date), it.category);
-                                it.calendarView.addDecorator(it.eventDecorator);
+                                it.binding.calendarView.addDecorator(it.eventDecorator);
                             }
                         }
                     })
@@ -172,7 +172,7 @@ public class Calendar {
                                 }
 
                                 });
-                    it.calendarView.invalidateDecorators();
+                    it.binding.calendarView.invalidateDecorators();
 
                 })
                 .setNegativeButton("Cancelar", null)
@@ -198,10 +198,10 @@ public class Calendar {
                                 });
 
                     if (it.eventDecorator != null) {
-                        it.calendarView.removeDecorator(it.eventDecorator);
+                        it.binding.calendarView.removeDecorator(it.eventDecorator);
                         it.eventDecorator = null;
                     }
-                    it.calendarView.invalidateDecorators();
+                    it.binding.calendarView.invalidateDecorators();
                     loadAndDecorateEvents();
                 })
                 .setNegativeButton("Cancelar", null)
@@ -220,7 +220,7 @@ public class Calendar {
             CalendarDay startDay = CalendarDay.from(startDate);
             CalendarDay endDay = CalendarDay.from(endDate);
 
-            it.calendarView.state().edit()
+            it.binding.calendarView.state().edit()
                     .setMinimumDate(startDay)
                     .setMaximumDate(endDay)
                     .commit();
@@ -233,7 +233,7 @@ public class Calendar {
         it.loadEvents.execute(it.itinerary.getId(), events -> {
             it.runOnUiThread(() -> {
 
-                it.calendarView.removeDecorators();
+                it.binding.calendarView.removeDecorators();
 
                 if (events != null && !events.isEmpty()) {
                     HashSet<CalendarDay> eventDays = new HashSet<>();
@@ -244,7 +244,7 @@ public class Calendar {
                             CalendarDay day = CalendarDay.from(eventDate);
                             eventDays.add(day);
                             EventDecorator eventDecorator = new EventDecorator(it, Collections.singleton(day), event.getCategory());
-                            it.calendarView.addDecorator(eventDecorator);
+                            it.binding.calendarView.addDecorator(eventDecorator);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }

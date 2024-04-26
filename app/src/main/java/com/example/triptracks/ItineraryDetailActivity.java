@@ -18,9 +18,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
-import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Entities.Itinerary;
-import com.example.triptracks.Domain.LogicaNegocio.DateSelectionHandler;
+import com.example.triptracks.Domain.LogicaNegocio.DetailActLogic;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteAllEvents;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteOneEvent;
@@ -52,12 +51,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 
 public class ItineraryDetailActivity extends AppCompatActivity {
 
-    Itinerary itinerary;
+    public Itinerary itinerary;
     boolean detailsVisible = false;
     ItineraryTileBinding binding;
     Spinner spinnerCountry, spinnerState, spinnerCity;
@@ -75,16 +73,15 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
     FirebaseItineraryHandler firebaseItineraryHandler;
 
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
      public CalendarDay selectedDateMin = null;
      public CalendarDay selectedDateMax = null;
 
     boolean startDateSelected = false;
 
-    MaterialCalendarView calendarView;
     DeleteItinerary deleteItinerary;
-    ShareItinerary shareItinerary;
+    public ShareItinerary shareItinerary;
     DeleteAllEvents deleteEvents;
     DeleteOneEvent deleteOneEvent;
     UpdateEvent UpdateEvent;
@@ -95,13 +92,9 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
     UpdateItinerary updateItinerary;
     MapServiceImp mapServiceImp;
-    DateSelectionHandler dateSelectionHandler;
+    DetailActLogic detailActLogic;
 
-
-
-
-    public ItineraryDetailActivity() {
-    }
+    public ItineraryDetailActivity() {}
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -111,27 +104,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         calendar = new Calendar(this);
-
-
-        itinerary = getIntent().getParcelableExtra(ItinActivity.KEY_ITINERARY);
-        assert itinerary != null;
-        binding.itineraryTitle.setText(itinerary.getItineraryTitle());
-        binding.itineraryCountry.setText(itinerary.getCountry());
-        binding.itineraryState.setText(itinerary.getState());
-        binding.itineraryCity.setText(itinerary.getCity());
-        binding.itineraryTitle.setVisibility(View.VISIBLE);
-
-        int resourceId = android.R.drawable.ic_menu_more;
-        binding.itineraryTitle.setCompoundDrawablesWithIntrinsicBounds(resourceId, 0, 0, 0);
-        binding.itineraryTitle.setOnClickListener(v -> pulsar());
-
-        configurar(binding);
-        binding.layoutmapcontainer.setVisibility(View.GONE);
-        binding.layoutcalendarcontainer.setVisibility(View.GONE);
-        binding.getRoot().setBackgroundResource(R.drawable.fondo);
-
-        firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {
-        });
+        firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
         shareItinerary = new ShareItinerary(firebaseItineraryHandler);
         deleteItinerary = new DeleteItinerary(firebaseItineraryHandler);
         deleteOneEvent = new DeleteOneEvent(firebaseItineraryHandler);
@@ -140,30 +113,44 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         updateItinerary = new UpdateItinerary(firebaseItineraryHandler);
         loadEvents = new LoadEvents(firebaseItineraryHandler);
         getLoadedEvents = new getLoadedEvents(firebaseItineraryHandler);
+        mapServiceImp = new MapServiceImp(this, itinerary);
+        detailActLogic = new DetailActLogic(this, calendar);
 
-        calendarView = findViewById(R.id.calendarView);
+        itinerary = getIntent().getParcelableExtra(ItinActivity.KEY_ITINERARY);
+        assert itinerary != null;
+        binding.itineraryTitle.setText(itinerary.getItineraryTitle());
+        binding.itineraryCountry.setText(itinerary.getCountry());
+        binding.itineraryState.setText(itinerary.getState());
+        binding.itineraryCity.setText(itinerary.getCity());
+        binding.itineraryTitle.setVisibility(View.VISIBLE);
+        binding.itineraryTitle.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_more, 0, 0, 0);
+        binding.itineraryTitle.setOnClickListener(v -> pulsar());
+        binding.layoutmapcontainer.setVisibility(View.GONE);
+        binding.layoutcalendarcontainer.setVisibility(View.GONE);
+        binding.getRoot().setBackgroundResource(R.drawable.fondo);
+
+        configurar(binding);
         calendar.configureCalendarView();
         calendar.loadAndDecorateEvents();
 
-        mapServiceImp = new MapServiceImp(this, itinerary);
 
-        dateSelectionHandler = new DateSelectionHandler(this, calendar);
-
-        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+        binding.calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
 
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                dateSelectionHandler.handleDateSelection(date, isEditing);
+                detailActLogic.handleDateSelection(date, isEditing);
             }
         });
     }
+
+
 
     public void showConfirmstartDateDialog(CalendarDay date) {
         new AlertDialog.Builder(this)
                 .setTitle("Confirmación")
                 .setMessage("¿Guardar esta fecha como fecha de inicio?")
                 .setPositiveButton("Ok", (dialog, which) -> {
-                    dateSelectionHandler.confirmarFechaInicio(date);
+                    detailActLogic.confirmarFechaInicio(date);
                     Toast.makeText(this, "Fecha de inicio seleccionada", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancelar", (dialog, which) -> {
@@ -177,7 +164,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
                 .setTitle("Confirmación")
                 .setMessage("¿Guardar esta fecha como fecha de fin?")
                 .setPositiveButton("Ok", (dialog, which) -> {
-                    dateSelectionHandler.confirmarFechaFin(date);
+                    detailActLogic.confirmarFechaFin(date);
                     Toast.makeText(this, "Fecha de fin seleccionada", Toast.LENGTH_SHORT).show();
 
                 })
@@ -188,10 +175,6 @@ public class ItineraryDetailActivity extends AppCompatActivity {
                 })
                 .show();
     }
-
-
-
-
 
 
     @Override
@@ -206,26 +189,21 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         setResult(AuthActivity.RESULT_SESION_CLOSED, resultIntent);
         if (id == R.id.menu_compartir) {
             Log.d("_ITDETTAG", "Compartir itinerario");
-            // abrir dialogo para escoger con que usuarios compartir el itineriario
-           //juan123456@gmail.com email de ejemplo
             showDialog();
         }
         if (id == R.id.action_show_map) {
             binding.layoutmapcontainer.setVisibility(View.VISIBLE);
             binding.layoutcalendarcontainer.setVisibility(View.GONE);
             binding.map.setVisibility(View.VISIBLE);
-
             showMapFragment();
             return true;
         } else if (id == R.id.action_show_calendar) {
-
             binding.layoutcalendarcontainer.setVisibility(View.VISIBLE);
             binding.layoutmapcontainer.setVisibility(View.GONE);
             binding.map.setVisibility(View.GONE);
             showCalendarFragment();
             return true;
         }
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -235,44 +213,19 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.str_compartir);
         LayoutInflater inflater = getLayoutInflater();
-
         View dialogView = inflater.inflate(R.layout.compartir_itinerario, null);
         final EditText Targetemail = dialogView.findViewById(R.id.TEmailEdit);
-
-        ArrayList<String > colaborators = itinerary.getColaborators();
-
-
         builder.setView(dialogView);
         builder.setPositiveButton(R.string.str_compartir, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String text = Targetemail.getText().toString();//juan123456@gmail.com
-
-                if(!colaborators.contains(text) && Objects.equals(user.getEmail(), itinerary.getAdmin())){
-
-                    colaborators.add(text);
-
-                    itinerary.setColaborators(colaborators);
-
-                    shareItinerary.execute(itinerary , text,new ItineraryRepository.OperationCallback() {
-                        @Override
-                        public void onSuccess() {
-
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-                        }
-
-                    });
-                }
-
+                detailActLogic.share(text);
                 Log.d("_ITDETTAG", "Compartiendo con " + text + "por " + itinerary.getAdmin());
             }
         });
         builder.setNegativeButton(R.string.str_cancelar, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-
                 Log.d("_ITDETTAG", "Cancelado compartir");
             }
         });
@@ -395,15 +348,10 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             setResult(ItinActivity.RESULT_DELETE, resultIntent);
             deleteItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
                         @Override
-                        public void onSuccess() {
-
-                        }
+                        public void onSuccess() {}
 
                         @Override
-                        public void onFailure(Exception e) {
-
-
-                        }
+                        public void onFailure(Exception e) {}
                     });
 
                 finish();
@@ -471,14 +419,10 @@ public class ItineraryDetailActivity extends AppCompatActivity {
                     calendar.configureCalendarView();
                     deleteEvents.execute(itinerary.getId(),new ItineraryRepository.OperationCallback() {
                         @Override
-                        public void onSuccess() {
-
-                        }
+                        public void onSuccess() {}
 
                         @Override
-                        public void onFailure(Exception e) {
-
-                        }
+                        public void onFailure(Exception e) {}
 
 
                         });
@@ -489,9 +433,9 @@ public class ItineraryDetailActivity extends AppCompatActivity {
                     startDateSelected = false;
                     calendar.loadAndDecorateEvents();
                     calendar.configureCalendarView();
-                    calendarView.setClickable(false);
-                    calendarView.setLongClickable(false);
-                    calendarView.setEnabled(false);
+                    binding.calendarView.setClickable(false);
+                    binding.calendarView.setLongClickable(false);
+                    binding.calendarView.setEnabled(false);
 
                 } else{
                     calendar.loadAndDecorateEvents();
@@ -532,9 +476,9 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
 
                 });
-                calendarView.setClickable(false);
-                calendarView.setLongClickable(false);
-                calendarView.setEnabled(false);
+                binding.calendarView.setClickable(false);
+                binding.calendarView.setLongClickable(false);
+                binding.calendarView.setEnabled(false);
 
             }
         });
@@ -556,18 +500,18 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         findViewById(R.id.spinnerCityAct2).setVisibility(View.VISIBLE);
         selectedDateMin = null;
         selectedDateMax = null;
-        calendarView.setClickable(false);
-        calendarView.setLongClickable(false);
-        calendarView.setEnabled(false);
-        calendarView.clearSelection();
-        calendarView.removeDecorators();
-        calendarView.state().edit()
+        binding.calendarView.setClickable(false);
+        binding.calendarView.setLongClickable(false);
+        binding.calendarView.setEnabled(false);
+        binding.calendarView.clearSelection();
+        binding.calendarView.removeDecorators();
+        binding.calendarView.state().edit()
                 .setMinimumDate((java.util.Calendar) null)
                 .setMaximumDate((java.util.Calendar) null)
                 .commit();
 
         if (selectedDateMin != null && selectedDateMax != null) {
-            calendarView.state().edit()
+            binding.calendarView.state().edit()
                     .setMinimumDate(selectedDateMin)
                     .setMaximumDate(selectedDateMax)
                     .commit();
@@ -575,15 +519,9 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
         }
 
-
-
-
-
     public EditText getTitleEditText() {
         return binding.itineraryTitle;
     }
-
-
 
     private void showMapFragment() {
         fragmentmap = SupportMapFragment.newInstance();
@@ -600,5 +538,9 @@ public class ItineraryDetailActivity extends AppCompatActivity {
                 .replace(R.id.calendarContainer, fragmentcalendar)
                 .commit();
     }
+
+
+
+
 
 }
