@@ -79,7 +79,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         registerForContextMenu(binding.categoriesRv);
 
         mAdapter.mostrarbotones(true);
-        new LoadCountriesTask(this).execute();
+        //new LoadCountriesTask(this).execute();
 
         firebaseItineraryHandler = new FirebaseItineraryHandler(this::updateItineraryList);
 

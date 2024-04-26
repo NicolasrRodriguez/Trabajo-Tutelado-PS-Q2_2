@@ -19,7 +19,7 @@
         android:theme="@style/Theme.TripTracks"
         tools:targetApi="31">
         <activity
-            android:name=".Presenter.ItneratyActivityView"
+            android:name=".Presenter.ItneraryActivityView"
             android:exported="false" />
 
         <meta-data

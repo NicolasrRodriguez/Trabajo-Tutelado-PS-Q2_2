@@ -33,16 +33,16 @@ import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
+import com.example.triptracks.Domain.LogicaNegocio.ItineraryLogic;
 import com.example.triptracks.ItinActivity;
 import com.example.triptracks.ItineraryDetailActivity;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityMainBinding;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItneratyActivityView extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener{
+public class ItneraryActivityView extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener{
 
     public static final String KEY_ITINERARY = "itinerary";
     public static final int RESULT_DELETE = 1;
@@ -53,6 +53,8 @@ public class ItneratyActivityView extends AppCompatActivity implements Itinerary
     private String UserEmail;
 
     private FirebaseItineraryHandler firebaseItineraryHandler;
+
+    private ItineraryLogic itineraryLogic = new ItineraryLogic();//referencia a capa logica de negocio
 
     private FirebaseAuthData firebaseAuth = new FirebaseAuthData();
     private ActivityMainBinding binding;
@@ -84,7 +86,7 @@ public class ItneratyActivityView extends AppCompatActivity implements Itinerary
 
         mAdapter.mostrarbotones(true);
         //new LoadCountriesTask(this).execute();
-
+        itineraryLogic.setAdapter(mAdapter);
         //firebaseItineraryHandler = new FirebaseItineraryHandler(this::updateItineraryList);
 
         createItinerary = new CreateItinerary(firebaseItineraryHandler);
@@ -189,7 +191,7 @@ public class ItneratyActivityView extends AppCompatActivity implements Itinerary
                         for (State state : selectedCountry.getStates()) {
                             stateNames.add(state.getName());
                         }
-                        ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(ItinActivity.this, android.R.layout.simple_spinner_item, stateNames);
+                        ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(ItneraryActivityView.this, android.R.layout.simple_spinner_item, stateNames);
                         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinnerState.setAdapter(stateAdapter);
                     }
@@ -233,7 +235,7 @@ public class ItneratyActivityView extends AppCompatActivity implements Itinerary
                                 break;
                             }
                         }
-                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(ItinActivity.this, android.R.layout.simple_spinner_item, cityNames);
+                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(ItneraryActivityView.this, android.R.layout.simple_spinner_item, cityNames);
                         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinnerCity.setAdapter(cityAdapter);
                     }
@@ -309,8 +311,8 @@ public class ItneratyActivityView extends AppCompatActivity implements Itinerary
                     inputItineraryName.setBackgroundResource(R.drawable.error_background);
                     isValid = false;
                 }
-                String startDate = formatDate(startDatePicker);
-                String endDate = formatDate(endDatePicker);
+                String startDate = itineraryLogic.formatDate(startDatePicker);
+                String endDate = itineraryLogic.formatDate(endDatePicker);
                 if (startDate.compareTo(endDate) > 0) {
                     Toast.makeText(getApplicationContext(), "La fecha de inicio no puede ser posterior a la fecha de fin.", Toast.LENGTH_LONG).show();
                     isValid = false;
@@ -318,7 +320,7 @@ public class ItneratyActivityView extends AppCompatActivity implements Itinerary
 
 
                 if (isValid) {
-                    addItems(itineraryName, selectedCountryName, selectedStateName, selectedCityName,startDate,endDate);
+                    itineraryLogic.addItems(itineraryName, selectedCountryName, selectedStateName, selectedCityName,startDate,endDate,UserEmail);
                     dialog.dismiss();
                 }
             });
@@ -328,7 +330,40 @@ public class ItneratyActivityView extends AppCompatActivity implements Itinerary
     }
 
     @Override
-    public void onContextMenuClick(int position) {
+    public void onItemClick(int position) {
+        if (position != RecyclerView.NO_POSITION) {
+            Itinerary selectedItinerary = mAdapter.getItem(position);
+            detalle_actividad(selectedItinerary);
+        }
+    }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (selectedPosition != RecyclerView.NO_POSITION) {
+            if (id == R.id.info) {
+                Intent intent = new Intent(this, ItineraryDetailActivity.class);
+                intent.putExtra(ItinActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
+                myStartActivityForResult.launch(intent);
+                selectedPosition = RecyclerView.NO_POSITION;
+                return true;
+            }
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+
+    @Override
+    public void onContextMenuClick(int position) {
+        Itinerary selectedItinerary = mItineraryList.get(position);
+        Intent intent = new Intent(this, ItineraryDetailActivity.class);
+        intent.putExtra(ItinActivity.KEY_ITINERARY, selectedItinerary);
+        myStartActivityForResult.launch(intent);
+    }
+
+
+    public void onCountriesLoaded(List<Country> countries) {
+        mCountries = countries;
     }
 }

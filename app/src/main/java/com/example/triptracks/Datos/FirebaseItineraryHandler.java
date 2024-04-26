@@ -244,4 +244,11 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                 .addOnFailureListener(callback::onFailure);
     }
 
+    public String setId(){
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").
+                child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",")).child("itineraries");
+        return databaseReference.push().getKey();
+    }
+
 }
