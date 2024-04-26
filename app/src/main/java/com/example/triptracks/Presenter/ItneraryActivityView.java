@@ -34,6 +34,7 @@ import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryLogic;
+import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
 import com.example.triptracks.ItinActivity;
 import com.example.triptracks.ItineraryDetailActivity;
 import com.example.triptracks.R;
@@ -52,7 +53,6 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
 
     private String UserEmail;
 
-    private FirebaseItineraryHandler firebaseItineraryHandler;
 
     private ItineraryLogic itineraryLogic = new ItineraryLogic();//referencia a capa logica de negocio
 
@@ -82,14 +82,12 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.categoriesRv.setLayoutManager(linearLayoutManager);
         binding.categoriesRv.setAdapter(mAdapter);
+        binding.diferenciador.setText("2");//DIFERENCIADOR QUITRA AL ELIMINAR ITINACTIVITY
         registerForContextMenu(binding.categoriesRv);
 
         mAdapter.mostrarbotones(true);
-        //new LoadCountriesTask(this).execute();
+        new LoadCountriesTask(this).execute();
         itineraryLogic.setAdapter(mAdapter);
-        //firebaseItineraryHandler = new FirebaseItineraryHandler(this::updateItineraryList);
-
-        createItinerary = new CreateItinerary(firebaseItineraryHandler);
 
     }
 
@@ -333,6 +331,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
     public void onItemClick(int position) {
         if (position != RecyclerView.NO_POSITION) {
             Itinerary selectedItinerary = mAdapter.getItem(position);
+            Log.d("_ITNVIWTAG", "voy a arrancar la siguiente actividad");
             detalle_actividad(selectedItinerary);
         }
     }
@@ -343,6 +342,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         if (selectedPosition != RecyclerView.NO_POSITION) {
             if (id == R.id.info) {
                 Intent intent = new Intent(this, ItineraryDetailActivity.class);
+                Log.d("_ITNVIWTAG", "voy a arrancar la siguiente actividad");
                 intent.putExtra(ItinActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
                 myStartActivityForResult.launch(intent);
                 selectedPosition = RecyclerView.NO_POSITION;

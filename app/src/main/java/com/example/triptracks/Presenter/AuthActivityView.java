@@ -77,7 +77,7 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
     //funciones para comprobar si se ha autenticado correctamente o no
     @Override
     public void onResultSuccess() {//autenticacion exitosa
-        Intent intent = new Intent(this, ItinActivity.class);
+        Intent intent = new Intent(this, ItneraryActivityView.class);
         myStartActivityForResult.launch(intent);//arranca la siguiente actividad
     }
 
