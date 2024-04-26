@@ -30,6 +30,7 @@ import com.beastwall.localisation.model.State;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
+import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.databinding.ActivityMainBinding;

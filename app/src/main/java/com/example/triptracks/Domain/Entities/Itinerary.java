@@ -26,7 +26,7 @@ public class Itinerary implements Parcelable {
     }
 
 
-    public Itinerary(String id, String itineraryTitle, String country, String state,String city,String admin, ArrayList<String> shared,String startDate, String endDate) {
+    public Itinerary(String id, String itineraryTitle, String country, String state,String city,String admin, ArrayList<String> colaborators,String startDate, String endDate) {
         this.id = id;
 
         this.itineraryTitle = itineraryTitle;
@@ -36,7 +36,7 @@ public class Itinerary implements Parcelable {
         this.startDate = startDate;
         this.endDate = endDate;
         this.Admin = admin;
-        this.Colaborators = shared;
+        this.Colaborators = colaborators;
 
     }
 
