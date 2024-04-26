@@ -24,7 +24,7 @@
             android:value="AIzaSyDEOfNtdi5CEB1Fq3UlDRvbRKyVwCkv9OM"/>
 
         <activity
-            android:name=".AuthActivity"
+            android:name=".Presenter.AuthActivityView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
