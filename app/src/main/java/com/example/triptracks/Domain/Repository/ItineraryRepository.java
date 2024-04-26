@@ -14,6 +14,7 @@ public interface ItineraryRepository {
     void saveItinerary(Itinerary itinerary, OperationCallback callback);
     void deleteItinerary(Itinerary itinerary, OperationCallback callback);
     void shareItinerary(Itinerary itinerary , String Target,OperationCallback callback);
+    void updateItinerary(Itinerary itinerary,OperationCallback callback);
 
     void deleteAllEvents(String itineraryId, OperationCallback callback);
     void updateEvent(Itinerary itinerary , Event event,OperationCallback callback);

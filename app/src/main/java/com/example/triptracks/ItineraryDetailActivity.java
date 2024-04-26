@@ -31,6 +31,7 @@ import com.example.triptracks.Domain.LogicaNegocio.DeleteItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteOneEvent;
 import com.example.triptracks.Domain.LogicaNegocio.ShareItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateEvent;
+import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.Presenter.EventDecorator;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -100,6 +101,8 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     DeleteOneEvent deleteOneEvent;
     UpdateEvent UpdateEvent;
 
+    UpdateItinerary updateItinerary;
+
 
 
     public ItineraryDetailActivity() {
@@ -139,6 +142,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         deleteOneEvent = new DeleteOneEvent(firebaseItineraryHandler);
         deleteEvents = new DeleteAllEvents(firebaseItineraryHandler);
         UpdateEvent = new UpdateEvent(firebaseItineraryHandler);
+        updateItinerary = new UpdateItinerary(firebaseItineraryHandler);
 
 
         calendarView = findViewById(R.id.calendarView);
@@ -590,7 +594,20 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
                 findViewById(R.id.spinnerStateAct2).setVisibility(View.GONE);
                 findViewById(R.id.itineraryCity).setVisibility(View.VISIBLE);
                 findViewById(R.id.spinnerCityAct2).setVisibility(View.GONE);
-                firebaseItineraryHandler.updateItinerary(itinerary);
+                updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+
+
+                });
+
             }
         });
     }

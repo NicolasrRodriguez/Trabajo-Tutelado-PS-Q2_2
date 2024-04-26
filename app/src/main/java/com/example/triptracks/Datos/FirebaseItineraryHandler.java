@@ -70,7 +70,9 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                 .addOnFailureListener(callback::onFailure);
     }
 
-    public void updateItinerary(Itinerary itinerary) {
+
+    @Override
+    public void updateItinerary(Itinerary itinerary,OperationCallback callback) {
         for (String colaborator: itinerary.getColaborators()) {
             String colaboratorPath = colaborator.replace(".", ",");
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
@@ -93,10 +95,10 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                             DatabaseReference eventsRef = itineraryRef.child("events");
                             eventsRef.removeValue()
                                     .addOnSuccessListener(aVoid -> {
-                                        Log.d("Firebase", "Eventos eliminados correctamente");
                                         updateItineraryFields(itineraryRef, itinerary);
+                                        callback.onSuccess();
                                     })
-                                    .addOnFailureListener(e -> Log.e("Firebase", "Fallo al eliminar eventos", e));
+                                    .addOnFailureListener(callback::onFailure);
                         }else{
                             updateItineraryFields(itineraryRef, itinerary);
                         }
