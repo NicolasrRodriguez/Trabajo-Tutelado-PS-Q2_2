@@ -29,9 +29,11 @@ import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteAllEvents;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteOneEvent;
+import com.example.triptracks.Domain.LogicaNegocio.LoadEvents;
 import com.example.triptracks.Domain.LogicaNegocio.ShareItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateEvent;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
+import com.example.triptracks.Domain.LogicaNegocio.getLoadedEvents;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.Presenter.EventDecorator;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -101,6 +103,10 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
     DeleteOneEvent deleteOneEvent;
     UpdateEvent UpdateEvent;
 
+    LoadEvents loadEvents;
+
+    getLoadedEvents getLoadedEvents;
+
     UpdateItinerary updateItinerary;
 
 
@@ -143,6 +149,8 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         deleteEvents = new DeleteAllEvents(firebaseItineraryHandler);
         UpdateEvent = new UpdateEvent(firebaseItineraryHandler);
         updateItinerary = new UpdateItinerary(firebaseItineraryHandler);
+        loadEvents = new LoadEvents(firebaseItineraryHandler);
+        getLoadedEvents = new getLoadedEvents(firebaseItineraryHandler);
 
 
         calendarView = findViewById(R.id.calendarView);

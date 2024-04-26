@@ -4,6 +4,9 @@ package com.example.triptracks.Domain.Repository;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Entities.Itinerary;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 
 public interface ItineraryRepository {
 
@@ -18,5 +21,8 @@ public interface ItineraryRepository {
 
     void deleteAllEvents(String itineraryId, OperationCallback callback);
     void updateEvent(Itinerary itinerary , Event event,OperationCallback callback);
-    void deleteOneEvent(String itineraryId , String eventId,OperationCallback callback);
+
+    void deleteOneEvent(String itineraryId , String eventId, OperationCallback callback);
+    void loadEvents(String itineraryId, Consumer<List<Event>> callback);
+    List<Event> getLoadedEvents();
 }

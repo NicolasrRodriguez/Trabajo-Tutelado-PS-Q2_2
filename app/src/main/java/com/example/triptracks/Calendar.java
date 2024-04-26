@@ -79,7 +79,7 @@ public class Calendar {
     }
 
     Event findEventByDate(CalendarDay date) {
-        List<Event> loadedEvents = it.firebaseItineraryHandler.getLoadedEvents();
+        List<Event> loadedEvents = it.getLoadedEvents.execute();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
         String targetDate = dateFormat.format(date.getDate());
         for (Event event : loadedEvents) {
@@ -230,7 +230,7 @@ public class Calendar {
     }
 
     void loadAndDecorateEvents() {
-        it.firebaseItineraryHandler.loadEvents(it.itinerary.getId(), events -> {
+        it.loadEvents.execute(it.itinerary.getId(), events -> {
             it.runOnUiThread(() -> {
 
                 it.calendarView.removeDecorators();

@@ -142,6 +142,8 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
         }
     }
 
+
+    @Override
     public void shareItinerary(Itinerary itinerary , String Target,OperationCallback callback){
         if (itinerary.getId() != null) {
                 //acutaliza la propia base de datos
@@ -171,6 +173,8 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
         }
     }
 
+
+    @Override
     public void loadEvents(String itineraryId, Consumer<List<Event>> callback) {
         DatabaseReference eventsRef = ref.child(itineraryId).child("events");
         ValueEventListener eventListener = new ValueEventListener() {
@@ -194,6 +198,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
         eventsRef.addValueEventListener(eventListener);
     }
 
+    @Override
     public List<Event> getLoadedEvents() {
         return new ArrayList<>(loadedEvents);
     }
