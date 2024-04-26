@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
+import com.example.triptracks.Datos.FirebaseAuthData;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
@@ -51,6 +52,8 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     private String UserEmail;
 
     private FirebaseItineraryHandler firebaseItineraryHandler;
+
+    private FirebaseAuthData firebaseAuth = new FirebaseAuthData();
     private ActivityMainBinding binding;
 
     public static ItineraryAdapter mAdapter;
@@ -67,16 +70,13 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        Intent intent = getIntent();
-        if (intent != null) {
-            UserEmail = intent.getStringExtra("UserEmail");
-        }
+
         mAdapter = new ItineraryAdapter(mItineraryList, this, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.categoriesRv.setLayoutManager(linearLayoutManager);
         binding.categoriesRv.setAdapter(mAdapter);
         registerForContextMenu(binding.categoriesRv);
-
+        UserEmail = firebaseAuth.email();
         mAdapter.mostrarbotones(true);
         new LoadCountriesTask(this).execute();
 

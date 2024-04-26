@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 
 //extiende AppCompatActivity por que si no falla FirebaseAuth
 public class FirebaseAuthData extends AppCompatActivity {
@@ -65,6 +67,10 @@ public class FirebaseAuthData extends AppCompatActivity {
             }
         });
 
+    }
+
+    public String  email(){
+        return Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
     }
 
 }
