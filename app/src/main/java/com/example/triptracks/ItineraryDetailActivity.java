@@ -29,6 +29,7 @@ import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteAllEvents;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DeleteOneEvent;
+import com.example.triptracks.Domain.LogicaNegocio.ShareItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateEvent;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.Presenter.EventDecorator;
@@ -94,6 +95,7 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
 
     MaterialCalendarView calendarView;
     DeleteItinerary deleteItinerary;
+    ShareItinerary shareItinerary;
     DeleteAllEvents deleteEvents;
     DeleteOneEvent deleteOneEvent;
     UpdateEvent UpdateEvent;
@@ -130,8 +132,14 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
         binding.layoutcalendarcontainer.setVisibility(View.GONE);
         binding.getRoot().setBackgroundResource(R.drawable.fondo);
 
-        firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {
-        });
+        firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
+
+        shareItinerary = new ShareItinerary(firebaseItineraryHandler);
+        deleteItinerary = new DeleteItinerary(firebaseItineraryHandler);
+        deleteOneEvent = new DeleteOneEvent(firebaseItineraryHandler);
+        deleteEvents = new DeleteAllEvents(firebaseItineraryHandler);
+        UpdateEvent = new UpdateEvent(firebaseItineraryHandler);
+
 
         calendarView = findViewById(R.id.calendarView);
         calendar.configureCalendarView();
@@ -258,7 +266,17 @@ public class ItineraryDetailActivity extends AppCompatActivity implements OnMapR
 
                     itinerary.setColaborators(colaborators);
 
-                    firebaseItineraryHandler.shareItinerary(itinerary , text);//comparte el itinerario con el usuario elegido
+                    shareItinerary.execute(itinerary , text,new ItineraryRepository.OperationCallback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                        }
+
+                    });
                 }
 
                 Log.d("_ITDETTAG", "Compartiendo con " + text + "por " + itinerary.getAdmin());

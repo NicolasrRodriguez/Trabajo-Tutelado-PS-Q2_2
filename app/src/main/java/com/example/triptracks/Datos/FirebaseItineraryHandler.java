@@ -140,12 +140,12 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
         }
     }
 
-    public void shareItinerary(Itinerary itinerary , String Target){
+    public void shareItinerary(Itinerary itinerary , String Target,OperationCallback callback){
         if (itinerary.getId() != null) {
                 //acutaliza la propia base de datos
                 ref.child(itinerary.getId()).setValue(itinerary)
-                        .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario actualizado"))
-                        .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
+                        .addOnSuccessListener(aVoid -> callback.onSuccess())
+                        .addOnFailureListener(callback::onFailure);
 
                 for (Event event : getLoadedEvents() ) {
                     saveEvent(event, ref.child(itinerary.getId()).child("events"),event.getId());
@@ -159,8 +159,8 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                 Log.d("Firebase", "Compartierndo Itinerario con " + Target + "desde:" + itinerary.getAdmin());
 
                 Targetref.child(itinerary.getId()).setValue(itinerary)
-                        .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario compartido con " + Target ))
-                        .addOnFailureListener(e -> Log.e("Firebase", "Fallo al compartir el itinerario", e));
+                        .addOnSuccessListener(aVoid -> callback.onSuccess())
+                        .addOnFailureListener(callback::onFailure);
 
                 for (Event event : getLoadedEvents()) {
                     saveEvent(event,Targetref.child(itinerary.getId()).child("events"), event.getId());
