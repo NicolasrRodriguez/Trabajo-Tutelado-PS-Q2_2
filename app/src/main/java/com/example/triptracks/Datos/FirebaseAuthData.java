@@ -67,4 +67,8 @@ public class FirebaseAuthData extends AppCompatActivity {
 
     }
 
+    public void closeSes(){
+        FirebaseAuth.getInstance().signOut();
+    }
+
 }
