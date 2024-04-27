@@ -8,17 +8,10 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
-
 import com.example.triptracks.Domain.Entities.Event;
-import com.example.triptracks.Domain.LogicaNegocio.DeleteOneEvent;
+import com.example.triptracks.Domain.LogicaNegocio.CalendarLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadEvents;
-import com.example.triptracks.Domain.LogicaNegocio.UpdateEvent;
-import com.example.triptracks.Domain.LogicaNegocio.getLoadedEvents;
-import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.Presenter.EventDecorator;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,14 +25,15 @@ import java.util.Locale;
 public class Calendar {
 
     private ItineraryDetailActivity it;
+    public CalendarLogic calendlogic;
 
     public Calendar(ItineraryDetailActivity it) {
         this.it = it;
+        this.calendlogic = new CalendarLogic(it);
     }
 
-
     public void promptForActivity(CalendarDay date) {
-        Event existingEvent = findEventByDate(date);
+        Event existingEvent = calendlogic.findEventByDate(date);
         if (existingEvent != null) {
             showEventOptionsDialog(existingEvent);
         } else {
@@ -50,7 +44,6 @@ public class Calendar {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(it, android.R.layout.simple_spinner_item, categories);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             it.spinner_evento.setAdapter(adapter);
-
             LinearLayout layout = new LinearLayout(it);
             layout.setOrientation(LinearLayout.VERTICAL);
             layout.addView(it.spinner_evento);
@@ -63,17 +56,7 @@ public class Calendar {
                     .setPositiveButton("Aceptar", (dialogInterface, i) -> {
                         String activity = input.getText().toString();
                         if (!activity.isEmpty()) {
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ","))
-                                    .child("itineraries").child(it.itinerary.getId()).child("events");
-                            String id = databaseReference.push().getKey();
-                            it.category = it.spinner_evento.getSelectedItem().toString();
-                            if (id != null) {
-                                Event event = new Event(id, date.getDate().toString(), it.category, activity);
-                                databaseReference.child(id).setValue(event);
-                                it.eventDecorator =new EventDecorator(it, Collections.singleton(date), it.category);
-                                it.binding.calendarView.addDecorator(it.eventDecorator);
-                            }
+                            calendlogic.createEvent(date,activity);
                         }
                     })
                     .setNegativeButton("Cancelar", null)
@@ -82,18 +65,6 @@ public class Calendar {
         }
     }
 
-    public Event findEventByDate(CalendarDay date) {
-        getLoadedEvents getLoadedEvents = new getLoadedEvents(it.firebaseItineraryHandler);
-        List<Event> loadedEvents = getLoadedEvents.execute();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-        String targetDate = dateFormat.format(date.getDate());
-        for (Event event : loadedEvents) {
-            if (event.getDate().equals(targetDate)) {
-                return event;
-            }
-        }
-        return null;
-    }
 
     public void showEventOptionsDialog(Event event) {
         LinearLayout layout = new LinearLayout(it);
@@ -137,8 +108,6 @@ public class Calendar {
         layout.addView(textView);
     }
 
-
-
     private void editEvent(Event event) {
         LinearLayout layout = new LinearLayout(it);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -161,25 +130,7 @@ public class Calendar {
                 .setTitle("Editar evento")
                 .setView(layout)
                 .setPositiveButton("Actualizar", (dialogInterface, i) -> {
-                    String description = input.getText().toString();
-                    String category = spinner.getSelectedItem().toString();
-                    event.setDescription(description);
-                    event.setCategory(category);
-                    UpdateEvent UpdateEvent = new UpdateEvent(it.firebaseItineraryHandler);
-                    UpdateEvent.execute(it.itinerary, event,new ItineraryRepository.OperationCallback() {
-                                @Override
-                                public void onSuccess() {
-
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-
-                                }
-
-                                });
-                    it.binding.calendarView.invalidateDecorators();
-
+                    calendlogic.edit(event,input,spinner);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
@@ -191,19 +142,7 @@ public class Calendar {
                 .setTitle("Confirmar eliminación")
                 .setMessage("¿Estás seguro de que deseas eliminar este evento?")
                 .setPositiveButton("Eliminar", (dialogInterface, i) -> {
-                    DeleteOneEvent deleteOneEvent = new DeleteOneEvent(it.firebaseItineraryHandler);
-                    deleteOneEvent.execute(it.itinerary.getId(), event.getId(),new ItineraryRepository.OperationCallback() {
-                                @Override
-                                public void onSuccess() {
-
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                }
-
-                                });
-
+                    calendlogic.delete(event);
                     if (it.eventDecorator != null) {
                         it.binding.calendarView.removeDecorator(it.eventDecorator);
                         it.eventDecorator = null;
@@ -213,27 +152,6 @@ public class Calendar {
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
-    }
-
-
-
-    public void configureCalendarView() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
-        try {
-            Date startDate = format.parse(it.itinerary.getStartDate());
-            Date endDate = format.parse(it.itinerary.getEndDate());
-
-            CalendarDay startDay = CalendarDay.from(startDate);
-            CalendarDay endDay = CalendarDay.from(endDate);
-
-            it.binding.calendarView.state().edit()
-                    .setMinimumDate(startDay)
-                    .setMaximumDate(endDay)
-                    .commit();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     public void loadAndDecorateEvents() {

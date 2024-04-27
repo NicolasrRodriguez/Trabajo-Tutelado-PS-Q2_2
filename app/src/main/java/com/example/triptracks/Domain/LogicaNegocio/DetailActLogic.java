@@ -38,6 +38,7 @@ public class DetailActLogic {
     private CalendarDay selectedDateMin;
     private CalendarDay selectedDateMax;
 
+
     public DetailActLogic(ItineraryDetailActivity activity, Calendar calendar, Itinerary itinerary, FirebaseUser user, CalendarDay selectedDateMin, CalendarDay selectedDateMax) {
         this.it = activity;
         this.calendar = calendar;
@@ -56,7 +57,7 @@ public class DetailActLogic {
                 confirmarFechaFin(date);
             }
         } else {
-            Event existingEvent = calendar.findEventByDate(date);
+            Event existingEvent = calendar.calendlogic.findEventByDate(date);
             if (existingEvent != null) {
                 calendar.showEventOptionsDialog(existingEvent);
             } else {
@@ -233,7 +234,7 @@ public class DetailActLogic {
             String editedEndDate = dateFormat.format(endDate);
             itinerary.setStartDate(editedStartDate);
             itinerary.setEndDate(editedEndDate);
-            calendar.configureCalendarView();
+            calendar.calendlogic.configureCalendarView();
             DeleteAllEvents deleteEvents = new DeleteAllEvents(it.firebaseItineraryHandler);
             deleteEvents.execute(itinerary.getId(),new ItineraryRepository.OperationCallback() {
                 @Override
@@ -247,14 +248,14 @@ public class DetailActLogic {
             Toast.makeText(it, "Edición cancelada: falta una fecha por seleccionar", Toast.LENGTH_LONG).show();
             startDateSelected = false;
             calendar.loadAndDecorateEvents();
-            calendar.configureCalendarView();
+            calendar.calendlogic.configureCalendarView();
             it.binding.calendarView.setClickable(false);
             it.binding.calendarView.setLongClickable(false);
             it.binding.calendarView.setEnabled(false);
 
         } else{
             calendar.loadAndDecorateEvents();
-            calendar.configureCalendarView();
+            calendar.calendlogic.configureCalendarView();
 
         }
         it.binding.calendarView.setClickable(false);

@@ -51,11 +51,11 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     public boolean isEditing = false;
     boolean detailsVisible = false;
     boolean startDateSelected = false;
-    EventDecorator eventDecorator;
+    public EventDecorator eventDecorator;
     SupportMapFragment fragmentmap;
     Fragment fragmentcalendar;
-    Spinner spinner_evento;
-    String category;
+    public Spinner spinner_evento;
+    public String category;
 
 
 
@@ -88,7 +88,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         mapServiceImp = new MapServiceImp(this, itinerary);
         detailActLogic = new DetailActLogic(this, calendar, itinerary, user, selectedDateMin, selectedDateMax);
         calendarView = findViewById(R.id.calendarView);
-        calendar.configureCalendarView();
+        calendar.calendlogic.configureCalendarView();
         calendar.loadAndDecorateEvents();
         configurarSpinners();
         configurarBotones();
