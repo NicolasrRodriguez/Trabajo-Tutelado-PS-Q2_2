@@ -33,14 +33,11 @@ public class DetailActLogic {
 
     private boolean startDateSelected;
     private Calendar calendar;
-    private boolean isEditing;
     private ItineraryDetailActivity it;
     private Itinerary itinerary;
     private FirebaseUser user;
     private CalendarDay selectedDateMin;
     private CalendarDay selectedDateMax;
-
-
 
     public DetailActLogic(ItineraryDetailActivity activity, Calendar calendar, Itinerary itinerary, FirebaseUser user, CalendarDay selectedDateMin, CalendarDay selectedDateMax) {
         this.it = activity;
@@ -114,112 +111,6 @@ public class DetailActLogic {
         Log.d("_ITDETTAG", "Compartiendo con " + email + " por " + it.itinerary.getAdmin());
     }
 
-
-    private void hideSoftKeyboard() {
-        EditText titleEditText = it.binding.itineraryTitle;
-        titleEditText.setFocusable(false);
-        titleEditText.setFocusableInTouchMode(false);
-        titleEditText.setCursorVisible(false);
-        titleEditText.clearFocus();
-        InputMethodManager imm = (InputMethodManager) it.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(titleEditText.getWindowToken(), 0);
-    }
-
-    private void updateFields(){
-        String Admin = itinerary.getAdmin();
-        ArrayList<String> colaboratos = itinerary.getColaborators();
-        String editedTitle = it.binding.itineraryTitle.getText().toString();
-        String editedCountry = itinerary.getCountry();
-        String editedState = itinerary.getState();
-        String editedCity = itinerary.getCity();
-        if (it.spinnerCountry.getSelectedItem() != null) {
-            String selectedCountry = it.spinnerCountry.getSelectedItem().toString();
-            if (!selectedCountry.equals(it.getString(R.string.select_country))) {
-                editedCountry = selectedCountry;
-                editedState = "";
-                editedCity = "";
-            }
-        }
-
-        if (it.spinnerState.getSelectedItem() != null) {
-            String selectedState = it.spinnerState.getSelectedItem().toString();
-            if (!selectedState.equals(it.getString(R.string.select_state))) {
-                editedState = selectedState;
-            }
-        }
-
-        if (it.spinnerCity.getSelectedItem() != null) {
-            String selectedCity = it.spinnerCity.getSelectedItem().toString();
-            if (!selectedCity.equals(it.getString(R.string.select_city))) {
-                editedCity = selectedCity;
-            }
-        }
-
-        itinerary.setItineraryTitle(editedTitle);
-        itinerary.setCountry(editedCountry);
-        itinerary.setState(editedState);
-        itinerary.setCity(editedCity);
-        itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
-        itinerary.setColaborators(colaboratos);
-
-        it.binding.itineraryTitle.setText(itinerary.getItineraryTitle());
-        it.binding.itineraryCountry.setText(itinerary.getCountry());
-        it.binding.itineraryState.setText(itinerary.getState());
-        it.binding.itineraryCity.setText(itinerary.getCity());
-
-        it.mapServiceImp.initializeMap();
-        mAdapter.actualizar_por_id(it.itinerary);
-
-        it.updateItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
-            @Override
-            public void onSuccess() {}
-
-            @Override
-            public void onFailure(Exception e) {}
-
-
-        });
-    }
-
-
-    private void updateDates(){
-        if (selectedDateMin != null && selectedDateMax != null) {
-            Date startDate = selectedDateMin.getDate();
-            Date endDate = selectedDateMax.getDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            String editedStartDate = dateFormat.format(startDate);
-            String editedEndDate = dateFormat.format(endDate);
-            itinerary.setStartDate(editedStartDate);
-            itinerary.setEndDate(editedEndDate);
-            calendar.configureCalendarView();
-            it.deleteEvents.execute(itinerary.getId(), new ItineraryRepository.OperationCallback() {
-                @Override
-                public void onSuccess() {}
-
-                @Override
-                public void onFailure(Exception e) {}
-
-            });
-
-        } else if (selectedDateMin != null && selectedDateMax == null || selectedDateMin == null && selectedDateMax != null) {
-            startDateSelected = false;
-            calendar.loadAndDecorateEvents();
-            calendar.configureCalendarView();
-            it.calendarView.setClickable(false);
-            it.calendarView.setLongClickable(false);
-            it.calendarView.setEnabled(false);
-        } else {
-            calendar.loadAndDecorateEvents();
-            calendar.configureCalendarView();
-
-        }
-
-        it.calendarView.setClickable(false);
-        it.calendarView.setLongClickable(false);
-        it.calendarView.setEnabled(false);
-    }
-
-
     public void llenarListaPaises(List<String> countryNames) {
         countryNames.add(it.getString(R.string.select_country));
         for (Country country : ItinActivity.mCountries) {
@@ -268,6 +159,108 @@ public class DetailActLogic {
         }
     }
 
+    private void hidekeyboard(){
+        EditText titleEditText =it.binding.itineraryTitle;
+        titleEditText.setFocusable(false);
+        titleEditText.setFocusableInTouchMode(false);
+        titleEditText.setCursorVisible(false);
+        titleEditText.clearFocus();
+        InputMethodManager imm = (InputMethodManager) it.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(titleEditText.getWindowToken(), 0);
+    }
+
+    private void updatefields(){
+
+        String editedTitle = it.binding.itineraryTitle.getText().toString();
+        String editedCountry = itinerary.getCountry();
+        String editedState = itinerary.getState();
+        String editedCity = itinerary.getCity();
+        String Admin = itinerary.getAdmin();
+        ArrayList<String> colaboratos = itinerary.getColaborators();
+        if (it.spinnerCountry.getSelectedItem() != null) {
+            String selectedCountry = it.spinnerCountry.getSelectedItem().toString();
+            if (!selectedCountry.equals(it.getString(R.string.select_country))) {
+                editedCountry = selectedCountry;
+                editedState = "";
+                editedCity = "";
+            }
+        }
+
+        if (it.spinnerState.getSelectedItem() != null) {
+            String selectedState = it.spinnerState.getSelectedItem().toString();
+            if (!selectedState.equals(it.getString(R.string.select_state))) {
+                editedState = selectedState;
+            }
+        }
+
+        if (it.spinnerCity.getSelectedItem() != null) {
+            String selectedCity = it.spinnerCity.getSelectedItem().toString();
+            if (!selectedCity.equals(it.getString(R.string.select_city))) {
+                editedCity = selectedCity;
+            }
+        }
+
+        itinerary.setItineraryTitle(editedTitle);
+        itinerary.setCountry(editedCountry);
+        itinerary.setState(editedState);
+        itinerary.setCity(editedCity);
+        itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
+        itinerary.setColaborators(colaboratos);
+        it.binding.itineraryTitle.setText(itinerary.getItineraryTitle());
+        it.binding.itineraryCountry.setText(itinerary.getCountry());
+        it.binding.itineraryState.setText(itinerary.getState());
+        it. binding.itineraryCity.setText(itinerary.getCity());
+        it. mapServiceImp.initializeMap();
+        mAdapter.actualizar_por_id(itinerary);
+        it.updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
+            @Override
+            public void onSuccess() {}
+
+            @Override
+            public void onFailure(Exception e) {}
+        });
+
+    }
+
+    private void updateDates(){
+
+        if (selectedDateMin != null && selectedDateMax != null) {
+            Date startDate = selectedDateMin.getDate();
+            Date endDate = selectedDateMax.getDate();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            String editedStartDate = dateFormat.format(startDate);
+            String editedEndDate = dateFormat.format(endDate);
+            itinerary.setStartDate(editedStartDate);
+            itinerary.setEndDate(editedEndDate);
+            calendar.configureCalendarView();
+            it.deleteEvents.execute(itinerary.getId(),new ItineraryRepository.OperationCallback() {
+                @Override
+                public void onSuccess() {}
+
+                @Override
+                public void onFailure(Exception e) {}
+
+            });
+        } else if (selectedDateMin!=null && selectedDateMax==null ||selectedDateMin==null && selectedDateMax!=null ) {
+            Toast.makeText(it, "Edición cancelada: falta una fecha por seleccionar", Toast.LENGTH_LONG).show();
+            startDateSelected = false;
+            calendar.loadAndDecorateEvents();
+            calendar.configureCalendarView();
+            it.binding.calendarView.setClickable(false);
+            it.binding.calendarView.setLongClickable(false);
+            it.binding.calendarView.setEnabled(false);
+
+        } else{
+            calendar.loadAndDecorateEvents();
+            calendar.configureCalendarView();
+
+        }
+        it.binding.calendarView.setClickable(false);
+        it.binding.calendarView.setLongClickable(false);
+        it.binding.calendarView.setEnabled(false);
+
+    }
+
     public void handleDeleteButtonClick(Itinerary itinerary) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra("ACTION", "DELETE");
@@ -284,9 +277,6 @@ public class DetailActLogic {
     }
 
 
-
-
-
     public void handleVolverButtonClick(Itinerary itinerary) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra("ACTION", "BACK");
@@ -294,7 +284,6 @@ public class DetailActLogic {
         it.setResult(ItinActivity.RESULT_OK, resultIntent);
         it.finish();
     }
-
 
 
     public void handleEditButtonClick(EditText editText) {
@@ -326,110 +315,12 @@ public class DetailActLogic {
 
     }
 
-
-
     public void handleOkButtonClick(){
         if (it.isEditing) {
             it.isEditing = false;
-            EditText titleEditText =it.binding.itineraryTitle;
-            titleEditText.setFocusable(false);
-            titleEditText.setFocusableInTouchMode(false);
-            titleEditText.setCursorVisible(false);
-            titleEditText.clearFocus();
-            InputMethodManager imm = (InputMethodManager) it.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(titleEditText.getWindowToken(), 0);
-            String editedTitle = it.binding.itineraryTitle.getText().toString();
-            String editedCountry = itinerary.getCountry();
-            String editedState = itinerary.getState();
-            String editedCity = itinerary.getCity();
-            String Admin = itinerary.getAdmin();
-            ArrayList<String> colaboratos = itinerary.getColaborators();
-            if (it.spinnerCountry.getSelectedItem() != null) {
-                String selectedCountry = it.spinnerCountry.getSelectedItem().toString();
-                if (!selectedCountry.equals(it.getString(R.string.select_country))) {
-                    editedCountry = selectedCountry;
-                    editedState = "";
-                    editedCity = "";
-                }
-            }
-
-            if (it.spinnerState.getSelectedItem() != null) {
-                String selectedState = it.spinnerState.getSelectedItem().toString();
-                if (!selectedState.equals(it.getString(R.string.select_state))) {
-                    editedState = selectedState;
-                }
-            }
-
-            if (it.spinnerCity.getSelectedItem() != null) {
-                String selectedCity = it.spinnerCity.getSelectedItem().toString();
-                if (!selectedCity.equals(it.getString(R.string.select_city))) {
-                    editedCity = selectedCity;
-                }
-            }
-
-            if (selectedDateMin != null && selectedDateMax != null) {
-                Date startDate = selectedDateMin.getDate();
-                Date endDate = selectedDateMax.getDate();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                String editedStartDate = dateFormat.format(startDate);
-                String editedEndDate = dateFormat.format(endDate);
-                itinerary.setStartDate(editedStartDate);
-                itinerary.setEndDate(editedEndDate);
-                calendar.configureCalendarView();
-                it.deleteEvents.execute(itinerary.getId(),new ItineraryRepository.OperationCallback() {
-                    @Override
-                    public void onSuccess() {}
-
-                    @Override
-                    public void onFailure(Exception e) {}
-
-
-                });
-
-
-            } else if (selectedDateMin!=null && selectedDateMax==null ||selectedDateMin==null && selectedDateMax!=null ) {
-                Toast.makeText(it, "Edición cancelada: falta una fecha por seleccionar", Toast.LENGTH_LONG).show();
-                startDateSelected = false;
-                calendar.loadAndDecorateEvents();
-                calendar.configureCalendarView();
-                it.binding.calendarView.setClickable(false);
-                it.binding.calendarView.setLongClickable(false);
-                it.binding.calendarView.setEnabled(false);
-
-            } else{
-                calendar.loadAndDecorateEvents();
-                calendar.configureCalendarView();
-
-            }
-
-            itinerary.setItineraryTitle(editedTitle);
-            itinerary.setCountry(editedCountry);
-            itinerary.setState(editedState);
-            itinerary.setCity(editedCity);
-
-            itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
-            itinerary.setColaborators(colaboratos);
-
-            it.binding.itineraryTitle.setText(itinerary.getItineraryTitle());
-            it.binding.itineraryCountry.setText(itinerary.getCountry());
-            it.binding.itineraryState.setText(itinerary.getState());
-            it. binding.itineraryCity.setText(itinerary.getCity());
-            it. mapServiceImp.initializeMap();
-            mAdapter.actualizar_por_id(itinerary);
-            it.updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
-                @Override
-                public void onSuccess() {}
-
-                @Override
-                public void onFailure(Exception e) {}
-
-
-            });
-            it.binding.calendarView.setClickable(false);
-            it.binding.calendarView.setLongClickable(false);
-            it.binding.calendarView.setEnabled(false);
-
-
+            hidekeyboard();
+            updatefields();
+            updateDates();
         }
     }
 }
