@@ -108,7 +108,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         getLoadedEvents = new getLoadedEvents(firebaseItineraryHandler);
         calendar = new Calendar(this);
         mapServiceImp = new MapServiceImp(this, itinerary);
-        detailActLogic = new DetailActLogic(this, calendar, itinerary, user, selectedDateMin, selectedDateMax,isEditing);
+        detailActLogic = new DetailActLogic(this, calendar, itinerary, user, selectedDateMin, selectedDateMax);
         calendarView = findViewById(R.id.calendarView);
         calendar.configureCalendarView();
         calendar.loadAndDecorateEvents();
@@ -120,7 +120,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                detailActLogic.handleDateSelection(date, isEditing);
+                detailActLogic.handleDateSelection(date);
             }
         });
     }

@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.util.TypedValue;
+
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
@@ -39,19 +41,19 @@ public class DetailActLogic {
     private CalendarDay selectedDateMax;
 
 
-    public DetailActLogic(ItineraryDetailActivity activity, Calendar calendar, Itinerary itinerary, FirebaseUser user, CalendarDay selectedDateMin, CalendarDay selectedDateMax, Boolean isEditing) {
+
+    public DetailActLogic(ItineraryDetailActivity activity, Calendar calendar, Itinerary itinerary, FirebaseUser user, CalendarDay selectedDateMin, CalendarDay selectedDateMax) {
         this.it = activity;
         this.calendar = calendar;
         this.itinerary = itinerary;
         this.user = user;
-        this.isEditing = isEditing;
         this.selectedDateMin = selectedDateMin;
         this.selectedDateMax = selectedDateMax;
     }
 
-    public void handleDateSelection(CalendarDay date, boolean isEditing) {
+    public void handleDateSelection(CalendarDay date) {
 
-        if (isEditing) {
+        if (it.isEditing) {
             if (!startDateSelected) {
                 confirmarFechaInicio(date);
             } else {
@@ -111,6 +113,7 @@ public class DetailActLogic {
         }
         Log.d("_ITDETTAG", "Compartiendo con " + email + " por " + it.itinerary.getAdmin());
     }
+
 
     private void hideSoftKeyboard() {
         EditText titleEditText = it.binding.itineraryTitle;
@@ -216,6 +219,7 @@ public class DetailActLogic {
         it.calendarView.setEnabled(false);
     }
 
+
     public void llenarListaPaises(List<String> countryNames) {
         countryNames.add(it.getString(R.string.select_country));
         for (Country country : ItinActivity.mCountries) {
@@ -279,33 +283,9 @@ public class DetailActLogic {
 
     }
 
-    public void handleEditButtonClick(EditText editText){
-        isEditing = true;
-        editText.setFocusable(true);
-        editText.setFocusableInTouchMode(true);
-        editText.setCursorVisible(true);
-        Context context = editText.getContext();
-        TypedValue outValue = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.editTextBackground, outValue, true);
-        selectedDateMin = null;
-        selectedDateMax = null;
-        it.calendarView.setClickable(false);
-        it.calendarView.setLongClickable(false);
-        it.calendarView.setEnabled(false);
-        it.calendarView.clearSelection();
-        it.calendarView.removeDecorators();
-        it.calendarView.state().edit()
-                .setMinimumDate((java.util.Calendar) null)
-                .setMaximumDate((java.util.Calendar) null)
-                .commit();
 
-        if (selectedDateMin != null && selectedDateMax != null) {
-            it.calendarView.state().edit()
-                    .setMinimumDate(selectedDateMin)
-                    .setMaximumDate(selectedDateMax)
-                    .commit();
-        }
-    }
+
+
 
     public void handleVolverButtonClick(Itinerary itinerary) {
         Intent resultIntent = new Intent();
@@ -315,12 +295,141 @@ public class DetailActLogic {
         it.finish();
     }
 
-    public void handleOkButtonClick() {
-        if (isEditing) {
-            isEditing = false;
-            hideSoftKeyboard();
-            updateFields();
-            updateDates();
+
+
+    public void handleEditButtonClick(EditText editText) {
+        it.isEditing = true;
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.setCursorVisible(true);
+        Context context = editText.getContext();
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.editTextBackground, outValue, true);
+        selectedDateMin = null;
+        selectedDateMax = null;
+        it.binding.calendarView.setClickable(false);
+        it.binding.calendarView.setLongClickable(false);
+        it.binding.calendarView.setEnabled(false);
+        it.binding.calendarView.clearSelection();
+        it.binding.calendarView.removeDecorators();
+        it.binding.calendarView.state().edit()
+                .setMinimumDate((java.util.Calendar) null)
+                .setMaximumDate((java.util.Calendar) null)
+                .commit();
+
+        if (selectedDateMin != null && selectedDateMax != null) {
+            it.binding.calendarView.state().edit()
+                    .setMinimumDate(selectedDateMin)
+                    .setMaximumDate(selectedDateMax)
+                    .commit();
+        }
+
+    }
+
+
+
+    public void handleOkButtonClick(){
+        if (it.isEditing) {
+            it.isEditing = false;
+            EditText titleEditText =it.binding.itineraryTitle;
+            titleEditText.setFocusable(false);
+            titleEditText.setFocusableInTouchMode(false);
+            titleEditText.setCursorVisible(false);
+            titleEditText.clearFocus();
+            InputMethodManager imm = (InputMethodManager) it.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(titleEditText.getWindowToken(), 0);
+            String editedTitle = it.binding.itineraryTitle.getText().toString();
+            String editedCountry = itinerary.getCountry();
+            String editedState = itinerary.getState();
+            String editedCity = itinerary.getCity();
+            String Admin = itinerary.getAdmin();
+            ArrayList<String> colaboratos = itinerary.getColaborators();
+            if (it.spinnerCountry.getSelectedItem() != null) {
+                String selectedCountry = it.spinnerCountry.getSelectedItem().toString();
+                if (!selectedCountry.equals(it.getString(R.string.select_country))) {
+                    editedCountry = selectedCountry;
+                    editedState = "";
+                    editedCity = "";
+                }
+            }
+
+            if (it.spinnerState.getSelectedItem() != null) {
+                String selectedState = it.spinnerState.getSelectedItem().toString();
+                if (!selectedState.equals(it.getString(R.string.select_state))) {
+                    editedState = selectedState;
+                }
+            }
+
+            if (it.spinnerCity.getSelectedItem() != null) {
+                String selectedCity = it.spinnerCity.getSelectedItem().toString();
+                if (!selectedCity.equals(it.getString(R.string.select_city))) {
+                    editedCity = selectedCity;
+                }
+            }
+
+            if (selectedDateMin != null && selectedDateMax != null) {
+                Date startDate = selectedDateMin.getDate();
+                Date endDate = selectedDateMax.getDate();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                String editedStartDate = dateFormat.format(startDate);
+                String editedEndDate = dateFormat.format(endDate);
+                itinerary.setStartDate(editedStartDate);
+                itinerary.setEndDate(editedEndDate);
+                calendar.configureCalendarView();
+                it.deleteEvents.execute(itinerary.getId(),new ItineraryRepository.OperationCallback() {
+                    @Override
+                    public void onSuccess() {}
+
+                    @Override
+                    public void onFailure(Exception e) {}
+
+
+                });
+
+
+            } else if (selectedDateMin!=null && selectedDateMax==null ||selectedDateMin==null && selectedDateMax!=null ) {
+                Toast.makeText(it, "Edición cancelada: falta una fecha por seleccionar", Toast.LENGTH_LONG).show();
+                startDateSelected = false;
+                calendar.loadAndDecorateEvents();
+                calendar.configureCalendarView();
+                it.binding.calendarView.setClickable(false);
+                it.binding.calendarView.setLongClickable(false);
+                it.binding.calendarView.setEnabled(false);
+
+            } else{
+                calendar.loadAndDecorateEvents();
+                calendar.configureCalendarView();
+
+            }
+
+            itinerary.setItineraryTitle(editedTitle);
+            itinerary.setCountry(editedCountry);
+            itinerary.setState(editedState);
+            itinerary.setCity(editedCity);
+
+            itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
+            itinerary.setColaborators(colaboratos);
+
+            it.binding.itineraryTitle.setText(itinerary.getItineraryTitle());
+            it.binding.itineraryCountry.setText(itinerary.getCountry());
+            it.binding.itineraryState.setText(itinerary.getState());
+            it. binding.itineraryCity.setText(itinerary.getCity());
+            it. mapServiceImp.initializeMap();
+            mAdapter.actualizar_por_id(itinerary);
+            it.updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
+                @Override
+                public void onSuccess() {}
+
+                @Override
+                public void onFailure(Exception e) {}
+
+
+            });
+            it.binding.calendarView.setClickable(false);
+            it.binding.calendarView.setLongClickable(false);
+            it.binding.calendarView.setEnabled(false);
+
+
         }
     }
 }
