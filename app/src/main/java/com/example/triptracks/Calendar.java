@@ -210,7 +210,7 @@ public class Calendar {
 
 
 
-    void configureCalendarView() {
+    public void configureCalendarView() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
         try {
@@ -229,7 +229,7 @@ public class Calendar {
         }
     }
 
-    void loadAndDecorateEvents() {
+    public void loadAndDecorateEvents() {
         it.loadEvents.execute(it.itinerary.getId(), events -> {
             it.runOnUiThread(() -> {
 

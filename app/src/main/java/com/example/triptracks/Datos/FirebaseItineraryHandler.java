@@ -226,7 +226,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
             for (String colaborator : itinerary.getColaborators()) {
                 String colaboratorPath = colaborator.replace(".", ",");
                 DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("users")
-                        .child(colaboratorPath).child(itinerary.getId()).child("events").child(event.getId());
+                        .child(colaboratorPath).child("itineraries").child(itinerary.getId()).child("events").child(event.getId());
                 eventRef.setValue(event)
                         .addOnSuccessListener(aVoid -> callback.onSuccess())
                         .addOnFailureListener(callback::onFailure);
