@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.util.TypedValue;
-
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -101,7 +100,8 @@ public class DetailActLogic {
         if (!collaborators.contains(email) && Objects.equals(user.getEmail(), itinerary.getAdmin())) {
             collaborators.add(email);
             itinerary.setColaborators(collaborators);
-            it.shareItinerary.execute(it.itinerary, email, new ItineraryRepository.OperationCallback() {
+            ShareItinerary shareItinerary = new ShareItinerary(it.firebaseItineraryHandler);
+            shareItinerary.execute(it.itinerary, email, new ItineraryRepository.OperationCallback() {
                 @Override
                 public void onSuccess() {}
                 @Override
@@ -212,7 +212,8 @@ public class DetailActLogic {
         it. binding.itineraryCity.setText(itinerary.getCity());
         it. mapServiceImp.initializeMap();
         mAdapter.actualizar_por_id(itinerary);
-        it.updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
+        UpdateItinerary updateItinerary = new UpdateItinerary(it.firebaseItineraryHandler);
+        updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
             @Override
             public void onSuccess() {}
 
@@ -233,7 +234,8 @@ public class DetailActLogic {
             itinerary.setStartDate(editedStartDate);
             itinerary.setEndDate(editedEndDate);
             calendar.configureCalendarView();
-            it.deleteEvents.execute(itinerary.getId(),new ItineraryRepository.OperationCallback() {
+            DeleteAllEvents deleteEvents = new DeleteAllEvents(it.firebaseItineraryHandler);
+            deleteEvents.execute(itinerary.getId(),new ItineraryRepository.OperationCallback() {
                 @Override
                 public void onSuccess() {}
 
@@ -266,7 +268,8 @@ public class DetailActLogic {
         resultIntent.putExtra("ACTION", "DELETE");
         resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
         it.setResult(ItinActivity.RESULT_DELETE, resultIntent);
-        it.deleteItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
+        DeleteItinerary deleteItinerary = new DeleteItinerary(it.firebaseItineraryHandler);
+        deleteItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
             @Override
             public void onSuccess() {it.finish();}
 

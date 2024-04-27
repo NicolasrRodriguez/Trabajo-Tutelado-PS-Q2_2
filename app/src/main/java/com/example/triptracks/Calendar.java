@@ -10,6 +10,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.triptracks.Domain.Entities.Event;
+import com.example.triptracks.Domain.LogicaNegocio.DeleteOneEvent;
+import com.example.triptracks.Domain.LogicaNegocio.LoadEvents;
+import com.example.triptracks.Domain.LogicaNegocio.UpdateEvent;
+import com.example.triptracks.Domain.LogicaNegocio.getLoadedEvents;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.Presenter.EventDecorator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,7 +83,8 @@ public class Calendar {
     }
 
     public Event findEventByDate(CalendarDay date) {
-        List<Event> loadedEvents = it.getLoadedEvents.execute();
+        getLoadedEvents getLoadedEvents = new getLoadedEvents(it.firebaseItineraryHandler);
+        List<Event> loadedEvents = getLoadedEvents.execute();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
         String targetDate = dateFormat.format(date.getDate());
         for (Event event : loadedEvents) {
@@ -160,7 +165,8 @@ public class Calendar {
                     String category = spinner.getSelectedItem().toString();
                     event.setDescription(description);
                     event.setCategory(category);
-                    it.UpdateEvent.execute(it.itinerary, event,new ItineraryRepository.OperationCallback() {
+                    UpdateEvent UpdateEvent = new UpdateEvent(it.firebaseItineraryHandler);
+                    UpdateEvent.execute(it.itinerary, event,new ItineraryRepository.OperationCallback() {
                                 @Override
                                 public void onSuccess() {
 
@@ -185,7 +191,8 @@ public class Calendar {
                 .setTitle("Confirmar eliminación")
                 .setMessage("¿Estás seguro de que deseas eliminar este evento?")
                 .setPositiveButton("Eliminar", (dialogInterface, i) -> {
-                    it.deleteOneEvent.execute(it.itinerary.getId(), event.getId(),new ItineraryRepository.OperationCallback() {
+                    DeleteOneEvent deleteOneEvent = new DeleteOneEvent(it.firebaseItineraryHandler);
+                    deleteOneEvent.execute(it.itinerary.getId(), event.getId(),new ItineraryRepository.OperationCallback() {
                                 @Override
                                 public void onSuccess() {
 
@@ -230,7 +237,8 @@ public class Calendar {
     }
 
     public void loadAndDecorateEvents() {
-        it.loadEvents.execute(it.itinerary.getId(), events -> {
+        LoadEvents loadEvents = new LoadEvents(it.firebaseItineraryHandler);
+        loadEvents.execute(it.itinerary.getId(), events -> {
             it.runOnUiThread(() -> {
 
                 it.binding.calendarView.removeDecorators();

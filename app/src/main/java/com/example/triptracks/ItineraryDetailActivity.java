@@ -17,14 +17,6 @@ import android.widget.Toast;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DetailActLogic;
-import com.example.triptracks.Domain.LogicaNegocio.DeleteAllEvents;
-import com.example.triptracks.Domain.LogicaNegocio.DeleteItinerary;
-import com.example.triptracks.Domain.LogicaNegocio.DeleteOneEvent;
-import com.example.triptracks.Domain.LogicaNegocio.LoadEvents;
-import com.example.triptracks.Domain.LogicaNegocio.ShareItinerary;
-import com.example.triptracks.Domain.LogicaNegocio.UpdateEvent;
-import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
-import com.example.triptracks.Domain.LogicaNegocio.getLoadedEvents;
 import com.example.triptracks.Domain.Service.MapServiceImp;
 import com.example.triptracks.Presenter.EventDecorator;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -46,32 +38,26 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
     public Itinerary itinerary;
     public Calendar calendar;
-    public DeleteItinerary deleteItinerary;
-    public ShareItinerary shareItinerary;
-    public DeleteAllEvents deleteEvents;
     public FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     public CalendarDay selectedDateMin = null;
     public CalendarDay selectedDateMax = null;
-    public UpdateItinerary updateItinerary;
     public MapServiceImp mapServiceImp;
     public ItineraryTileBinding binding;
     public Spinner spinnerCountry;
     public Spinner spinnerState;
     public Spinner spinnerCity;
     public MaterialCalendarView calendarView;
+    public FirebaseItineraryHandler firebaseItineraryHandler;
     public boolean isEditing = false;
     boolean detailsVisible = false;
+    boolean startDateSelected = false;
     EventDecorator eventDecorator;
-    Spinner spinner_evento;
     SupportMapFragment fragmentmap;
     Fragment fragmentcalendar;
+    Spinner spinner_evento;
     String category;
-    FirebaseItineraryHandler firebaseItineraryHandler;
-    boolean startDateSelected = false;
-    DeleteOneEvent deleteOneEvent;
-    UpdateEvent UpdateEvent;
-    LoadEvents loadEvents;
-    getLoadedEvents getLoadedEvents;
+
+
 
     DetailActLogic detailActLogic;
 
@@ -98,14 +84,6 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         binding.getRoot().setBackgroundResource(R.drawable.fondo);
 
         firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
-        shareItinerary = new ShareItinerary(firebaseItineraryHandler);
-        deleteItinerary = new DeleteItinerary(firebaseItineraryHandler);
-        deleteOneEvent = new DeleteOneEvent(firebaseItineraryHandler);
-        deleteEvents = new DeleteAllEvents(firebaseItineraryHandler);
-        UpdateEvent = new UpdateEvent(firebaseItineraryHandler);
-        updateItinerary = new UpdateItinerary(firebaseItineraryHandler);
-        loadEvents = new LoadEvents(firebaseItineraryHandler);
-        getLoadedEvents = new getLoadedEvents(firebaseItineraryHandler);
         calendar = new Calendar(this);
         mapServiceImp = new MapServiceImp(this, itinerary);
         detailActLogic = new DetailActLogic(this, calendar, itinerary, user, selectedDateMin, selectedDateMax);
@@ -114,7 +92,6 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         calendar.loadAndDecorateEvents();
         configurarSpinners();
         configurarBotones();
-
 
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
 
@@ -279,9 +256,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
     private void configurarBotones() {
 
-        binding.butBorrar.setOnClickListener(v -> {
-            detailActLogic.handleDeleteButtonClick(itinerary);
-        });
+        binding.butBorrar.setOnClickListener(v -> {detailActLogic.handleDeleteButtonClick(itinerary);});
 
         binding.butEdit.setOnClickListener(v -> {
             detailActLogic.handleEditButtonClick(binding.itineraryTitle);
@@ -293,9 +268,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             findViewById(R.id.spinnerCityAct2).setVisibility(View.VISIBLE);
         });
 
-        binding.butVolver.setOnClickListener(v -> {
-            detailActLogic.handleVolverButtonClick(itinerary);
-        });
+        binding.butVolver.setOnClickListener(v -> {detailActLogic.handleVolverButtonClick(itinerary);});
 
         binding.butOk.setOnClickListener(v -> {
             detailActLogic.handleOkButtonClick();
@@ -308,14 +281,12 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         });
     }
 
-
     private void showMapFragment() {
         fragmentmap = SupportMapFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.mapContainer, fragmentmap)
                 .commit();
         fragmentmap.getMapAsync(mapServiceImp);
-
     }
 
     private void showCalendarFragment() {
