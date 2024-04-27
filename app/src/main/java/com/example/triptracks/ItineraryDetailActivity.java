@@ -1,17 +1,14 @@
 package com.example.triptracks;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -28,7 +25,6 @@ import com.example.triptracks.Domain.LogicaNegocio.ShareItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateEvent;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.getLoadedEvents;
-import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.Domain.Service.MapServiceImp;
 import com.example.triptracks.Presenter.EventDecorator;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -38,60 +34,45 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import com.beastwall.localisation.model.City;
-import com.beastwall.localisation.model.Country;
-import com.beastwall.localisation.model.State;
 import com.example.triptracks.databinding.ItineraryTileBinding;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import static com.example.triptracks.ItinActivity.mAdapter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 public class ItineraryDetailActivity extends AppCompatActivity {
 
     public Itinerary itinerary;
+    public Calendar calendar;
+    public DeleteItinerary deleteItinerary;
+    public ShareItinerary shareItinerary;
+    public DeleteAllEvents deleteEvents;
+    public FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public CalendarDay selectedDateMin = null;
+    public CalendarDay selectedDateMax = null;
+    public UpdateItinerary updateItinerary;
+    public MapServiceImp mapServiceImp;
+    public ItineraryTileBinding binding;
+    public Spinner spinnerCountry;
+    public Spinner spinnerState;
+    public Spinner spinnerCity;
+    public MaterialCalendarView calendarView;
+    public boolean isEditing = false;
     boolean detailsVisible = false;
-    ItineraryTileBinding binding;
-    Spinner spinnerCountry, spinnerState, spinnerCity;
-
-    boolean isEditing = false;
-
     EventDecorator eventDecorator;
-
     Spinner spinner_evento;
     SupportMapFragment fragmentmap;
     Fragment fragmentcalendar;
-
     String category;
-    Calendar calendar;
-
     FirebaseItineraryHandler firebaseItineraryHandler;
-
-    public FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-     public CalendarDay selectedDateMin = null;
-     public CalendarDay selectedDateMax = null;
-
     boolean startDateSelected = false;
-
-    DeleteItinerary deleteItinerary;
-    public ShareItinerary shareItinerary;
-    DeleteAllEvents deleteEvents;
     DeleteOneEvent deleteOneEvent;
     UpdateEvent UpdateEvent;
-
     LoadEvents loadEvents;
-
     getLoadedEvents getLoadedEvents;
 
-    UpdateItinerary updateItinerary;
-    MapServiceImp mapServiceImp;
     DetailActLogic detailActLogic;
 
     public ItineraryDetailActivity() {}
@@ -103,7 +84,19 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         binding = ItineraryTileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        calendar = new Calendar(this);
+        itinerary = getIntent().getParcelableExtra(ItinActivity.KEY_ITINERARY);
+        assert itinerary != null;
+        binding.itineraryTitle.setText(itinerary.getItineraryTitle());
+        binding.itineraryCountry.setText(itinerary.getCountry());
+        binding.itineraryState.setText(itinerary.getState());
+        binding.itineraryCity.setText(itinerary.getCity());
+        binding.itineraryTitle.setVisibility(View.VISIBLE);
+        binding.itineraryTitle.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_more, 0, 0, 0);
+        binding.itineraryTitle.setOnClickListener(v -> pulsarDesplegable());
+        binding.layoutmapcontainer.setVisibility(View.GONE);
+        binding.layoutcalendarcontainer.setVisibility(View.GONE);
+        binding.getRoot().setBackgroundResource(R.drawable.fondo);
+
         firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
         shareItinerary = new ShareItinerary(firebaseItineraryHandler);
         deleteItinerary = new DeleteItinerary(firebaseItineraryHandler);
@@ -113,28 +106,17 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         updateItinerary = new UpdateItinerary(firebaseItineraryHandler);
         loadEvents = new LoadEvents(firebaseItineraryHandler);
         getLoadedEvents = new getLoadedEvents(firebaseItineraryHandler);
+        calendar = new Calendar(this);
         mapServiceImp = new MapServiceImp(this, itinerary);
-        detailActLogic = new DetailActLogic(this, calendar);
-
-        itinerary = getIntent().getParcelableExtra(ItinActivity.KEY_ITINERARY);
-        assert itinerary != null;
-        binding.itineraryTitle.setText(itinerary.getItineraryTitle());
-        binding.itineraryCountry.setText(itinerary.getCountry());
-        binding.itineraryState.setText(itinerary.getState());
-        binding.itineraryCity.setText(itinerary.getCity());
-        binding.itineraryTitle.setVisibility(View.VISIBLE);
-        binding.itineraryTitle.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_more, 0, 0, 0);
-        binding.itineraryTitle.setOnClickListener(v -> pulsar());
-        binding.layoutmapcontainer.setVisibility(View.GONE);
-        binding.layoutcalendarcontainer.setVisibility(View.GONE);
-        binding.getRoot().setBackgroundResource(R.drawable.fondo);
-
-        configurar(binding);
+        detailActLogic = new DetailActLogic(this, calendar, itinerary, user, selectedDateMin, selectedDateMax,isEditing);
+        calendarView = findViewById(R.id.calendarView);
         calendar.configureCalendarView();
         calendar.loadAndDecorateEvents();
+        configurarSpinners();
+        configurarBotones();
 
 
-        binding.calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
 
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
@@ -142,8 +124,6 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     public void showConfirmstartDateDialog(CalendarDay date) {
         new AlertDialog.Builder(this)
@@ -234,8 +214,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     }
 
 
-
-    private void pulsar() {
+    private void pulsarDesplegable() {
         if (!isEditing) {
             detailsVisible = !detailsVisible;
             if (detailsVisible) {
@@ -247,44 +226,37 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     }
 
     private void mostrardetalles() {
-        findViewById(R.id.layoutCountry).setVisibility(View.VISIBLE);
-        findViewById(R.id.layoutState).setVisibility(View.VISIBLE);
-        findViewById(R.id.layoutCity).setVisibility(View.VISIBLE);
-        findViewById(R.id.mapContainer).setVisibility(View.VISIBLE);
-        findViewById(R.id.calendarContainer).setVisibility(View.VISIBLE);
+        binding.layoutCountry.setVisibility(View.VISIBLE);
+        binding.layoutState.setVisibility(View.VISIBLE);
+        binding.layoutCity.setVisibility(View.VISIBLE);
+        binding.mapContainer.setVisibility(View.VISIBLE);
+        binding.calendarContainer.setVisibility(View.VISIBLE);
     }
 
     private void ocultardetalles() {
-
-        findViewById(R.id.layoutCountry).setVisibility(View.GONE);
-        findViewById(R.id.layoutState).setVisibility(View.GONE);
-        findViewById(R.id.layoutCity).setVisibility(View.GONE);
-
-
+        binding.layoutCountry.setVisibility(View.GONE);
+        binding.layoutState.setVisibility(View.GONE);
+        binding.layoutCity.setVisibility(View.GONE);
     }
 
-    private void configurar(ItineraryTileBinding binding) {
+
+    private void configurarSpinners() {
 
         spinnerCountry = findViewById(R.id.spinnerCountryAct2);
         spinnerState = findViewById(R.id.spinnerStateAct2);
         spinnerCity = findViewById(R.id.spinnerCityAct2);
 
         List<String> countryNames = new ArrayList<>();
-        countryNames.add(getString(R.string.select_country));
-        for (Country country : ItinActivity.mCountries) {
-            countryNames.add(country.getName());
-        }
+        detailActLogic.llenarListaPaises(countryNames);
         ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, countryNames);
         countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCountry.setAdapter(countryAdapter);
-
 
         List<String> stateNames = new ArrayList<>();
         stateNames.add(getString(R.string.select_state));
         ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stateNames);
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerState.setAdapter(stateAdapter);
-
 
         List<String> cityNames = new ArrayList<>();
         cityNames.add(getString(R.string.select_city));
@@ -295,233 +267,47 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCountryName = (String) parent.getItemAtPosition(position);
-                if (!selectedCountryName.equals(getString(R.string.select_country))) {
-
-                    Country selectedCountry = null;
-                    for (Country country : ItinActivity.mCountries) {
-                        if (country.getName().equals(selectedCountryName)) {
-                            selectedCountry = country;
-                            break;
-                        }
-                    }
-                    if (selectedCountry != null) {
-                        List<String> stateNames = new ArrayList<>();
-                        stateNames.add(getString(R.string.select_state));
-                        for (State state : selectedCountry.getStates()) {
-                            stateNames.add(state.getName());
-                        }
-                        ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(ItineraryDetailActivity.this, android.R.layout.simple_spinner_item, stateNames);
-                        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerState.setAdapter(stateAdapter);
-                    }
-
-                    if (selectedCountry != null) {
-
-                        List<String> cityNames = new ArrayList<>();
-                        cityNames.add(getString(R.string.select_city));
-                        for (State state : selectedCountry.getStates()) {
-                            if (state.getName().equals(state.getName())) {
-                                for (City city : state.getCities()) {
-                                    cityNames.add(city.getName());
-                                }
-                                break;
-                            }
-                        }
-                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(ItineraryDetailActivity.this, android.R.layout.simple_spinner_item, cityNames);
-                        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerCity.setAdapter(cityAdapter);
-                    }
-                }
+                detailActLogic.seleccionarPais(selectedCountryName);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
+    }
+
+    private void configurarBotones() {
 
         binding.butBorrar.setOnClickListener(v -> {
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("ACTION", "DELETE");
-            resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
-            setResult(ItinActivity.RESULT_DELETE, resultIntent);
-            deleteItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
-                        @Override
-                        public void onSuccess() {}
-
-                        @Override
-                        public void onFailure(Exception e) {}
-                    });
-
-                finish();
-
+            detailActLogic.handleDeleteButtonClick(itinerary);
         });
 
         binding.butEdit.setOnClickListener(v -> {
-            editar_atributos(getTitleEditText());
+            detailActLogic.handleEditButtonClick(binding.itineraryTitle);
+            findViewById(R.id.itineraryCountry).setVisibility(View.GONE);
+            findViewById(R.id.spinnerCountryAct2).setVisibility(View.VISIBLE);
+            findViewById(R.id.itineraryState).setVisibility(View.GONE);
+            findViewById(R.id.spinnerStateAct2).setVisibility(View.VISIBLE);
+            findViewById(R.id.itineraryCity).setVisibility(View.GONE);
+            findViewById(R.id.spinnerCityAct2).setVisibility(View.VISIBLE);
         });
+
         binding.butVolver.setOnClickListener(v -> {
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("ACTION", "BACK");
-            resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
-            setResult(ItinActivity.RESULT_OK, resultIntent);
-            finish();
+            detailActLogic.handleVolverButtonClick(itinerary);
         });
 
         binding.butOk.setOnClickListener(v -> {
-            if (isEditing) {
-                isEditing = false;
-                EditText titleEditText = getTitleEditText();
-                titleEditText.setFocusable(false);
-                titleEditText.setFocusableInTouchMode(false);
-                titleEditText.setCursorVisible(false);
-                titleEditText.clearFocus();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(titleEditText.getWindowToken(), 0);
-                String editedTitle = getTitleEditText().getText().toString();
-                String editedCountry = itinerary.getCountry();
-                String editedState = itinerary.getState();
-                String editedCity = itinerary.getCity();
-                String Admin = itinerary.getAdmin();
-                ArrayList<String> colaboratos = itinerary.getColaborators();
-                if (spinnerCountry.getSelectedItem() != null) {
-                    String selectedCountry = spinnerCountry.getSelectedItem().toString();
-                    if (!selectedCountry.equals(getString(R.string.select_country))) {
-                        editedCountry = selectedCountry;
-                        editedState = "";
-                        editedCity = "";
-                    }
-                }
-
-                if (spinnerState.getSelectedItem() != null) {
-                    String selectedState = spinnerState.getSelectedItem().toString();
-                    if (!selectedState.equals(getString(R.string.select_state))) {
-                        editedState = selectedState;
-                    }
-                }
-
-                if (spinnerCity.getSelectedItem() != null) {
-                    String selectedCity = spinnerCity.getSelectedItem().toString();
-                    if (!selectedCity.equals(getString(R.string.select_city))) {
-                        editedCity = selectedCity;
-                    }
-                }
-
-                if (selectedDateMin != null && selectedDateMax != null) {
-                    Date startDate = selectedDateMin.getDate();
-                    Date endDate = selectedDateMax.getDate();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    String editedStartDate = dateFormat.format(startDate);
-                    String editedEndDate = dateFormat.format(endDate);
-                    itinerary.setStartDate(editedStartDate);
-                    itinerary.setEndDate(editedEndDate);
-                    calendar.configureCalendarView();
-                    deleteEvents.execute(itinerary.getId(),new ItineraryRepository.OperationCallback() {
-                        @Override
-                        public void onSuccess() {}
-
-                        @Override
-                        public void onFailure(Exception e) {}
-
-
-                        });
-
-
-                } else if (selectedDateMin!=null && selectedDateMax==null ||selectedDateMin==null && selectedDateMax!=null ) {
-                    Toast.makeText(ItineraryDetailActivity.this, "Edición cancelada: falta una fecha por seleccionar", Toast.LENGTH_LONG).show();
-                    startDateSelected = false;
-                    calendar.loadAndDecorateEvents();
-                    calendar.configureCalendarView();
-                    binding.calendarView.setClickable(false);
-                    binding.calendarView.setLongClickable(false);
-                    binding.calendarView.setEnabled(false);
-
-                } else{
-                    calendar.loadAndDecorateEvents();
-                    calendar.configureCalendarView();
-
-                }
-
-                itinerary.setItineraryTitle(editedTitle);
-                itinerary.setCountry(editedCountry);
-                itinerary.setState(editedState);
-                itinerary.setCity(editedCity);
-
-                itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
-                itinerary.setColaborators(colaboratos);
-
-                binding.itineraryTitle.setText(itinerary.getItineraryTitle());
-                binding.itineraryCountry.setText(itinerary.getCountry());
-                binding.itineraryState.setText(itinerary.getState());
-                binding.itineraryCity.setText(itinerary.getCity());
-                mapServiceImp.initializeMap();
-                mAdapter.actualizar_por_id(itinerary);
-                findViewById(R.id.itineraryCountry).setVisibility(View.VISIBLE);
-                findViewById(R.id.spinnerCountryAct2).setVisibility(View.GONE);
-                findViewById(R.id.itineraryState).setVisibility(View.VISIBLE);
-                findViewById(R.id.spinnerStateAct2).setVisibility(View.GONE);
-                findViewById(R.id.itineraryCity).setVisibility(View.VISIBLE);
-                findViewById(R.id.spinnerCityAct2).setVisibility(View.GONE);
-                updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-
-                    }
-
-
-                });
-                binding.calendarView.setClickable(false);
-                binding.calendarView.setLongClickable(false);
-                binding.calendarView.setEnabled(false);
-
-            }
+            detailActLogic.handleOkButtonClick();
+            findViewById(R.id.itineraryCountry).setVisibility(View.VISIBLE);
+            findViewById(R.id.spinnerCountryAct2).setVisibility(View.GONE);
+            findViewById(R.id.itineraryState).setVisibility(View.VISIBLE);
+            findViewById(R.id.spinnerStateAct2).setVisibility(View.GONE);
+            findViewById(R.id.itineraryCity).setVisibility(View.VISIBLE);
+            findViewById(R.id.spinnerCityAct2).setVisibility(View.GONE);
         });
     }
 
-    public void editar_atributos(EditText editText) {
-        isEditing = true;
-        editText.setFocusable(true);
-        editText.setFocusableInTouchMode(true);
-        editText.setCursorVisible(true);
-        Context context = editText.getContext();
-        TypedValue outValue = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.editTextBackground, outValue, true);
-        findViewById(R.id.itineraryCountry).setVisibility(View.GONE);
-        findViewById(R.id.spinnerCountryAct2).setVisibility(View.VISIBLE);
-        findViewById(R.id.itineraryState).setVisibility(View.GONE);
-        findViewById(R.id.spinnerStateAct2).setVisibility(View.VISIBLE);
-        findViewById(R.id.itineraryCity).setVisibility(View.GONE);
-        findViewById(R.id.spinnerCityAct2).setVisibility(View.VISIBLE);
-        selectedDateMin = null;
-        selectedDateMax = null;
-        binding.calendarView.setClickable(false);
-        binding.calendarView.setLongClickable(false);
-        binding.calendarView.setEnabled(false);
-        binding.calendarView.clearSelection();
-        binding.calendarView.removeDecorators();
-        binding.calendarView.state().edit()
-                .setMinimumDate((java.util.Calendar) null)
-                .setMaximumDate((java.util.Calendar) null)
-                .commit();
-
-        if (selectedDateMin != null && selectedDateMax != null) {
-            binding.calendarView.state().edit()
-                    .setMinimumDate(selectedDateMin)
-                    .setMaximumDate(selectedDateMax)
-                    .commit();
-        }
-
-        }
-
-    public EditText getTitleEditText() {
-        return binding.itineraryTitle;
-    }
 
     private void showMapFragment() {
         fragmentmap = SupportMapFragment.newInstance();
@@ -538,9 +324,4 @@ public class ItineraryDetailActivity extends AppCompatActivity {
                 .replace(R.id.calendarContainer, fragmentcalendar)
                 .commit();
     }
-
-
-
-
-
 }

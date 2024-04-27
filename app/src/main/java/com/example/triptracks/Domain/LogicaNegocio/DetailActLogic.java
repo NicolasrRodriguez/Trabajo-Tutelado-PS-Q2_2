@@ -1,29 +1,52 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
+import static com.example.triptracks.ItinActivity.mAdapter;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
-
+import android.util.TypedValue;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import com.beastwall.localisation.model.City;
+import com.beastwall.localisation.model.Country;
+import com.beastwall.localisation.model.State;
 import com.example.triptracks.Calendar;
 import com.example.triptracks.Domain.Entities.Event;
+import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
+import com.example.triptracks.ItinActivity;
 import com.example.triptracks.ItineraryDetailActivity;
+import com.example.triptracks.R;
+import com.google.firebase.auth.FirebaseUser;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class DetailActLogic {
 
-
     private boolean startDateSelected;
-
-
     private Calendar calendar;
+    private boolean isEditing;
     private ItineraryDetailActivity it;
+    private Itinerary itinerary;
+    private FirebaseUser user;
+    private CalendarDay selectedDateMin;
+    private CalendarDay selectedDateMax;
 
-    public DetailActLogic(ItineraryDetailActivity activity, Calendar calendar) {
+
+    public DetailActLogic(ItineraryDetailActivity activity, Calendar calendar, Itinerary itinerary, FirebaseUser user, CalendarDay selectedDateMin, CalendarDay selectedDateMax, Boolean isEditing) {
         this.it = activity;
         this.calendar = calendar;
-
+        this.itinerary = itinerary;
+        this.user = user;
+        this.isEditing = isEditing;
+        this.selectedDateMin = selectedDateMin;
+        this.selectedDateMax = selectedDateMax;
     }
 
     public void handleDateSelection(CalendarDay date, boolean isEditing) {
@@ -46,44 +69,39 @@ public class DetailActLogic {
 
     public void confirmarFechaInicio(CalendarDay date) {
 
-        if(it.selectedDateMin == null) {
-
-            it.selectedDateMin = date;
+        if(selectedDateMin == null) {
+            selectedDateMin = date;
             startDateSelected = true;
             it.showConfirmstartDateDialog(date);
-
         }
-
     }
 
     public void confirmarFechaFin(CalendarDay date) {
 
-        if(it.selectedDateMax == null) {
-
-            if (it.selectedDateMin != null && date.getDate().after(it.selectedDateMin.getDate())) {
-                it.selectedDateMax = date;
+        if(selectedDateMax == null) {
+            if (selectedDateMin != null && date.getDate().after(selectedDateMin.getDate())) {
+                selectedDateMax = date;
                 startDateSelected = false;
                 it.showConfirmendDateDialog(date);
 
-            } else if (it.selectedDateMin != null && it.selectedDateMin == date) {
-                it.selectedDateMax = date;
+            } else if (selectedDateMin != null && selectedDateMin == date) {
+                selectedDateMax = date;
                 startDateSelected = false;
                 it.showConfirmendDateDialog(date);
 
             } else {
-                it.selectedDateMin = null;
-                it.selectedDateMax = null;
+                selectedDateMin = null;
+                selectedDateMax = null;
                 confirmarFechaInicio(date);
             }
         }
-
     }
 
     public void share(String email) {
-        ArrayList<String> collaborators = it.itinerary.getColaborators();
-        if (!collaborators.contains(email) && Objects.equals(it.user.getEmail(), it.itinerary.getAdmin())) {
+        ArrayList<String> collaborators = itinerary.getColaborators();
+        if (!collaborators.contains(email) && Objects.equals(user.getEmail(), itinerary.getAdmin())) {
             collaborators.add(email);
-            it.itinerary.setColaborators(collaborators);
+            itinerary.setColaborators(collaborators);
             it.shareItinerary.execute(it.itinerary, email, new ItineraryRepository.OperationCallback() {
                 @Override
                 public void onSuccess() {}
@@ -93,6 +111,216 @@ public class DetailActLogic {
         }
         Log.d("_ITDETTAG", "Compartiendo con " + email + " por " + it.itinerary.getAdmin());
     }
+
+    private void hideSoftKeyboard() {
+        EditText titleEditText = it.binding.itineraryTitle;
+        titleEditText.setFocusable(false);
+        titleEditText.setFocusableInTouchMode(false);
+        titleEditText.setCursorVisible(false);
+        titleEditText.clearFocus();
+        InputMethodManager imm = (InputMethodManager) it.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(titleEditText.getWindowToken(), 0);
+    }
+
+    private void updateFields(){
+        String Admin = itinerary.getAdmin();
+        ArrayList<String> colaboratos = itinerary.getColaborators();
+        String editedTitle = it.binding.itineraryTitle.getText().toString();
+        String editedCountry = itinerary.getCountry();
+        String editedState = itinerary.getState();
+        String editedCity = itinerary.getCity();
+        if (it.spinnerCountry.getSelectedItem() != null) {
+            String selectedCountry = it.spinnerCountry.getSelectedItem().toString();
+            if (!selectedCountry.equals(it.getString(R.string.select_country))) {
+                editedCountry = selectedCountry;
+                editedState = "";
+                editedCity = "";
+            }
+        }
+
+        if (it.spinnerState.getSelectedItem() != null) {
+            String selectedState = it.spinnerState.getSelectedItem().toString();
+            if (!selectedState.equals(it.getString(R.string.select_state))) {
+                editedState = selectedState;
+            }
+        }
+
+        if (it.spinnerCity.getSelectedItem() != null) {
+            String selectedCity = it.spinnerCity.getSelectedItem().toString();
+            if (!selectedCity.equals(it.getString(R.string.select_city))) {
+                editedCity = selectedCity;
+            }
+        }
+
+        itinerary.setItineraryTitle(editedTitle);
+        itinerary.setCountry(editedCountry);
+        itinerary.setState(editedState);
+        itinerary.setCity(editedCity);
+        itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
+        itinerary.setColaborators(colaboratos);
+
+        it.binding.itineraryTitle.setText(itinerary.getItineraryTitle());
+        it.binding.itineraryCountry.setText(itinerary.getCountry());
+        it.binding.itineraryState.setText(itinerary.getState());
+        it.binding.itineraryCity.setText(itinerary.getCity());
+
+        it.mapServiceImp.initializeMap();
+        mAdapter.actualizar_por_id(it.itinerary);
+
+        it.updateItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
+            @Override
+            public void onSuccess() {}
+
+            @Override
+            public void onFailure(Exception e) {}
+
+
+        });
+    }
+
+
+    private void updateDates(){
+        if (selectedDateMin != null && selectedDateMax != null) {
+            Date startDate = selectedDateMin.getDate();
+            Date endDate = selectedDateMax.getDate();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            String editedStartDate = dateFormat.format(startDate);
+            String editedEndDate = dateFormat.format(endDate);
+            itinerary.setStartDate(editedStartDate);
+            itinerary.setEndDate(editedEndDate);
+            calendar.configureCalendarView();
+            it.deleteEvents.execute(itinerary.getId(), new ItineraryRepository.OperationCallback() {
+                @Override
+                public void onSuccess() {}
+
+                @Override
+                public void onFailure(Exception e) {}
+
+            });
+
+        } else if (selectedDateMin != null && selectedDateMax == null || selectedDateMin == null && selectedDateMax != null) {
+            startDateSelected = false;
+            calendar.loadAndDecorateEvents();
+            calendar.configureCalendarView();
+            it.calendarView.setClickable(false);
+            it.calendarView.setLongClickable(false);
+            it.calendarView.setEnabled(false);
+        } else {
+            calendar.loadAndDecorateEvents();
+            calendar.configureCalendarView();
+
+        }
+
+        it.calendarView.setClickable(false);
+        it.calendarView.setLongClickable(false);
+        it.calendarView.setEnabled(false);
+    }
+
+    public void llenarListaPaises(List<String> countryNames) {
+        countryNames.add(it.getString(R.string.select_country));
+        for (Country country : ItinActivity.mCountries) {
+            countryNames.add(country.getName());
+        }
+    }
+
+    public void seleccionarPais(String selectedCountryName) {
+
+        if (!selectedCountryName.equals(it.getString(R.string.select_country))) {
+
+            Country selectedCountry = null;
+            for (Country country : ItinActivity.mCountries) {
+                if (country.getName().equals(selectedCountryName)) {
+                    selectedCountry = country;
+                    break;
+                }
+            }
+            if (selectedCountry != null) {
+                List<String> stateNames = new ArrayList<>();
+                stateNames.add(it.getString(R.string.select_state));
+                for (State state : selectedCountry.getStates()) {
+                    stateNames.add(state.getName());
+                }
+                ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(it, android.R.layout.simple_spinner_item, stateNames);
+                stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                it.spinnerState.setAdapter(stateAdapter);
+            }
+
+            if (selectedCountry != null) {
+                List<String> cityNames = new ArrayList<>();
+                cityNames.add(it.getString(R.string.select_city));
+                for (State state : selectedCountry.getStates()) {
+                    if (state.getName().equals(state.getName())) {
+                        for (City city : state.getCities()) {
+                            cityNames.add(city.getName());
+                        }
+                        break;
+                    }
+                }
+                ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(it, android.R.layout.simple_spinner_item, cityNames);
+                cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                it.spinnerCity.setAdapter(cityAdapter);
+            }
+
+        }
+    }
+
+    public void handleDeleteButtonClick(Itinerary itinerary) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("ACTION", "DELETE");
+        resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
+        it.setResult(ItinActivity.RESULT_DELETE, resultIntent);
+        it.deleteItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
+            @Override
+            public void onSuccess() {it.finish();}
+
+            @Override
+            public void onFailure(Exception e) {}
+        });
+
+    }
+
+    public void handleEditButtonClick(EditText editText){
+        isEditing = true;
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.setCursorVisible(true);
+        Context context = editText.getContext();
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.editTextBackground, outValue, true);
+        selectedDateMin = null;
+        selectedDateMax = null;
+        it.calendarView.setClickable(false);
+        it.calendarView.setLongClickable(false);
+        it.calendarView.setEnabled(false);
+        it.calendarView.clearSelection();
+        it.calendarView.removeDecorators();
+        it.calendarView.state().edit()
+                .setMinimumDate((java.util.Calendar) null)
+                .setMaximumDate((java.util.Calendar) null)
+                .commit();
+
+        if (selectedDateMin != null && selectedDateMax != null) {
+            it.calendarView.state().edit()
+                    .setMinimumDate(selectedDateMin)
+                    .setMaximumDate(selectedDateMax)
+                    .commit();
+        }
+    }
+
+    public void handleVolverButtonClick(Itinerary itinerary) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("ACTION", "BACK");
+        resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
+        it.setResult(ItinActivity.RESULT_OK, resultIntent);
+        it.finish();
+    }
+
+    public void handleOkButtonClick() {
+        if (isEditing) {
+            isEditing = false;
+            hideSoftKeyboard();
+            updateFields();
+            updateDates();
+        }
+    }
 }
-
-
