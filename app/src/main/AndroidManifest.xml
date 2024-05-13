@@ -21,6 +21,7 @@
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
+            android:parentActivityName=".Presenter.ItneraryActivityView"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".Presenter.ItneraryActivityView"
@@ -37,13 +38,6 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ItinActivity"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity android:name=".Presenter.ItineraryDetailActivity" />

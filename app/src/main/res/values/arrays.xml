@@ -9,4 +9,17 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="Language">
+        <item>Español</item>
+        <item>Ingles</item>
+        <item>Gallego</item>
+    </string-array>
+
+    <string-array name="Language_values">
+        <item>Español</item>
+        <item>Ingles</item>
+        <item>Gallego</item>
+    </string-array>
+
 </resources>

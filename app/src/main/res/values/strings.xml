@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mis itinerarios</string>
+    <string name="app_name">TripTracks</string>
     <string name="str_but_añadir">Añadir elementos</string>
     <string name="str_but_borrar">Borrar elementos</string>
     <string name="str_borrar">Borrar</string>
