@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.ItinActivity;
+import com.example.triptracks.Presenter.ItneraryActivityView;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ItineraryTileBinding;
 
@@ -48,7 +49,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
 
             binding.itineraryTitle.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                 menu.add(Menu.NONE, R.id.info, Menu.NONE, "Info").setOnMenuItemClickListener(item -> {
-                    ItinActivity.selectedPosition = getAdapterPosition();
+                    ItneraryActivityView.selectedPosition = getAdapterPosition();
                     return false;
                 });
             });

@@ -1,4 +1,4 @@
-package com.example.triptracks;
+package com.example.triptracks.Presenter;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -14,11 +14,14 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.example.triptracks.AuthActivity;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DetailActLogic;
 import com.example.triptracks.Domain.Service.MapServiceImp;
-import com.example.triptracks.Presenter.EventDecorator;
+import com.example.triptracks.ItinActivity;
+import com.example.triptracks.R;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;

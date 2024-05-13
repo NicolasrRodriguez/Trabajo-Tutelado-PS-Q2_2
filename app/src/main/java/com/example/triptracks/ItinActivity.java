@@ -32,8 +32,8 @@ import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
-import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
+import com.example.triptracks.Presenter.ItineraryDetailActivity;
 import com.example.triptracks.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -365,6 +365,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     public boolean onContextItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (selectedPosition != RecyclerView.NO_POSITION) {
+            Log.d("_TAG1","Selected position cambia a " + selectedPosition);
             if (id == R.id.info) {
                 Intent intent = new Intent(this, ItineraryDetailActivity.class);
                 intent.putExtra(ItinActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
@@ -372,6 +373,10 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
                 selectedPosition = RecyclerView.NO_POSITION;
                 return true;
             }
+        }
+        else {
+            Log.d("_TAG1","Selected position no cambia" + selectedPosition);
+
         }
 
         return super.onContextItemSelected(item);

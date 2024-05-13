@@ -29,14 +29,12 @@ import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
 import com.example.triptracks.AuthActivity;
 import com.example.triptracks.Datos.FirebaseAuthData;
-import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
 import com.example.triptracks.ItinActivity;
-import com.example.triptracks.ItineraryDetailActivity;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityMainBinding;
 
@@ -67,17 +65,14 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
 
     public static int selectedPosition = RecyclerView.NO_POSITION;
 
-    CreateItinerary createItinerary;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        Intent intent = getIntent();
-        if (intent != null) {
-            UserEmail = intent.getStringExtra("UserEmail");
-        }
+        UserEmail = firebaseAuth.email();
         mAdapter = new ItineraryAdapter(mItineraryList, this, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.categoriesRv.setLayoutManager(linearLayoutManager);
@@ -88,6 +83,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         mAdapter.mostrarbotones(true);
         new LoadCountriesTask(this).execute();
         itineraryLogic.setAdapter(mAdapter);
+
 
     }
 
@@ -327,43 +323,45 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         dialog.show();
     }
 
+
+
+
+    public void onCountriesLoaded(List<Country> countries) {
+        mCountries = countries;
+    }
+
     @Override
     public void onItemClick(int position) {
+        Log.d("_TAG1","Clickado en posicion" + position);
         if (position != RecyclerView.NO_POSITION) {
             Itinerary selectedItinerary = mAdapter.getItem(position);
-            Log.d("_ITNVIWTAG", "voy a arrancar la siguiente actividad");
             detalle_actividad(selectedItinerary);
         }
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (selectedPosition != RecyclerView.NO_POSITION) {
-            if (id == R.id.info) {
-                Intent intent = new Intent(this, ItineraryDetailActivity.class);
-                Log.d("_ITNVIWTAG", "voy a arrancar la siguiente actividad");
-                intent.putExtra(ItinActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
-                myStartActivityForResult.launch(intent);
-                selectedPosition = RecyclerView.NO_POSITION;
-                return true;
-            }
-        }
-
-        return super.onContextItemSelected(item);
-    }
-
-
-    @Override
     public void onContextMenuClick(int position) {
+        Log.d("_TAG1","menu contextual de posicion" + position);
         Itinerary selectedItinerary = mItineraryList.get(position);
         Intent intent = new Intent(this, ItineraryDetailActivity.class);
         intent.putExtra(ItinActivity.KEY_ITINERARY, selectedItinerary);
         myStartActivityForResult.launch(intent);
     }
+    public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (selectedPosition != RecyclerView.NO_POSITION) {
+            if (id == R.id.info) {
+                Intent intent = new Intent(this, ItineraryDetailActivity.class);
+                intent.putExtra(ItinActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
+                myStartActivityForResult.launch(intent);
+                selectedPosition = RecyclerView.NO_POSITION;
+                return true;
+            }
+        }else {
+            Log.d("_TAG1","Selected position no cambia");
 
+        }
 
-    public void onCountriesLoaded(List<Country> countries) {
-        mCountries = countries;
+        return super.onContextItemSelected(item);
     }
 }

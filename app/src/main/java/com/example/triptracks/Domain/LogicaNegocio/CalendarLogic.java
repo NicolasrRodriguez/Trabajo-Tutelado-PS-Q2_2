@@ -5,7 +5,7 @@ import android.widget.Spinner;
 
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
-import com.example.triptracks.ItineraryDetailActivity;
+import com.example.triptracks.Presenter.ItineraryDetailActivity;
 import com.example.triptracks.Presenter.EventDecorator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;

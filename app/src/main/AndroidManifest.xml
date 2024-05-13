@@ -42,7 +42,7 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".ItineraryDetailActivity" />
+        <activity android:name=".Presenter.ItineraryDetailActivity" />
     </application>
 
 </manifest>

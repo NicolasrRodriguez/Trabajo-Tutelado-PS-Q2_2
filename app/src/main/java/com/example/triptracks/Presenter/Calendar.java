@@ -1,4 +1,4 @@
-package com.example.triptracks;
+package com.example.triptracks.Presenter;
 
 import android.text.InputType;
 import android.util.TypedValue;
@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.LogicaNegocio.CalendarLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadEvents;
-import com.example.triptracks.Presenter.EventDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
