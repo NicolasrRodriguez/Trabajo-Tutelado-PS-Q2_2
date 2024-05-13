@@ -69,6 +69,10 @@ public class FirebaseAuthData extends AppCompatActivity {
 
     }
 
+    public void closeSes(){
+        FirebaseAuth.getInstance().signOut();
+    }
+
     public String  email(){
         return Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
     }

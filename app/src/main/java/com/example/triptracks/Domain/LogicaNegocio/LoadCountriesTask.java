@@ -5,14 +5,15 @@ import android.os.AsyncTask;
 import com.beastwall.localisation.Localisation;
 import com.beastwall.localisation.model.Country;
 import com.example.triptracks.ItinActivity;
+import com.example.triptracks.Presenter.ItneraryActivityView;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {
-    private WeakReference<ItinActivity> activityReference;
+    private WeakReference<ItneraryActivityView> activityReference;
 
-    public LoadCountriesTask(ItinActivity context) {
+    public LoadCountriesTask(ItneraryActivityView context) {
         this.activityReference = new WeakReference<>(context);
     }
 
@@ -25,7 +26,7 @@ public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {
     @Override
     protected void onPostExecute(List<Country> countries) {
         super.onPostExecute(countries);
-        ItinActivity activity = activityReference.get();
+        ItneraryActivityView activity = activityReference.get();
         if (activity != null && !activity.isFinishing()) {
             activity.onCountriesLoaded(countries);
         }

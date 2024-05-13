@@ -1,7 +1,12 @@
+package com.example.triptracks.Presenter;
 
-package com.example.triptracks;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,31 +23,27 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
+import com.example.triptracks.AuthActivity;
 import com.example.triptracks.Datos.FirebaseAuthData;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
+import com.example.triptracks.Domain.LogicaNegocio.ItineraryLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
-import com.example.triptracks.Domain.Repository.ItineraryRepository;
+import com.example.triptracks.ItinActivity;
+import com.example.triptracks.ItineraryDetailActivity;
+import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityMainBinding;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener {
+public class ItneraryActivityView extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener{
 
     public static final String KEY_ITINERARY = "itinerary";
     public static final int RESULT_DELETE = 1;
@@ -52,13 +53,15 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
 
     private String UserEmail;
 
-    private FirebaseItineraryHandler firebaseItineraryHandler;
+
+    private ItineraryLogic itineraryLogic = new ItineraryLogic();//referencia a capa logica de negocio
 
     private FirebaseAuthData firebaseAuth = new FirebaseAuthData();
     private ActivityMainBinding binding;
 
     public static ItineraryAdapter mAdapter;
     private ArrayList<Itinerary> mItineraryList = new ArrayList<>();
+
 
     public static List<Country> mCountries = new ArrayList<>();
 
@@ -71,23 +74,24 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        Intent intent = getIntent();
+        if (intent != null) {
+            UserEmail = intent.getStringExtra("UserEmail");
+        }
         mAdapter = new ItineraryAdapter(mItineraryList, this, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.categoriesRv.setLayoutManager(linearLayoutManager);
         binding.categoriesRv.setAdapter(mAdapter);
+        binding.diferenciador.setText("2");//DIFERENCIADOR QUITRA AL ELIMINAR ITINACTIVITY
         registerForContextMenu(binding.categoriesRv);
-        UserEmail = firebaseAuth.email();
+
         mAdapter.mostrarbotones(true);
-        //new LoadCountriesTask(this).execute();
-
-        firebaseItineraryHandler = new FirebaseItineraryHandler(this::updateItineraryList);
-
-        createItinerary = new CreateItinerary(firebaseItineraryHandler);
+        new LoadCountriesTask(this).execute();
+        itineraryLogic.setAdapter(mAdapter);
 
     }
 
-
+    //arranca la siguiente actividad, detalle de los itinerarios
     ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -116,17 +120,15 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         Intent resultIntent = new Intent();
         setResult(AuthActivity.RESULT_SESION_CLOSED, resultIntent);
         if (id == R.id.menu_opcion_1) {
-            showDialog();
+            showDialog(); //crea un nuevo itinerario
             return true;
         } else if (id == R.id.menu_opcion_cerrarSesion) {
-            FirebaseAuth.getInstance().signOut();
+            firebaseAuth.closeSes();//cierra la sesion y acaba la actividad
             finish();
         }
 
@@ -136,10 +138,10 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
     void detalle_actividad(Itinerary itinerary) {
         Intent intent = new Intent(this, ItineraryDetailActivity.class);
         intent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
-        myStartActivityForResult.launch(intent);
+        myStartActivityForResult.launch(intent);//arranca la siguiente actividad, detalle de los itinerarios
     }
 
-    public void showDialog() {
+    public void showDialog() {//Dialogo para la creación del itinerario
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.str_mensaje_dialog);
         LayoutInflater inflater = getLayoutInflater();
@@ -187,7 +189,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
                         for (State state : selectedCountry.getStates()) {
                             stateNames.add(state.getName());
                         }
-                        ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(ItinActivity.this, android.R.layout.simple_spinner_item, stateNames);
+                        ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(ItneraryActivityView.this, android.R.layout.simple_spinner_item, stateNames);
                         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinnerState.setAdapter(stateAdapter);
                     }
@@ -231,7 +233,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
                                 break;
                             }
                         }
-                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(ItinActivity.this, android.R.layout.simple_spinner_item, cityNames);
+                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(ItneraryActivityView.this, android.R.layout.simple_spinner_item, cityNames);
                         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinnerCity.setAdapter(cityAdapter);
                     }
@@ -307,8 +309,8 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
                     inputItineraryName.setBackgroundResource(R.drawable.error_background);
                     isValid = false;
                 }
-                String startDate = formatDate(startDatePicker);
-                String endDate = formatDate(endDatePicker);
+                String startDate = itineraryLogic.formatDate(startDatePicker);
+                String endDate = itineraryLogic.formatDate(endDatePicker);
                 if (startDate.compareTo(endDate) > 0) {
                     Toast.makeText(getApplicationContext(), "La fecha de inicio no puede ser posterior a la fecha de fin.", Toast.LENGTH_LONG).show();
                     isValid = false;
@@ -316,7 +318,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
 
 
                 if (isValid) {
-                    addItems(itineraryName, selectedCountryName, selectedStateName, selectedCityName,startDate,endDate);
+                    itineraryLogic.addItems(itineraryName, selectedCountryName, selectedStateName, selectedCityName,startDate,endDate,UserEmail);
                     dialog.dismiss();
                 }
             });
@@ -325,41 +327,14 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         dialog.show();
     }
 
-
-    private void addItems(String itineraryName, String countryName, String stateName, String cityName,String startDate,String endDate) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").
-                child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",")).child("itineraries");
-        String itineraryId = databaseReference.push().getKey();
-        ArrayList<String> shared = new  ArrayList<>();
-        shared.add(UserEmail);
-        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName,UserEmail ,shared,startDate,endDate);
-        ArrayList<Itinerary> newItineraries = new ArrayList<>();
-        newItineraries.add(itinerary);
-        mAdapter.anadirelem(newItineraries);
-        createItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-
-
-            }
-
-        });
-    }
-
-
     @Override
     public void onItemClick(int position) {
         if (position != RecyclerView.NO_POSITION) {
             Itinerary selectedItinerary = mAdapter.getItem(position);
+            Log.d("_ITNVIWTAG", "voy a arrancar la siguiente actividad");
             detalle_actividad(selectedItinerary);
         }
     }
-
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -367,6 +342,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         if (selectedPosition != RecyclerView.NO_POSITION) {
             if (id == R.id.info) {
                 Intent intent = new Intent(this, ItineraryDetailActivity.class);
+                Log.d("_ITNVIWTAG", "voy a arrancar la siguiente actividad");
                 intent.putExtra(ItinActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
                 myStartActivityForResult.launch(intent);
                 selectedPosition = RecyclerView.NO_POSITION;
@@ -377,6 +353,7 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         return super.onContextItemSelected(item);
     }
 
+
     @Override
     public void onContextMenuClick(int position) {
         Itinerary selectedItinerary = mItineraryList.get(position);
@@ -385,20 +362,8 @@ public class ItinActivity extends AppCompatActivity implements ItineraryAdapter.
         myStartActivityForResult.launch(intent);
     }
 
+
     public void onCountriesLoaded(List<Country> countries) {
         mCountries = countries;
-    }
-
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void updateItineraryList(ArrayList<Itinerary> itineraries) {
-        mAdapter.updateData(itineraries);
-        mAdapter.notifyDataSetChanged();
-    }
-    private String formatDate(DatePicker datePicker) {
-        int year = datePicker.getYear();
-        int month = datePicker.getMonth() + 1;
-        int day = datePicker.getDayOfMonth();
-        return String.format(Locale.US, "%04d-%02d-%02d", year, month, day);
     }
 }

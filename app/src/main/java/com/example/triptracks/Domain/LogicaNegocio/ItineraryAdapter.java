@@ -1,5 +1,5 @@
 
-package com.example.triptracks;
+package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.ItinActivity;
+import com.example.triptracks.R;
 import com.example.triptracks.databinding.ItineraryTileBinding;
 
 public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyViewHolder> {

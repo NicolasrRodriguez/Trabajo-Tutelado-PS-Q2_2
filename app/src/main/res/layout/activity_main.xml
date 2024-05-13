@@ -6,6 +6,15 @@
     tools:context=".ItinActivity"
     android:background="@drawable/fondo">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/diferenciador"
+        android:text="1"
+        tools:ignore="MissingConstraints">
+
+    </TextView>
+
     <FrameLayout
         android:id="@+id/headerContainer"
         android:layout_width="0dp"
