@@ -30,12 +30,11 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Verificar si la preferencia de idioma ya tiene un valor guardado
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String languageValue = prefs.getString("language_preference", null);
         if (languageValue == null) {
-            // Si no hay valor guardado, establecer el idioma por defecto y guardar la configuración
-            languageValue = Locale.getDefault().getLanguage(); // Idioma por defecto del dispositivo
+            languageValue = Locale.getDefault().getLanguage();
             saveLanguagePreference(this, languageValue);
         }
     }
@@ -56,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
                 languagePreference.setOnPreferenceChangeListener((preference, newValue) -> {
                     String languageValue = newValue.toString();
                     updateLocale(languageValue);
-                    getActivity().recreate(); // Recreate the activity to apply the new language
+                    getActivity().recreate();
                     return true;
                 });
             }

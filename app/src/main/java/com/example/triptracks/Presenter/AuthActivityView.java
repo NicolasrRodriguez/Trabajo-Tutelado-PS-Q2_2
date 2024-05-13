@@ -67,7 +67,7 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 
-    //lanza la siguiente actividad una vez se autentica el usuario
+
     ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
