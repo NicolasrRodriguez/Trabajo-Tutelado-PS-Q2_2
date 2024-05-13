@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import com.example.triptracks.Domain.Entities.Itinerary;
-import com.example.triptracks.ItinActivity;
 import com.example.triptracks.Presenter.ItneraryActivityView;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ItineraryTileBinding;

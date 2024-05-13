@@ -4,7 +4,6 @@ package com.example.triptracks.Domain.LogicaNegocio;
 import android.os.AsyncTask;
 import com.beastwall.localisation.Localisation;
 import com.beastwall.localisation.model.Country;
-import com.example.triptracks.ItinActivity;
 import com.example.triptracks.Presenter.ItneraryActivityView;
 
 import java.lang.ref.WeakReference;

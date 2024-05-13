@@ -15,12 +15,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.triptracks.AuthActivity;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DetailActLogic;
 import com.example.triptracks.Domain.Service.MapServiceImp;
-import com.example.triptracks.ItinActivity;
 import com.example.triptracks.R;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -73,7 +71,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         binding = ItineraryTileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        itinerary = getIntent().getParcelableExtra(ItinActivity.KEY_ITINERARY);
+        itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
         assert itinerary != null;
         binding.itineraryTitle.setText(itinerary.getItineraryTitle());
         binding.itineraryCountry.setText(itinerary.getCountry());
@@ -146,7 +144,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         Intent resultIntent = new Intent();
-        setResult(AuthActivity.RESULT_SESION_CLOSED, resultIntent);
+        setResult(AuthActivityView.RESULT_SESION_CLOSED, resultIntent);
         if (id == R.id.menu_compartir) {
             Log.d("_ITDETTAG", "Compartir itinerario");
             showDialog();

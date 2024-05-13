@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.triptracks.ItinActivity;
 import com.example.triptracks.Domain.LogicaNegocio.AuthLogic;
 import com.example.triptracks.Domain.LogicaNegocio.AuthResult;
 import com.example.triptracks.R;

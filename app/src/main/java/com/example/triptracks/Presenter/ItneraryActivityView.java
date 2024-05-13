@@ -27,14 +27,11 @@ import android.widget.Toast;
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
-import com.example.triptracks.AuthActivity;
 import com.example.triptracks.Datos.FirebaseAuthData;
 import com.example.triptracks.Domain.Entities.Itinerary;
-import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
-import com.example.triptracks.ItinActivity;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityMainBinding;
 
@@ -119,7 +116,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         Intent resultIntent = new Intent();
-        setResult(AuthActivity.RESULT_SESION_CLOSED, resultIntent);
+        setResult(AuthActivityView.RESULT_SESION_CLOSED, resultIntent);
         if (id == R.id.menu_opcion_1) {
             showDialog(); //crea un nuevo itinerario
             return true;
@@ -133,7 +130,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
 
     void detalle_actividad(Itinerary itinerary) {
         Intent intent = new Intent(this, ItineraryDetailActivity.class);
-        intent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
+        intent.putExtra(ItneraryActivityView.KEY_ITINERARY, itinerary);
         myStartActivityForResult.launch(intent);//arranca la siguiente actividad, detalle de los itinerarios
     }
 
@@ -344,7 +341,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         Log.d("_TAG1","menu contextual de posicion" + position);
         Itinerary selectedItinerary = mItineraryList.get(position);
         Intent intent = new Intent(this, ItineraryDetailActivity.class);
-        intent.putExtra(ItinActivity.KEY_ITINERARY, selectedItinerary);
+        intent.putExtra(ItneraryActivityView.KEY_ITINERARY, selectedItinerary);
         myStartActivityForResult.launch(intent);
     }
     public boolean onContextItemSelected(MenuItem item) {
@@ -352,7 +349,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         if (selectedPosition != RecyclerView.NO_POSITION) {
             if (id == R.id.info) {
                 Intent intent = new Intent(this, ItineraryDetailActivity.class);
-                intent.putExtra(ItinActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
+                intent.putExtra(ItneraryActivityView.KEY_ITINERARY, mItineraryList.get(selectedPosition));
                 myStartActivityForResult.launch(intent);
                 selectedPosition = RecyclerView.NO_POSITION;
                 return true;
