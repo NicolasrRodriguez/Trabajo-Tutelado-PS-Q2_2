@@ -33,6 +33,7 @@ import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
 import com.example.triptracks.R;
+import com.example.triptracks.SettingsActivity;
 import com.example.triptracks.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -124,7 +125,12 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
             firebaseAuth.closeSes();//cierra la sesion y acaba la actividad
             finish();
         }
-
+        else if (item.getItemId() == R.id.menu_settings ) {
+            Log.d("_TAG", "Menu settings");
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
