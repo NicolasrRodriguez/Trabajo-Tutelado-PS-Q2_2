@@ -2,12 +2,16 @@ package com.example.triptracks.Presenter;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,7 +43,7 @@ import com.example.triptracks.databinding.ActivityMainBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItneraryActivityView extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener{
+public class ItneraryActivityView extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener , SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String KEY_ITINERARY = "itinerary";
     public static final int RESULT_DELETE = 1;
@@ -82,7 +86,14 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         new LoadCountriesTask(this).execute();
         itineraryLogic.setAdapter(mAdapter);
 
+        setupSharedPreferences();
 
+
+    }
+
+    private void setupSharedPreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     //arranca la siguiente actividad, detalle de los itinerarios
@@ -366,5 +377,25 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
+        if (key.equals("theme")) {
+            setThemefun(sharedPreferences.getBoolean("theme",false));
+        }
+    }
+
+    private void setThemefun(boolean theme) {
+
+        if (theme){
+            Log.d("_TAG1","Modo Oscuro");
+
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else{
+            Log.d("_TAG1","Modo Claro");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 }

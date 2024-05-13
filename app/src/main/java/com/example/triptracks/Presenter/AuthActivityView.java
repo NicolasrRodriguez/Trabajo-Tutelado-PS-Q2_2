@@ -5,6 +5,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +17,7 @@ import com.example.triptracks.Domain.LogicaNegocio.AuthResult;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityAuthViewBinding;
 
-public class AuthActivityView extends AppCompatActivity implements View.OnClickListener, AuthResult {
+public class AuthActivityView extends AppCompatActivity implements View.OnClickListener, AuthResult{
 
     public static final int RESULT_SESION_CLOSED = 1;
 
@@ -34,6 +36,8 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
         binding.LogInBut.setOnClickListener(this);
         authLogic.setAuthResult(this);
     }
+
+
 
     //lanza la siguiente actividad una vez se autentica el usuario
     ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(

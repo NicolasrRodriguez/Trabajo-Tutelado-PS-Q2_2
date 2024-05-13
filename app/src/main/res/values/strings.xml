@@ -60,5 +60,8 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="opciones">Opciones</string>
+    <string name="modo_oscuro">Modo Oscuro</string>
+    <string name="modo_claro">Modo Claro</string>
+    <string name="tema">Tema de la aplicación</string>
 
 </resources>

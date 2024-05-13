@@ -9,12 +9,14 @@
         app:title="Send feedback"
         app:summary="Report technical issues or suggest new features"/>
 
-    <ListPreference
-        app:key="language_preference"
-        app:title="Language"
-        app:entries="@array/Language"
-        app:entryValues="@array/Language_values"
-        app:defaultValue="Español"/>
+    <CheckBoxPreference
+        app:key="theme"
+        app:defaultValue="false"
+        app:title="@string/tema"
+        app:summaryOff="@string/modo_claro"
+        app:summaryOn="@string/modo_oscuro">
+
+    </CheckBoxPreference>
 
 
 
