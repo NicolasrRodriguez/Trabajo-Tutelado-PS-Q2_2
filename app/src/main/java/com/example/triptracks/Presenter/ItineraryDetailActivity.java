@@ -59,6 +59,8 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     Fragment fragmentcalendar;
     public Spinner spinner_evento;
     public String category;
+    public boolean iscancelled = false;
+
 
 
 
@@ -95,6 +97,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         calendar.loadAndDecorateEvents();
         configurarSpinners();
         configurarBotones();
+        setTitle(R.string.app_name);
 
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
 
@@ -107,13 +110,13 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
     public void showConfirmstartDateDialog(CalendarDay date) {
         new AlertDialog.Builder(this)
-                .setTitle("Confirmación")
-                .setMessage("¿Guardar esta fecha como fecha de inicio?")
-                .setPositiveButton("Ok", (dialog, which) -> {
+                .setTitle( getResources().getString(R.string.confirmaci_n))
+                .setMessage( getResources().getString(R.string.guardar_esta_fecha_como_fecha_de_inicio))
+                .setPositiveButton( getResources().getString(R.string.ok), (dialog, which) -> {
                     detailActLogic.confirmarFechaInicio(date);
-                    Toast.makeText(this, "Fecha de inicio seleccionada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,  getResources().getString(R.string.fecha_de_inicio_seleccionada), Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Cancelar", (dialog, which) -> {
+                .setNegativeButton( getResources().getString(R.string.cancelar), (dialog, which) -> {
                     selectedDateMin = null;
                     startDateSelected = false;
                 })
@@ -121,14 +124,15 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     }
     public void showConfirmendDateDialog(CalendarDay date) {
         new AlertDialog.Builder(this)
-                .setTitle("Confirmación")
-                .setMessage("¿Guardar esta fecha como fecha de fin?")
-                .setPositiveButton("Ok", (dialog, which) -> {
+                .setTitle( getResources().getString(R.string.confirmaci_n))
+                .setMessage( getResources().getString(R.string.guardar_esta_fecha_como_fecha_de_fin))
+                .setPositiveButton(getResources().getString(R.string.ok), (dialog, which) -> {
                     detailActLogic.confirmarFechaFin(date);
-                    Toast.makeText(this, "Fecha de fin seleccionada", Toast.LENGTH_SHORT).show();
+                   ;
+                    Toast.makeText(this, getResources().getString(R.string.fecha_de_fin_seleccionada), Toast.LENGTH_LONG).show();
 
                 })
-                .setNegativeButton("Cancelar", (dialog, which) -> {
+                .setNegativeButton(getResources().getString(R.string.cancelar), (dialog, which) -> {
                     selectedDateMax = null;
                     startDateSelected = false;
 

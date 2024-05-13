@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.LogicaNegocio.CalendarLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadEvents;
+import com.example.triptracks.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +32,8 @@ public class Calendar {
         this.calendlogic = new CalendarLogic(it);
     }
 
+
+
     public void promptForActivity(CalendarDay date) {
         Event existingEvent = calendlogic.findEventByDate(date);
         if (existingEvent != null) {
@@ -39,7 +42,7 @@ public class Calendar {
             final EditText input = new EditText(it);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             it.spinner_evento = new Spinner(it);
-            List<String> categories = Arrays.asList("Exploración", "Gastronomía", "Entretenimiento");
+            List<String> categories = Arrays.asList(it. getResources().getString(R.string.exploraci_n), it.getResources().getString(R.string.gastronom_a), it.getResources().getString(R.string.entretenimiento));
             ArrayAdapter<String> adapter = new ArrayAdapter<>(it, android.R.layout.simple_spinner_item, categories);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             it.spinner_evento.setAdapter(adapter);
@@ -49,16 +52,16 @@ public class Calendar {
             layout.addView(input);
 
             AlertDialog dialog = new AlertDialog.Builder(it)
-                    .setTitle("Agregar actividad")
-                    .setMessage("Ingresa la actividad para " + date.getDate().toString())
+                    .setTitle(R.string.agregar_actividad)
+                    .setMessage(it.getResources().getString(R.string.ingresa_la_actividad_para) + date.getDate().toString())
                     .setView(layout)
-                    .setPositiveButton("Aceptar", (dialogInterface, i) -> {
+                    .setPositiveButton(it. getResources().getString(R.string.aceptar), (dialogInterface, i) -> {
                         String activity = input.getText().toString();
                         if (!activity.isEmpty()) {
                             calendlogic.createEvent(date,activity);
                         }
                     })
-                    .setNegativeButton("Cancelar", null)
+                    .setNegativeButton(it. getResources().getString(R.string.cancelar), null)
                     .create();
             dialog.show();
         }
@@ -70,8 +73,8 @@ public class Calendar {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(50, 20, 50, 20);
         AlertDialog.Builder builder = new AlertDialog.Builder(it)
-                .setTitle("Opciones de evento")
-                .setItems(new CharSequence[]{"Detalles", "Editar", "Eliminar"}, (dialogInterface, i) -> {
+                .setTitle(it.getResources().getString(R.string.opciones_de_evento))
+                .setItems(new CharSequence[]{it.getResources().getString(R.string.detalles), it.getResources().getString(R.string.editar), it.getResources().getString(R.string.eliminar)}, (dialogInterface, i) -> {
                     switch (i) {
                         case 0:
                             showEventDetails(event, layout);
@@ -90,12 +93,12 @@ public class Calendar {
 
     private void showEventDetails(Event event, LinearLayout layout) {
         layout.removeAllViews();
-        showMessage("Tipo de actividad", event.getCategory(), layout);
-        showMessage("Detalles del evento", event.getDescription(), layout);
+        showMessage(it.getResources().getString(R.string.tipo_de_actividad), event.getCategory(), layout);
+        showMessage(it.getString(R.string.detalles_del_evento), event.getDescription(), layout);
         AlertDialog.Builder builder = new AlertDialog.Builder(it)
-                .setTitle("Detalles del evento")
+                .setTitle(it.getString(R.string.detalles_del_evento))
                 .setView(layout)
-                .setPositiveButton("OK", null);
+                .setPositiveButton(it.getString(R.string.ok), null);
         AlertDialog detailsDialog = builder.create();
         detailsDialog.show();
     }
@@ -112,7 +115,7 @@ public class Calendar {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(50, 20, 50, 20);
         Spinner spinner = new Spinner(it);
-        List<String> categories = Arrays.asList("Exploración", "Gastronomía", "Entretenimiento");
+        List<String> categories = Arrays.asList(it. getResources().getString(R.string.exploraci_n), it.getResources().getString(R.string.gastronom_a), it.getResources().getString(R.string.entretenimiento));
         ArrayAdapter<String> adapter = new ArrayAdapter<>(it, android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -126,21 +129,21 @@ public class Calendar {
         input.setText(event.getDescription());
         layout.addView(input);
         new AlertDialog.Builder(it)
-                .setTitle("Editar evento")
+                .setTitle(it.getResources().getString(R.string.editar))
                 .setView(layout)
-                .setPositiveButton("Actualizar", (dialogInterface, i) -> {
+                .setPositiveButton(it.getResources().getString(R.string.actualizar), (dialogInterface, i) -> {
                     calendlogic.edit(event,input,spinner);
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(it.getResources().getString(R.string.cancelar), null)
                 .show();
     }
 
 
     private void deleteEvent(Event event) {
         new AlertDialog.Builder(it)
-                .setTitle("Confirmar eliminación")
-                .setMessage("¿Estás seguro de que deseas eliminar este evento?")
-                .setPositiveButton("Eliminar", (dialogInterface, i) -> {
+                .setTitle(it.getResources().getString(R.string.confirmar_eliminaci_n))
+                .setMessage(it.getResources().getString(R.string.est_s_seguro_de_que_deseas_eliminar_este_evento))
+                .setPositiveButton(it.getResources().getString(R.string.eliminar), (dialogInterface, i) -> {
                     calendlogic.delete(event);
                     if (it.eventDecorator != null) {
                         it.binding.calendarView.removeDecorator(it.eventDecorator);
@@ -149,7 +152,7 @@ public class Calendar {
                     it.binding.calendarView.invalidateDecorators();
                     loadAndDecorateEvents();
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(it.getResources().getString(R.string.cancelar), null)
                 .show();
     }
 

@@ -35,16 +35,22 @@ public class EventDecorator implements DayViewDecorator {
     }
 
     private Drawable getBackgroundDrawable(Context context, String category) {
-        switch (category) {
-            case "Exploración":
-                return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_expl);
-            case "Gastronomía":
-                return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_gast);
-            case "Entretenimiento":
-                return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_ent);
-            case "Default":
-                return ContextCompat.getDrawable(context,R.drawable.background_calendar_day_def);
+        String exploracion = context.getResources().getString(R.string.exploraci_n);
+        String gastronomia = context.getResources().getString(R.string.gastronom_a);
+        String entretenimiento = context.getResources().getString(R.string.entretenimiento);
+
+
+        if (category.equals(exploracion)) {
+            return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_expl);
+
+        } else if (category.equals(gastronomia)) {
+            return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_gast);
+        } else if (category.equals(entretenimiento)) {
+            return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_ent);
+        } else {
+            return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_def);
         }
-        return null;
     }
 }
+
+

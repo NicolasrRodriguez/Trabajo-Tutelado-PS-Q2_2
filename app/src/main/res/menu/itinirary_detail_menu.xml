@@ -9,13 +9,13 @@
 
     <item
         android:id="@+id/action_show_map"
-        android:title="Mapa"
+        android:title="@string/Mapa"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_show_calendar"
-        android:title="Calendario"
+        android:title="@string/Calendario"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

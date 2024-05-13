@@ -3,8 +3,11 @@ package com.example.triptracks.Presenter;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +18,8 @@ import com.example.triptracks.Domain.LogicaNegocio.AuthLogic;
 import com.example.triptracks.Domain.LogicaNegocio.AuthResult;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityAuthViewBinding;
+
+import java.util.Locale;
 
 public class AuthActivityView extends AppCompatActivity implements View.OnClickListener, AuthResult {
 
@@ -28,12 +33,38 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_view);
+        setLanguage(getLanguageFromPreferences());
+        setTitle(R.string.app_name);
         binding = ActivityAuthViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.text.setText("diablo");//QUITAR ESTE TEXTVIEW CUANDO SE QUITE AuthActivity
         binding.SingUpBut.setOnClickListener(this);
         binding.LogInBut.setOnClickListener(this);
         authLogic.setAuthResult(this);
+
+    }
+    private String getLanguageFromPreferences() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getString("language_preference", ""); // Obtener el idioma preferido
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setLanguage(getLanguageFromPreferences());
+        setTitle(R.string.app_name);
+        binding.SingUpBut.setText(getResources().getString(R.string.sign_up));
+        binding.LogInBut.setText(getResources().getString(R.string.log_in));
+        binding.EmailEdit.setHint(getResources().getString(R.string.Email));
+        binding.PassEdit.setHint(getResources().getString(R.string.Contraseña));
+    }
+
+    private void setLanguage(String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = getResources().getConfiguration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 
     //lanza la siguiente actividad una vez se autentica el usuario

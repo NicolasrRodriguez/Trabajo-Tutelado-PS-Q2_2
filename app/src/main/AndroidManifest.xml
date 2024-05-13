@@ -26,6 +26,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDEOfNtdi5CEB1Fq3UlDRvbRKyVwCkv9OM" />
 
+
+
         <activity
             android:name=".Presenter.AuthActivityView"
             android:exported="true">
@@ -35,14 +37,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".ItinActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+
         <activity
             android:name=".ItinActivity"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="WrongManifestParent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".Presenter.ItineraryDetailActivity" />
-    </application>
+        <activity android:name=".Presenter.ItineraryDetailActivity"
+            tools:ignore="WrongManifestParent" />
 
+    </application>
 </manifest>

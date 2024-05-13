@@ -2,6 +2,7 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -11,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import com.example.triptracks.Domain.Entities.Itinerary;
-import com.example.triptracks.ItinActivity;
 import com.example.triptracks.Presenter.ItneraryActivityView;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ItineraryTileBinding;
@@ -43,17 +43,18 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
         ItineraryTileBinding binding;
 
 
-        public MyViewHolder(ItineraryTileBinding binding, final OnItemClickListener listener) {
+        public MyViewHolder(ItineraryTileBinding binding, final OnItemClickListener listener, Context context) {
             super(binding.getRoot());
             this.binding = binding;
 
             binding.itineraryTitle.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-                menu.add(Menu.NONE, R.id.info, Menu.NONE, "Info").setOnMenuItemClickListener(item -> {
+                menu.add(Menu.NONE, R.id.info, Menu.NONE, context.getString(R.string.Informacion)).setOnMenuItemClickListener(item -> {
                     ItneraryActivityView.selectedPosition = getAdapterPosition();
                     return false;
                 });
             });
         }
+
 
         public void bind(Itinerary itinerary) {
             binding.element.setText(itinerary.getId());
@@ -64,11 +65,13 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
 
     @NonNull
     @Override
-    public ItineraryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
         ItineraryTileBinding binding = ItineraryTileBinding.inflate(inflater, parent, false);
-        return new MyViewHolder(binding, listener);
+        return new MyViewHolder(binding, listener, context);
     }
+
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {

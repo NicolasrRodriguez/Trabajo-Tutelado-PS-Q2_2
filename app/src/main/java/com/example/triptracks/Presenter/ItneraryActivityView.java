@@ -4,10 +4,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,10 +39,12 @@ import com.example.triptracks.Domain.LogicaNegocio.ItineraryLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
 import com.example.triptracks.ItinActivity;
 import com.example.triptracks.R;
+import com.example.triptracks.SettingsActivity;
 import com.example.triptracks.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ItneraryActivityView extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener{
 
@@ -48,6 +53,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
     public static final int RESULT_UPDATE = 2;
 
     public static final int RESULT_OK = 3;
+    private static final int SETTINGS_REQUEST_CODE = 100;
 
     private String UserEmail;
 
@@ -83,9 +89,31 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         mAdapter.mostrarbotones(true);
         new LoadCountriesTask(this).execute();
         itineraryLogic.setAdapter(mAdapter);
+        setTitle(R.string.app_name);
 
 
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SETTINGS_REQUEST_CODE) {
+            updateLanguage();
+        }
+    }
+
+
+    private void updateLanguage() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String language = preferences.getString("language_preference", ""); // Obtener el idioma preferido
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = getResources().getConfiguration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+        // Notificar a la actividad que las configuraciones han cambiado
+        recreate();
+    }
+
 
     //arranca la siguiente actividad, detalle de los itinerarios
     ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
@@ -126,6 +154,11 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         } else if (id == R.id.menu_opcion_cerrarSesion) {
             firebaseAuth.closeSes();//cierra la sesion y acaba la actividad
             finish();
+        }  else if (item.getItemId() == R.id.menu_settings) {
+            Log.d("_TAG", "menu settings");
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivityForResult(intent, SETTINGS_REQUEST_CODE);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

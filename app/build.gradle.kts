@@ -52,6 +52,11 @@ dependencies {
 
 
 
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.preference:preference:1.2.1")
+
+
+
 
     //Dependencias FireBase:
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
