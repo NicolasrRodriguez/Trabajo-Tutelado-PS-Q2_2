@@ -3,10 +3,12 @@ package com.example.triptracks.Presenter;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +22,8 @@ import com.example.triptracks.databinding.ActivityAuthViewBinding;
 public class AuthActivityView extends AppCompatActivity implements View.OnClickListener, AuthResult{
 
     public static final int RESULT_SESION_CLOSED = 1;
+
+    private SharedPreferences preferences;
 
     private ActivityAuthViewBinding binding;
 
@@ -35,6 +39,24 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
         binding.SingUpBut.setOnClickListener(this);
         binding.LogInBut.setOnClickListener(this);
         authLogic.setAuthResult(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);//this.getPreferences(Context.MODE_PRIVATE);
+        setThemeApp(preferences.getBoolean("theme",false));
+
+    }
+
+    private void setThemeApp(boolean theme){
+
+        if (theme){
+            Log.d("_TAG1","Modo Oscuro");
+
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else{
+            Log.d("_TAG1","Modo Claro");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+
     }
 
 
