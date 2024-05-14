@@ -37,7 +37,6 @@ import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
-import com.example.triptracks.ItinActivity;
 import com.example.triptracks.R;
 import com.example.triptracks.SettingsActivity;
 import com.example.triptracks.databinding.ActivityMainBinding;
@@ -166,7 +165,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
 
     void detalle_actividad(Itinerary itinerary) {
         Intent intent = new Intent(this, ItineraryDetailActivity.class);
-        intent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
+        intent.putExtra(ItneraryActivityView.KEY_ITINERARY, itinerary);
         myStartActivityForResult.launch(intent);//arranca la siguiente actividad, detalle de los itinerarios
     }
 
@@ -377,7 +376,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         Log.d("_TAG1","menu contextual de posicion" + position);
         Itinerary selectedItinerary = mItineraryList.get(position);
         Intent intent = new Intent(this, ItineraryDetailActivity.class);
-        intent.putExtra(ItinActivity.KEY_ITINERARY, selectedItinerary);
+        intent.putExtra(ItneraryActivityView.KEY_ITINERARY, selectedItinerary);
         myStartActivityForResult.launch(intent);
     }
     public boolean onContextItemSelected(MenuItem item) {
@@ -385,7 +384,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         if (selectedPosition != RecyclerView.NO_POSITION) {
             if (id == R.id.info) {
                 Intent intent = new Intent(this, ItineraryDetailActivity.class);
-                intent.putExtra(ItinActivity.KEY_ITINERARY, mItineraryList.get(selectedPosition));
+                intent.putExtra(ItneraryActivityView.KEY_ITINERARY, mItineraryList.get(selectedPosition));
                 myStartActivityForResult.launch(intent);
                 selectedPosition = RecyclerView.NO_POSITION;
                 return true;

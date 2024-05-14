@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import com.example.triptracks.Presenter.ItneraryActivityView;
 import com.example.triptracks.databinding.ActivityAuthBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -70,7 +72,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     private void Register(String email, String pass){
         Log.d("_AUTHTAG", "Registrando a: " + email);
 
-        Intent intent = new Intent(this, ItinActivity.class);
+        Intent intent = new Intent(this, ItneraryActivityView.class);
         intent.putExtra("UserEmail" , email);
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -90,7 +92,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     private void LogIn(String email, String pass){
         Log.d("_AUTHTAG", "Iniciando Sesion de: " + email);
 
-        Intent intent = new Intent(this, ItinActivity.class);
+        Intent intent = new Intent(this, ItneraryActivityView.class);
         intent.putExtra("UserEmail" , email);
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override

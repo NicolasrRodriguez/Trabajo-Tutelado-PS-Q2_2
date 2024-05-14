@@ -19,7 +19,6 @@ import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DetailActLogic;
 import com.example.triptracks.Domain.Service.MapServiceImp;
-import com.example.triptracks.ItinActivity;
 import com.example.triptracks.R;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -69,7 +68,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         binding = ItineraryTileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        itinerary = getIntent().getParcelableExtra(ItinActivity.KEY_ITINERARY);
+        itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
         assert itinerary != null;
         binding.itineraryTitle.setText(itinerary.getItineraryTitle());
         binding.itineraryCountry.setText(itinerary.getCountry());

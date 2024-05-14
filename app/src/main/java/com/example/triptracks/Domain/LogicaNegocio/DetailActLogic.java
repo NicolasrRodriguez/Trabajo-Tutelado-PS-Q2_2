@@ -1,6 +1,6 @@
 package com.example.triptracks.Domain.LogicaNegocio;
-
-import static com.example.triptracks.ItinActivity.mAdapter;
+import com.example.triptracks.Presenter.ItneraryActivityView;
+import static com.example.triptracks.Presenter.ItneraryActivityView.mAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -16,7 +16,7 @@ import com.example.triptracks.Presenter.Calendar;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
-import com.example.triptracks.ItinActivity;
+
 import com.example.triptracks.Presenter.ItineraryDetailActivity;
 import com.example.triptracks.R;
 import com.google.firebase.auth.FirebaseUser;
@@ -114,7 +114,7 @@ public class DetailActLogic {
 
     public void llenarListaPaises(List<String> countryNames) {
         countryNames.add(it.getString(R.string.select_country));
-        for (Country country : ItinActivity.mCountries) {
+        for (Country country : ItneraryActivityView.mCountries) {
             countryNames.add(country.getName());
         }
     }
@@ -124,7 +124,7 @@ public class DetailActLogic {
         if (!selectedCountryName.equals(it.getString(R.string.select_country))) {
 
             Country selectedCountry = null;
-            for (Country country : ItinActivity.mCountries) {
+            for (Country country : ItneraryActivityView.mCountries) {
                 if (country.getName().equals(selectedCountryName)) {
                     selectedCountry = country;
                     break;
@@ -245,7 +245,7 @@ public class DetailActLogic {
 
             });
         } else if (selectedDateMin!=null && selectedDateMax==null ||selectedDateMin==null && selectedDateMax!=null ) {
-            //Toast.makeText(it, "Edición cancelada: falta una fecha por seleccionar", Toast.LENGTH_LONG).show();
+            Toast.makeText(it, it.getResources().getString(R.string.edicion_cancelada), Toast.LENGTH_LONG).show();
             startDateSelected = false;
             calendar.loadAndDecorateEvents();
             calendar.calendlogic.configureCalendarView();
@@ -267,8 +267,8 @@ public class DetailActLogic {
     public void handleDeleteButtonClick(Itinerary itinerary) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra("ACTION", "DELETE");
-        resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
-        it.setResult(ItinActivity.RESULT_DELETE, resultIntent);
+        resultIntent.putExtra(ItneraryActivityView.KEY_ITINERARY, itinerary);
+        it.setResult(ItneraryActivityView.RESULT_DELETE, resultIntent);
         DeleteItinerary deleteItinerary = new DeleteItinerary(it.firebaseItineraryHandler);
         deleteItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
             @Override
@@ -284,8 +284,8 @@ public class DetailActLogic {
     public void handleVolverButtonClick(Itinerary itinerary) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra("ACTION", "BACK");
-        resultIntent.putExtra(ItinActivity.KEY_ITINERARY, itinerary);
-        it.setResult(ItinActivity.RESULT_OK, resultIntent);
+        resultIntent.putExtra(ItneraryActivityView.KEY_ITINERARY, itinerary);
+        it.setResult(ItneraryActivityView.RESULT_OK, resultIntent);
         it.finish();
     }
 
