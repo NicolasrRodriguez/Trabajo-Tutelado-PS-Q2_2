@@ -12,11 +12,11 @@ import android.widget.Toast;
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
+import com.example.triptracks.Presenter.Calendar;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.ItinActivity;
-import com.example.triptracks.Presenter.Calendar;
 import com.example.triptracks.Presenter.ItineraryDetailActivity;
 import com.example.triptracks.R;
 import com.google.firebase.auth.FirebaseUser;
@@ -245,7 +245,7 @@ public class DetailActLogic {
 
             });
         } else if (selectedDateMin!=null && selectedDateMax==null ||selectedDateMin==null && selectedDateMax!=null ) {
-
+            //Toast.makeText(it, "Edición cancelada: falta una fecha por seleccionar", Toast.LENGTH_LONG).show();
             startDateSelected = false;
             calendar.loadAndDecorateEvents();
             calendar.calendlogic.configureCalendarView();

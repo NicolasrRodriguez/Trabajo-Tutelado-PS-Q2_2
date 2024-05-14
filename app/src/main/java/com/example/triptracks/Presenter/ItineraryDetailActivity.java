@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.example.triptracks.AuthActivity;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
@@ -59,11 +58,6 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     Fragment fragmentcalendar;
     public Spinner spinner_evento;
     public String category;
-    public boolean iscancelled = false;
-
-
-
-
     DetailActLogic detailActLogic;
 
     public ItineraryDetailActivity() {}
@@ -90,11 +84,12 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
         firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
         calendar = new Calendar(this);
+        calendar.calendlogic.configureCalendarView();
+        calendar.loadAndDecorateEvents();
         mapServiceImp = new MapServiceImp(this, itinerary);
         detailActLogic = new DetailActLogic(this, calendar, itinerary, user, selectedDateMin, selectedDateMax);
         calendarView = findViewById(R.id.calendarView);
-        calendar.calendlogic.configureCalendarView();
-        calendar.loadAndDecorateEvents();
+
         configurarSpinners();
         configurarBotones();
         setTitle(R.string.app_name);
