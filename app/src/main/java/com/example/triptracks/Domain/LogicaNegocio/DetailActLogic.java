@@ -30,7 +30,7 @@ import java.util.Objects;
 
 public class DetailActLogic {
 
-    private boolean startDateSelected;
+    public boolean startDateSelected;
     private Calendar calendar;
     private ItineraryDetailActivity it;
     private Itinerary itinerary;
@@ -245,7 +245,7 @@ public class DetailActLogic {
 
             });
         } else if (selectedDateMin!=null && selectedDateMax==null ||selectedDateMin==null && selectedDateMax!=null ) {
-            Toast.makeText(it, it.getResources().getString(R.string.edicion_cancelada), Toast.LENGTH_LONG).show();
+
             startDateSelected = false;
             calendar.loadAndDecorateEvents();
             calendar.calendlogic.configureCalendarView();

@@ -96,7 +96,6 @@ public class Calendar {
 
     private void showEventDetails(Event event, LinearLayout layout) {
         layout.removeAllViews();
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(it);
         String languagePreference = prefs.getString("language_preference", Locale.getDefault().getLanguage());
         String categoria = event.getCategory();

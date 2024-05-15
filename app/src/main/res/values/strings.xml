@@ -55,7 +55,7 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="pref_title_language">Language</string>
-    <string name="pref_summary_language">Choose your preferred language</string>
+    <string name="pref_summary_language">Selected language: %1$s</string>
     <string name="pref_dialog_title_language">Select Language</string>
     <string name="Calendario">Calendar</string>
     <string name="Mapa">Map</string>

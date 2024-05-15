@@ -272,6 +272,9 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         binding.butVolver.setOnClickListener(v -> {detailActLogic.handleVolverButtonClick(itinerary);});
 
         binding.butOk.setOnClickListener(v -> {
+            binding.calendarView.clearSelection();
+            binding.calendarView.setClickable(false);
+            binding.calendarView.setEnabled(false);
             detailActLogic.handleOkButtonClick();
             findViewById(R.id.itineraryCountry).setVisibility(View.VISIBLE);
             findViewById(R.id.spinnerCountryAct2).setVisibility(View.GONE);
