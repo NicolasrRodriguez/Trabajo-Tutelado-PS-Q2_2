@@ -1,5 +1,6 @@
 package com.example.triptracks.Presenter;
 
+import android.content.SharedPreferences;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.widget.ArrayAdapter;
@@ -8,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.PreferenceManager;
+
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.LogicaNegocio.CalendarLogic;
 import com.example.triptracks.Domain.LogicaNegocio.LoadEvents;
@@ -93,7 +96,20 @@ public class Calendar {
 
     private void showEventDetails(Event event, LinearLayout layout) {
         layout.removeAllViews();
-        showMessage(it.getResources().getString(R.string.tipo_de_actividad), event.getCategory(), layout);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(it);
+        String languagePreference = prefs.getString("language_preference", Locale.getDefault().getLanguage());
+        String categoria = event.getCategory();
+        if (languagePreference.equals("en")) {
+            if (categoria.equals("Exploración")) {
+                categoria = "Exploration";
+            } else if (categoria.equals("Gastronomía")) {
+                categoria = "Gastronomy";
+            } else if (categoria.equals("Entretenimiento")) {
+                categoria = "Entertainment";
+            }
+        }
+        showMessage(it.getResources().getString(R.string.tipo_de_actividad), categoria, layout);
         showMessage(it.getString(R.string.detalles_del_evento), event.getDescription(), layout);
         AlertDialog.Builder builder = new AlertDialog.Builder(it)
                 .setTitle(it.getString(R.string.detalles_del_evento))

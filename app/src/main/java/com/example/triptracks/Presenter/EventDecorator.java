@@ -40,12 +40,12 @@ public class EventDecorator implements DayViewDecorator {
         String entretenimiento = context.getResources().getString(R.string.entretenimiento);
 
 
-        if (category.equals(exploracion)) {
+        if (category.equals(exploracion) || category.equals("Exploración")) {
             return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_expl);
 
-        } else if (category.equals(gastronomia)) {
+        } else if (category.equals(gastronomia) || category.equals("Gastronomía")) {
             return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_gast);
-        } else if (category.equals(entretenimiento)) {
+        } else if (category.equals(entretenimiento) || category.equals("Entretenimiento")) {
             return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_ent);
         } else {
             return ContextCompat.getDrawable(context, R.drawable.background_calendar_day_def);

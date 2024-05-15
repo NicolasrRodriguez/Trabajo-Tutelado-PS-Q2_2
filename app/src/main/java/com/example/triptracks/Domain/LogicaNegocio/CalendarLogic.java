@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class CalendarLogic {
     private ItineraryDetailActivity it;
@@ -32,6 +33,15 @@ public class CalendarLogic {
         String id = databaseReference.push().getKey();
         it.category = it.spinner_evento.getSelectedItem().toString();
         if (id != null) {
+            if( it.category.equals("Exploration")){
+                it.category = "Exploración";
+            } else if (it.category.equals("Gastronomy")) {
+                it.category ="Gastronomía";
+
+            } else if (it.category.equals("Entertainment")) {
+                it.category ="Entretenimiento";
+            }
+
             Event event = new Event(id, date.getDate().toString(), it.category, activity);
             databaseReference.child(id).setValue(event);
             it.eventDecorator =new EventDecorator(it, Collections.singleton(date), it.category);
@@ -55,8 +65,18 @@ public class CalendarLogic {
     public void edit(Event event, EditText input, Spinner spinner){
         String description = input.getText().toString();
         String category = spinner.getSelectedItem().toString();
+
         event.setDescription(description);
         event.setCategory(category);
+
+        if(Objects.equals(event.getCategory(), "Exploration")){
+            event.setCategory("Exploración");
+        } else if (Objects.equals(event.getCategory(), "Gastronomy")) {
+            event.setCategory("Gastronomía");
+
+        } else if (Objects.equals(event.getCategory(), "Entertainment")) {
+            event.setCategory("Entretenimiento");
+        }
         UpdateEvent UpdateEvent = new UpdateEvent(it.firebaseItineraryHandler);
         UpdateEvent.execute(it.itinerary, event,new ItineraryRepository.OperationCallback() {
             @Override
