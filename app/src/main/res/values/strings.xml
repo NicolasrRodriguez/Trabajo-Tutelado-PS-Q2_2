@@ -63,5 +63,8 @@
     <string name="modo_oscuro">Modo Oscuro</string>
     <string name="modo_claro">Modo Claro</string>
     <string name="tema">Tema de la aplicación</string>
+    <string name="sesion_iniciada">Mantener sesión iniciada?</string>
+    <string name="no">No</string>
+    <string name="si">Si</string>
 
 </resources>
