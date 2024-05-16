@@ -62,6 +62,8 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     public Spinner spinner_evento;
     public String category;
 
+    public static final String KEY_ITINERARY = "itinerary";
+
 
 
     DetailActLogic detailActLogic;
@@ -175,6 +177,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.menu_galeria) {
             Intent intent = new Intent(this, ImagesActivityVIew.class);
+            intent.putExtra(ItneraryActivityView.KEY_ITINERARY, itinerary);
             myStartActivityForResult.launch(intent);;
             return true;
         }

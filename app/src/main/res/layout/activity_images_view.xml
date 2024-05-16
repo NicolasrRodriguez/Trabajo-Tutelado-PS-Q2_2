@@ -19,6 +19,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/escogerimagen"
         android:text="imagen">
+    </Button>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/compartir"
+        android:text="Compartir"
+        >
 
     </Button>
 

@@ -14,6 +14,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.triptracks.Datos.FirebaseAuthData;
+import com.example.triptracks.Datos.FirebaseItineraryHandler;
+import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
+import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityImagesViewBinding;
 
@@ -23,9 +27,13 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
 
     private String UserEmail;
 
+    private Itinerary itinerary;
+
     private String imageSelected;
 
     private FirebaseAuthData firebaseAuth = new FirebaseAuthData();
+
+    private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +42,8 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
         UserEmail = firebaseAuth.email();
         binding.botonVolver.setOnClickListener(this);
         binding.escogerimagen.setOnClickListener(this);
+        binding.compartir.setOnClickListener(this);
+        itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
 
 
 
@@ -44,6 +54,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
             result -> {
                 assert result.getData() != null;
                 Uri iamgeuri = result.getData().getData();
+                assert iamgeuri != null;
                 imageSelected = iamgeuri.toString();
                 binding.image.setImageURI(iamgeuri);
             }
@@ -60,6 +71,12 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
         else if (v == binding.escogerimagen){
             Intent resultImageIntent = new Intent(MediaStore.ACTION_PICK_IMAGES);
             myStartActivityForResult.launch(resultImageIntent);
+        }
+        else if (v == binding.compartir) {
+            if (imageSelected != null) {
+                itinerary.addImageUri(imageSelected);
+            }
+
         }
     }
 }
