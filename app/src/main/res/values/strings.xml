@@ -63,5 +63,6 @@
     <string name="modo_oscuro">Modo Oscuro</string>
     <string name="modo_claro">Modo Claro</string>
     <string name="tema">Tema de la aplicación</string>
+    <string name="galeria">Galeria</string>
 
 </resources>

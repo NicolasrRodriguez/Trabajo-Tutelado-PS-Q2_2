@@ -20,9 +20,13 @@ import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DetailActLogic;
 import com.example.triptracks.Domain.Service.MapServiceImp;
 import com.example.triptracks.R;
+import com.example.triptracks.SettingsActivity;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -134,6 +138,14 @@ public class ItineraryDetailActivity extends AppCompatActivity {
                 .show();
     }
 
+    ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    Log.d("_TAG","Succesfully returned to MainActivity");
+                }
+            }
+    );
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -160,6 +172,10 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             binding.layoutmapcontainer.setVisibility(View.GONE);
             binding.map.setVisibility(View.GONE);
             showCalendarFragment();
+            return true;
+        } else if (id == R.id.menu_galeria) {
+            Intent intent = new Intent(this, ImagesActivityVIew.class);
+            myStartActivityForResult.launch(intent);;
             return true;
         }
 
