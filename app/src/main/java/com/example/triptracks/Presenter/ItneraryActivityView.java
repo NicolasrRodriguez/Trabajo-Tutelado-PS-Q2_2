@@ -32,6 +32,7 @@ import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
 import com.example.triptracks.AuthActivity;
 import com.example.triptracks.Datos.FirebaseAuthData;
+import com.example.triptracks.DocActivity;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.CreateItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryAdapter;
@@ -158,7 +159,12 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivityForResult(intent, SETTINGS_REQUEST_CODE);
             return true;
+        }else if (id == R.id.menu_documentacion) {
+            Intent documentacionIntent = new Intent(this, DocActivity.class);
+            startActivity(documentacionIntent);
+            return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }

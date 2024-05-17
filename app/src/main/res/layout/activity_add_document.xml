@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddDocumentActivity">
+
+    <EditText
+        android:id="@+id/etDocumentName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Document Name"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/etDocumentDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Document Description"
+        android:layout_below="@id/etDocumentName"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/btnSelectImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Image"
+        android:layout_below="@id/etDocumentDescription"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
+
+    <Button
+        android:id="@+id/btnAddDocument"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Document"
+        android:layout_below="@id/btnSelectImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
+</RelativeLayout>

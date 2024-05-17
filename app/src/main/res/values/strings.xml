@@ -82,4 +82,6 @@
     <string name="actualizar">Update</string>
     <string name="confirmar_eliminaci_n">Confirm Deletion</string>
     <string name="est_s_seguro_de_que_deseas_eliminar_este_evento">Are you sure you want to delete this event?</string>
+    <string name="Documentacion">Documentation</string>
+    <string name="add_document">Add Document</string>
 </resources>
