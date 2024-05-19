@@ -8,31 +8,37 @@
     android:elevation="4dp"
     android:layout_margin="8dp">
 
-<ImageView
-android:id="@+id/document_image"
-android:layout_width="match_parent"
-android:layout_height="200dp"
-android:scaleType="centerCrop"
-android:src="@drawable/placeholder_image"
-android:contentDescription="ff" />
+    <ImageView
+    android:id="@+id/document_image"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:scaleType="centerCrop"
+    android:src="@drawable/placeholder_image" />
 
-<TextView
-android:id="@+id/document_name"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:textSize="18sp"
-android:textStyle="bold"
-android:textColor="#000000"
-    android:layout_marginTop="8dp"
-    android:text="bb" />
+    <TextView
+    android:id="@+id/document_name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    android:textColor="#000000"
+        android:layout_marginTop="8dp"/>
 
-<TextView
-android:id="@+id/document_description"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:textSize="14sp"
-android:textColor="#000000"
-    android:layout_marginTop="4dp"
-    android:text="vv" />
+    <TextView
+    android:id="@+id/document_description"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="14sp"
+    android:textColor="#000000"
+        android:layout_marginTop="4dp" />
+    <TextView
+        android:id="@+id/document_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>

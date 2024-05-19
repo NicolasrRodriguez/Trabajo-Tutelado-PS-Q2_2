@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,8 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+
 
 public class DocActivity extends AppCompatActivity {
 
@@ -51,15 +48,12 @@ public class DocActivity extends AppCompatActivity {
     }
 
     private void refreshDocuments() {
-        Log.d("DocActivity", "Loading documents from Firebase Storage");
+        Log.d("DocActivity", "Loading documents from Firebase Realtime Database");
         if (user != null) {
-            firebaseMediaHandler.getImagesFromDocumentsFolder(imageUrls -> {
-                Log.d("DocActivity", "Received image URLs: " + imageUrls.size());
+            firebaseMediaHandler.getDocuments(documents -> {
+                Log.d("DocActivity", "Received documents: " + documents.size());
                 documentList.clear();
-                for (String imageUrl : imageUrls) {
-                    Document document = new Document("","", "", imageUrl);
-                    documentList.add(document);
-                }
+                documentList.addAll(documents);
                 documentAdapter.notifyDataSetChanged();
             }, errorMessage -> {
                 Log.e("DocActivity", "Error loading documents: " + errorMessage);
@@ -78,13 +72,12 @@ public class DocActivity extends AppCompatActivity {
             String documentName = data.getStringExtra("documentName");
             String documentDescription = data.getStringExtra("documentDescription");
             String documentUri = data.getStringExtra("documentUri");
-            Document document = new Document("",documentName, documentDescription, documentUri);
+            Document document = new Document("", documentName, documentDescription, documentUri);
             documentList.add(document);
             documentAdapter.notifyDataSetChanged();
             Toast.makeText(this, "Document added successfully", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,6 +98,4 @@ public class DocActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
-
 }

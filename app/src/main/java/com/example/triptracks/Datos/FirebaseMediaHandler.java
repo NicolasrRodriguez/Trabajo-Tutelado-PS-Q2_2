@@ -88,32 +88,28 @@ public class FirebaseMediaHandler {
 
 
 
-    public void getImagesFromDocumentsFolder(Consumer<List<String>> onSuccess, Consumer<String> onFailure) {
+    public void getDocuments(Consumer<List<Document>> onSuccess, Consumer<String> onFailure) {
         if (user != null) {
-            String userPath = user.getEmail().replace(".", ",");
-            StorageReference userDocumentsRef = storageReference.child("users/" + userPath + "/documents");
-
-            userDocumentsRef.listAll().addOnSuccessListener(listResult -> {
-                List<String> imageUrls = new ArrayList<>();
-                int itemCount = listResult.getItems().size();
-                int[] counter = {0};
-
-                for (StorageReference item : listResult.getItems()) {
-                    item.getDownloadUrl().addOnSuccessListener(uri -> {
-                        imageUrls.add(uri.toString());
-                        counter[0]++;
-
-                        if (counter[0] == itemCount) {
-                            onSuccess.accept(imageUrls);
-                        }
-                    }).addOnFailureListener(e -> onFailure.accept("Failed to download image: " + e.getMessage()));
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Document> documents = new ArrayList<>();
+                    for (DataSnapshot documentSnapshot : snapshot.getChildren()) {
+                        Document document = documentSnapshot.getValue(Document.class);
+                        documents.add(document);
+                    }
+                    onSuccess.accept(documents);
                 }
-            }).addOnFailureListener(e -> onFailure.accept("Failed to list documents: " + e.getMessage()));
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    onFailure.accept("Error fetching documents: " + error.getMessage());
+                }
+            });
         } else {
             onFailure.accept("User not logged in");
         }
     }
-
     public void deleteDocument(String imageUrl, Consumer<String> onSuccess, Consumer<String> onFailure) {
         if (user != null) {
             StorageReference imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
@@ -139,5 +135,30 @@ public class FirebaseMediaHandler {
             onFailure.accept("User not logged in");
         }
     }
+
+    public void getDocumentDetails(String documentId, Consumer<Document> onSuccess, Consumer<String> onFailure) {
+        if (user != null) {
+            databaseReference.child(documentId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        Document document = snapshot.getValue(Document.class);
+                        onSuccess.accept(document);
+                    } else {
+                        onFailure.accept("Document not found");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    onFailure.accept("Error fetching document details: " + error.getMessage());
+                }
+            });
+        } else {
+            onFailure.accept("User not logged in");
+        }
+    }
+
+
 
 }
