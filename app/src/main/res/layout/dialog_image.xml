@@ -21,7 +21,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
-        android:text="Document Title" />
+        android:text="" />
 
     <TextView
         android:id="@+id/descriptionTextView"
@@ -31,7 +31,7 @@
         android:layout_margin="16dp"
         android:textSize="16sp"
         android:textColor="@android:color/black"
-        android:text="Document Description" />
+        android:text="" />
 
     <ImageView
         android:id="@+id/btnClose"

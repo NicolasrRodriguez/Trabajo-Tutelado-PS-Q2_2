@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.triptracks.Datos.FirebaseMediaHandler;
 import com.example.triptracks.Domain.Entities.Document;
@@ -21,12 +22,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
-
 public class DocActivity extends AppCompatActivity {
 
     private static final int ADD_DOCUMENT_REQUEST = 1;
 
-    private ListView documentListView;
+    private RecyclerView documentRecyclerView;
     private DocumentAdapter documentAdapter;
     private ArrayList<Document> documentList;
     private FirebaseUser user;
@@ -37,10 +37,12 @@ public class DocActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doc);
-        documentListView = findViewById(R.id.documents_list);
+        documentRecyclerView = findViewById(R.id.documents_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        documentRecyclerView.setLayoutManager(linearLayoutManager);
         documentList = new ArrayList<>();
         documentAdapter = new DocumentAdapter(this, documentList);
-        documentListView.setAdapter(documentAdapter);
+        documentRecyclerView.setAdapter(documentAdapter);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
         firebaseMediaHandler = new FirebaseMediaHandler();
@@ -71,10 +73,12 @@ public class DocActivity extends AppCompatActivity {
         if (requestCode == ADD_DOCUMENT_REQUEST && resultCode == RESULT_OK && data != null) {
             String documentName = data.getStringExtra("documentName");
             String documentDescription = data.getStringExtra("documentDescription");
-            String documentUri = data.getStringExtra("documentUri");
-            Document document = new Document("", documentName, documentDescription, documentUri);
-            documentList.add(document);
-            documentAdapter.notifyDataSetChanged();
+            String imageUrl = data.getStringExtra("imageUrl");
+            Document document = new Document("", documentName, documentDescription, imageUrl);
+            documentList.add(0, document);
+            documentAdapter.notifyItemInserted(0);
+            documentRecyclerView.scrollToPosition(0);
+            refreshDocuments();
             Toast.makeText(this, "Document added successfully", Toast.LENGTH_SHORT).show();
         }
     }

@@ -53,7 +53,11 @@ public class AddDocumentActivity extends AppCompatActivity {
                 firebaseMediaHandler.uploadImage(selectedImageUri, documentName, documentDescription,
                         successMessage -> {
                             Toast.makeText(AddDocumentActivity.this, successMessage, Toast.LENGTH_SHORT).show();
-                            setResult(RESULT_OK);
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("documentName", documentName);
+                            resultIntent.putExtra("documentDescription", documentDescription);
+                            resultIntent.putExtra("imageUrl", selectedImageUri);
+                            setResult(RESULT_OK, resultIntent);
                             finish();
                         },
                         errorMessage -> {
@@ -70,11 +74,13 @@ public class AddDocumentActivity extends AppCompatActivity {
             }
         });
     }
+
     private void openGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
         startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
