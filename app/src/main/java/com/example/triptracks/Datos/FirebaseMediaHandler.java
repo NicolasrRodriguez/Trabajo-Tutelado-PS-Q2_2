@@ -116,10 +116,24 @@ public class FirebaseMediaHandler {
 
     public void deleteDocument(String imageUrl, Consumer<String> onSuccess, Consumer<String> onFailure) {
         if (user != null) {
-
             StorageReference imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
             imageRef.delete().addOnSuccessListener(aVoid -> {
-                onSuccess.accept("Document image deleted successfully");
+
+                databaseReference.orderByChild("imageUrl").equalTo(imageUrl).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot documentSnapshot : snapshot.getChildren()) {
+                            documentSnapshot.getRef().removeValue().addOnSuccessListener(aVoid2 -> {
+                                onSuccess.accept("Document deleted successfully");
+                            }).addOnFailureListener(e -> onFailure.accept("Failed to delete document from database: " + e.getMessage()));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        onFailure.accept("Failed to query document: " + error.getMessage());
+                    }
+                });
             }).addOnFailureListener(e -> onFailure.accept("Failed to delete image: " + e.getMessage()));
         } else {
             onFailure.accept("User not logged in");
