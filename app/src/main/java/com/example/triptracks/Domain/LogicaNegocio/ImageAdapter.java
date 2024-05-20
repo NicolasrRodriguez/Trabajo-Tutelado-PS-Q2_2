@@ -42,7 +42,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
 
     @NonNull
     @Override
-    public DocumentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_image, parent, false);
         return new DocumentViewHolder(view);
     }
