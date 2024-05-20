@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -32,6 +33,7 @@ public class AddDocumentActivityView extends AppCompatActivity {
     private Uri selectedImageUri;
     UploadDocument uploadDocument;
     private FirebaseMediaHandler firebaseMediaHandler;
+    private ProgressBar progressBar;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -46,6 +48,7 @@ public class AddDocumentActivityView extends AppCompatActivity {
         etDocumentName = findViewById(R.id.etDocumentName);
         etDocumentDescription = findViewById(R.id.etDocumentDescription);
         Button btnAddDocument = findViewById(R.id.btnAddDocument);
+        progressBar = findViewById(R.id.progressBar);
 
         btnAddDocument.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,8 +63,10 @@ public class AddDocumentActivityView extends AppCompatActivity {
                     Toast.makeText(AddDocumentActivityView.this, R.string.please_select_an_image, Toast.LENGTH_SHORT).show();
                     return;
                 }
+                progressBar.setVisibility(View.VISIBLE);
                 uploadDocument.execute(selectedImageUri, documentName, documentDescription,
                         successMessage -> {
+                            progressBar.setVisibility(View.GONE);
                             Toast.makeText(AddDocumentActivityView.this, successMessage, Toast.LENGTH_SHORT).show();
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("documentName", documentName);
@@ -71,6 +76,7 @@ public class AddDocumentActivityView extends AppCompatActivity {
                             finish();
                         },
                         errorMessage -> {
+                            progressBar.setVisibility(View.GONE);
                             Toast.makeText(AddDocumentActivityView.this, errorMessage, Toast.LENGTH_SHORT).show();
                         });
 

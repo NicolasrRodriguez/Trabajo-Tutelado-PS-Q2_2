@@ -102,8 +102,6 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
 
                 holder.nameTextView.setVisibility(View.GONE);
                 holder.descriptionTextView.setVisibility(View.GONE);
-            } else {
-                holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.placeholder_image));
             }
         }
     }
