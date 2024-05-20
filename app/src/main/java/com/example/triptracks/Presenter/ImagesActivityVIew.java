@@ -4,6 +4,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresExtension;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,15 +14,20 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.triptracks.Datos.FirebaseAuthData;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
+import com.example.triptracks.Domain.Entities.Imagen;
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.ImageAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ImageLogic;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityImagesViewBinding;
+
+import java.util.List;
 
 public class ImagesActivityVIew extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +40,12 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
 
     private FirebaseAuthData firebaseAuth = new FirebaseAuthData();
 
+    RecyclerView imagesRecyclerView;
+
+    private List<Imagen> images;
+
+    ImageAdapter imageAdapter;
+
 
     private ImageLogic imageLogic = new ImageLogic();
     @Override
@@ -40,10 +53,10 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         binding = ActivityImagesViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.botonVolver.setOnClickListener(this);
-        binding.escogerimagen.setOnClickListener(this);
-        binding.compartir.setOnClickListener(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
+        imageAdapter = new ImageAdapter(images);
+        imagesRecyclerView = findViewById(R.id.images_list);
 
 
 
@@ -56,6 +69,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
                 Uri iamgeuri = result.getData().getData();
                 assert iamgeuri != null;
                 imageSelected = iamgeuri;
+
                 binding.image.setImageURI(iamgeuri);
             }
     );

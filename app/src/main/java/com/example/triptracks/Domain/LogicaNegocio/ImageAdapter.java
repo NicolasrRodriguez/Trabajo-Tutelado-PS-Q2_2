@@ -1,5 +1,6 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.media.Image;
@@ -27,6 +28,10 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
 
     private List<Imagen> images;
 
+    public ImageAdapter(List<Imagen> images) {
+        this.images = images;
+    }
+
     public static class ImageViewHolder extends RecyclerView.ViewHolder{
 
         private final ImageView imageView;
@@ -50,13 +55,15 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
         return new ImageViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ImageAdapter.ImageViewHolder holder, int position) {
-        holder.getImageView().setImageURI(images.get(position).getImageUrl());
+        Glide.with(holder.getImageView()).load(images.get(position).getImageUrl()).into(holder.getImageView());
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return images.size();
     }
 }
