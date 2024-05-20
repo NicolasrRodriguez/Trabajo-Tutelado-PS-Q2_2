@@ -71,7 +71,9 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
                         builder.setTitle(R.string.eliminar_documento);
                         builder.setMessage(R.string.est_seguro_de_que_desea_eliminar_este_documento);
                         builder.setPositiveButton(R.string.si, (dialog, which) -> {
-                            firebaseMediaHandler.deleteDocument(imageUrl,
+                            DeleteDocument deleteDocumentUseCase = new DeleteDocument(firebaseMediaHandler);
+                            deleteDocumentUseCase.execute(
+                                    imageUrl,
                                     onSuccess -> {
                                         Log.d("Firebase", onSuccess);
                                         int currentPosition = holder.getAdapterPosition();
@@ -82,7 +84,11 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
                                             onDocumentDeletedListener.onDocumentDeleted();
                                         }
                                     },
-                                    onFailure -> Log.e("Firebase", onFailure));
+                                    onFailure -> {
+                                        Log.e("Firebase", onFailure);
+                                    }
+                            );
+
                         });
                         builder.setNegativeButton(R.string.no, null);
                         builder.show();
@@ -112,8 +118,9 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         ImageView imageView = dialog.findViewById(R.id.imageView);
         TextView titleTextView = dialog.findViewById(R.id.titleTextView);
         TextView descriptionTextView = dialog.findViewById(R.id.descriptionTextView);
-
-        firebaseMediaHandler.getDocumentDetails(documentId,
+        GetDocDetails getDocDetails = new GetDocDetails(firebaseMediaHandler);
+        getDocDetails.execute(
+                documentId,
                 document -> {
                     Glide.with(context)
                             .load(imageUrl)
@@ -123,7 +130,8 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
                 },
                 error -> {
                     Log.e("Firebase", "Error fetching document details: " + error);
-                });
+                }
+        );
 
         ImageView btnClose = dialog.findViewById(R.id.btnClose);
         btnClose.setTag(dialog);

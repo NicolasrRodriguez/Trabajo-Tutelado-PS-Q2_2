@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import com.example.triptracks.Datos.FirebaseMediaHandler;
+import com.example.triptracks.Domain.LogicaNegocio.UploadDocument;
 
 import java.util.Locale;
 
@@ -28,6 +29,7 @@ public class AddDocumentActivity extends AppCompatActivity {
     private EditText etDocumentName;
     private EditText etDocumentDescription;
     private Uri selectedImageUri;
+    UploadDocument uploadDocument;
     private FirebaseMediaHandler firebaseMediaHandler;
 
     @SuppressLint("MissingInflatedId")
@@ -38,6 +40,7 @@ public class AddDocumentActivity extends AppCompatActivity {
         setLanguage(getLanguageFromPreferences());
         setTitle(R.string.app_name);
         firebaseMediaHandler = new FirebaseMediaHandler();
+        uploadDocument = new UploadDocument(firebaseMediaHandler);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         etDocumentName = findViewById(R.id.etDocumentName);
         etDocumentDescription = findViewById(R.id.etDocumentDescription);
@@ -56,8 +59,7 @@ public class AddDocumentActivity extends AppCompatActivity {
                     Toast.makeText(AddDocumentActivity.this, R.string.please_select_an_image, Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                firebaseMediaHandler.uploadImage(selectedImageUri, documentName, documentDescription,
+                uploadDocument.execute(selectedImageUri, documentName, documentDescription,
                         successMessage -> {
                             Toast.makeText(AddDocumentActivity.this, successMessage, Toast.LENGTH_SHORT).show();
                             Intent resultIntent = new Intent();
@@ -70,6 +72,7 @@ public class AddDocumentActivity extends AppCompatActivity {
                         errorMessage -> {
                             Toast.makeText(AddDocumentActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                         });
+
             }
         });
 

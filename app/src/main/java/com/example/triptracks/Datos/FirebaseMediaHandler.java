@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.triptracks.Domain.Entities.Document;
+import com.example.triptracks.Domain.Repository.DocumentRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class FirebaseMediaHandler {
+public class FirebaseMediaHandler implements DocumentRepository {
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private FirebaseUser user;
@@ -42,6 +43,8 @@ public class FirebaseMediaHandler {
         }
     }
 
+
+    @Override
     public void uploadImage(Uri fileUri, String documentName, String documentDescription, Consumer<String> onSuccess, Consumer<String> onFailure) {
         if (fileUri != null && user != null) {
             String userPath = user.getEmail().replace(".", ",");
@@ -70,6 +73,8 @@ public class FirebaseMediaHandler {
             onFailure.accept("File URI or user is null");
         }
     }
+
+
     private void saveDocumentInfo(String documentId, String documentName, String documentDescription, String downloadUrl, Consumer<String> onSuccess, Consumer<String> onFailure) {
         if (user != null) {
             long timestamp = System.currentTimeMillis();
@@ -90,6 +95,8 @@ public class FirebaseMediaHandler {
 
 
 
+
+    @Override
     public void getDocuments(Consumer<List<Document>> onSuccess, Consumer<String> onFailure) {
         if (user != null) {
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -112,6 +119,8 @@ public class FirebaseMediaHandler {
             onFailure.accept("User not logged in");
         }
     }
+
+    @Override
     public void deleteDocument(String imageUrl, Consumer<String> onSuccess, Consumer<String> onFailure) {
         if (user != null) {
             StorageReference imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
@@ -138,6 +147,8 @@ public class FirebaseMediaHandler {
         }
     }
 
+
+    @Override
     public void getDocumentDetails(String documentId, Consumer<Document> onSuccess, Consumer<String> onFailure) {
         if (user != null) {
             databaseReference.child(documentId).addListenerForSingleValueEvent(new ValueEventListener() {

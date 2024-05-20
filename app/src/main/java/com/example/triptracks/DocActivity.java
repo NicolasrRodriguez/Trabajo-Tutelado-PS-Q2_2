@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.triptracks.Datos.FirebaseMediaHandler;
 import com.example.triptracks.Domain.Entities.Document;
 import com.example.triptracks.Domain.LogicaNegocio.DocumentAdapter;
+import com.example.triptracks.Domain.LogicaNegocio.GetDocuments;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -37,6 +38,7 @@ public class DocActivity extends AppCompatActivity {
     private ArrayList<Document> documentList;
     private FirebaseUser user;
     private FirebaseMediaHandler firebaseMediaHandler;
+    GetDocuments getDocuments;
 
 
     @SuppressLint("MissingInflatedId")
@@ -48,6 +50,8 @@ public class DocActivity extends AppCompatActivity {
         setTitle(R.string.app_name);
         documentRecyclerView = findViewById(R.id.documents_list);
 
+
+
         documentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         documentList = new ArrayList<>();
         documentAdapter = new DocumentAdapter(this, documentList);
@@ -56,6 +60,7 @@ public class DocActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
         firebaseMediaHandler = new FirebaseMediaHandler();
+        getDocuments = new GetDocuments(firebaseMediaHandler);
         refreshDocuments();
     }
 
@@ -76,16 +81,20 @@ public class DocActivity extends AppCompatActivity {
     private void refreshDocuments() {
         Log.d("DocActivity", "Loading documents from Firebase Realtime Database");
         if (user != null) {
-            firebaseMediaHandler.getDocuments(documents -> {
-                Log.d("DocActivity", "Received documents: " + documents.size());
-                documentList.clear();
-                Collections.sort(documents, Comparator.comparingLong(Document::getTimestamp));
-                documentList.addAll(documents);
-                documentAdapter.notifyDataSetChanged();
-            }, errorMessage -> {
-                Log.e("DocActivity", "Error loading documents: " + errorMessage);
-                Toast.makeText(DocActivity.this, "Error loading documents: " + errorMessage, Toast.LENGTH_SHORT).show();
-            });
+
+            getDocuments.execute(
+                    documents -> {
+                        Log.d("DocActivity", "Received documents: " + documents.size());
+                        documentList.clear();
+                        Collections.sort(documents, Comparator.comparingLong(Document::getTimestamp));
+                        documentList.addAll(documents);
+                        documentAdapter.notifyDataSetChanged();
+                    },
+                    errorMessage -> {
+                        Log.e("DocActivity", "Error loading documents: " + errorMessage);
+                        Toast.makeText(DocActivity.this, "Error loading documents: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+            );
         } else {
             Log.e("DocActivity", "User is null");
             Toast.makeText(DocActivity.this, "User is null", Toast.LENGTH_SHORT).show();
