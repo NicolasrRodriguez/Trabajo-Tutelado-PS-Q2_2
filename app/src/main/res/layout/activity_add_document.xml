@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondo"
     tools:context=".AddDocumentActivity">
 
     <EditText
@@ -11,7 +12,9 @@
         android:hint="@string/document_name"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:background="@android:color/white"
+        android:padding="10dp" />
 
     <EditText
         android:id="@+id/etDocumentDescription"
@@ -21,7 +24,9 @@
         android:layout_below="@id/etDocumentName"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:background="@android:color/white"
+        android:padding="10dp" />
 
     <Button
         android:id="@+id/btnSelectImage"
@@ -32,7 +37,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/white"
+        android:padding="10dp" />
 
     <Button
         android:id="@+id/btnAddDocument"
@@ -43,5 +50,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/white"
+        android:padding="10dp" />
 </RelativeLayout>

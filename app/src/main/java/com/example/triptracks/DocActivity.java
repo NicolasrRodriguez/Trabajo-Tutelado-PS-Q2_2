@@ -11,16 +11,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.triptracks.Datos.FirebaseMediaHandler;
 import com.example.triptracks.Domain.Entities.Document;
 import com.example.triptracks.Domain.LogicaNegocio.DocumentAdapter;
-import com.example.triptracks.Presenter.StackLayoutManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -38,7 +37,7 @@ public class DocActivity extends AppCompatActivity {
     private ArrayList<Document> documentList;
     private FirebaseUser user;
     private FirebaseMediaHandler firebaseMediaHandler;
-    private StackLayoutManager stackLayoutManager;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -48,8 +47,8 @@ public class DocActivity extends AppCompatActivity {
         setLanguage(getLanguageFromPreferences());
         setTitle(R.string.app_name);
         documentRecyclerView = findViewById(R.id.documents_list);
-        stackLayoutManager = new StackLayoutManager(this);
-        documentRecyclerView.setLayoutManager(stackLayoutManager);
+
+        documentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         documentList = new ArrayList<>();
         documentAdapter = new DocumentAdapter(this, documentList);
         documentRecyclerView.setAdapter(documentAdapter);
@@ -92,6 +91,7 @@ public class DocActivity extends AppCompatActivity {
             Toast.makeText(DocActivity.this, "User is null", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -106,28 +106,23 @@ public class DocActivity extends AppCompatActivity {
             Toast.makeText(this, "Document added successfully", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void addDocument(Document document) {
         documentList.add(0, document);
         documentAdapter.notifyItemInserted(0);
         documentRecyclerView.post(() -> {
-            stackLayoutManager.scrollToPosition(0);
+            documentRecyclerView.getLayoutManager().scrollToPosition(0);
             documentRecyclerView.post(() -> {
-                View firstChild = stackLayoutManager.findViewByPosition(0);
+                View firstChild =  documentRecyclerView.getLayoutManager().findViewByPosition(0);
                 if (firstChild != null) {
                     int offset = (documentRecyclerView.getHeight() - firstChild.getHeight()) / 2;
-                    stackLayoutManager.scrollToPositionWithOffset(0, offset);
+                    documentRecyclerView.getLayoutManager().scrollToPosition(0);
                 }
             });
         });
     }
 
-    private void deleteDocument(int position) {
-        if (position < 0 || position >= documentList.size()) return;
-        documentList.remove(position);
-        documentAdapter.notifyItemRemoved(position);
-        documentAdapter.notifyItemRangeChanged(position, documentList.size());
-        documentRecyclerView.post(() -> stackLayoutManager.applyScaleAndElevation());
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
