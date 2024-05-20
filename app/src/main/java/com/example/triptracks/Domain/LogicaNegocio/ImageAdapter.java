@@ -114,7 +114,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
         TextView titleTextView = dialog.findViewById(R.id.titleTextView);
         TextView descriptionTextView = dialog.findViewById(R.id.descriptionTextView);
 
-        firebaseMediaHandler.getDocumentDetails(documentId,
+        firebaseImages.getDocumentDetails(documentId,
                 document -> {
                     Glide.with(context)
                             .load(imageUrl)
