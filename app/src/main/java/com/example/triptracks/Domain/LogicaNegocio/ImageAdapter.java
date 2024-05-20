@@ -2,6 +2,7 @@ package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    private
+    private List<Imagen> images;
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder{
 
@@ -51,7 +52,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ImageAdapter.ImageViewHolder holder, int position) {
-        holder.getImageView().setImageURI();
+        holder.getImageView().setImageURI(images.get(position).getImageUrl());
     }
 
     @Override

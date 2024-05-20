@@ -1,23 +1,25 @@
 package com.example.triptracks.Domain.Entities;
 
+import java.net.URL;
+
 public class Imagen {
 
-    private String imageUrl;
+    private URL imageUrl;
 
 
 
-    public Imagen(String imageUrl ) {
+    public Imagen(URL imageUrl ) {
         this.imageUrl = imageUrl;
 
     }
 
 
 
-    public String getImageUrl() {
+    public URL getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(URL imageUrl) {
         this.imageUrl = imageUrl;
     }
 }
