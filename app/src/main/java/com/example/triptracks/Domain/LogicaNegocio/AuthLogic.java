@@ -1,7 +1,12 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.util.Log;
+
+import com.beastwall.localisation.model.Country;
 import com.example.triptracks.Datos.FirebaseAuthData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AuthLogic implements FirebaseAuthData.ResultCallback {
@@ -10,6 +15,8 @@ public class AuthLogic implements FirebaseAuthData.ResultCallback {
     private final FirebaseAuthData firebaseAuthData = new FirebaseAuthData(); //referencia a capa datos
 
     private AuthResult  authResult;//referencia  a interfaz para "comunicarse" con View
+
+
 
     public void setAuthResult(AuthResult authResult) {
         this.authResult = authResult;
@@ -59,5 +66,7 @@ public class AuthLogic implements FirebaseAuthData.ResultCallback {
         }
 
     }
+
+
 
 }

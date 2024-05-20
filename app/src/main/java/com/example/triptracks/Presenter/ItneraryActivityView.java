@@ -1,5 +1,7 @@
 package com.example.triptracks.Presenter;
 
+import static com.example.triptracks.Presenter.AuthActivityView.mCountries;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -66,7 +68,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
     private ArrayList<Itinerary> mItineraryList = new ArrayList<>();
 
 
-    public static List<Country> mCountries = new ArrayList<>();
+
 
     public static int selectedPosition = RecyclerView.NO_POSITION;
 
@@ -86,7 +88,6 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         registerForContextMenu(binding.categoriesRv);
 
         mAdapter.mostrarbotones(true);
-        new LoadCountriesTask(this).execute();
         itineraryLogic.setAdapter(mAdapter);
         setTitle(R.string.app_name);
 
@@ -360,12 +361,6 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         dialog.show();
     }
 
-
-
-
-    public void onCountriesLoaded(List<Country> countries) {
-        mCountries = countries;
-    }
 
     @Override
     public void onItemClick(int position) {

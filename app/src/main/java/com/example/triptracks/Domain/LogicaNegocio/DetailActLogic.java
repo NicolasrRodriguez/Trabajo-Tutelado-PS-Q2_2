@@ -3,6 +3,7 @@ import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.DeleteAllEvents
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.DeleteItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.ShareItinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.UpdateItinerary;
+import com.example.triptracks.Presenter.AuthActivityView;
 import com.example.triptracks.Presenter.ItneraryActivityView;
 import static com.example.triptracks.Presenter.ItneraryActivityView.mAdapter;
 import android.content.Context;
@@ -118,7 +119,7 @@ public class DetailActLogic {
 
     public void llenarListaPaises(List<String> countryNames) {
         countryNames.add(it.getString(R.string.select_country));
-        for (Country country : ItneraryActivityView.mCountries) {
+        for (Country country : AuthActivityView.mCountries) {
             countryNames.add(country.getName());
         }
     }
@@ -128,7 +129,7 @@ public class DetailActLogic {
         if (!selectedCountryName.equals(it.getString(R.string.select_country))) {
 
             Country selectedCountry = null;
-            for (Country country : ItneraryActivityView.mCountries) {
+            for (Country country : AuthActivityView.mCountries) {
                 if (country.getName().equals(selectedCountryName)) {
                     selectedCountry = country;
                     break;

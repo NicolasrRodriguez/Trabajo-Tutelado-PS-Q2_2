@@ -4,15 +4,16 @@ package com.example.triptracks.Domain.LogicaNegocio;
 import android.os.AsyncTask;
 import com.beastwall.localisation.Localisation;
 import com.beastwall.localisation.model.Country;
+import com.example.triptracks.Presenter.AuthActivityView;
 import com.example.triptracks.Presenter.ItneraryActivityView;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {
-    private WeakReference<ItneraryActivityView> activityReference;
+    private WeakReference<AuthActivityView> activityReference;
 
-    public LoadCountriesTask(ItneraryActivityView context) {
+    public LoadCountriesTask(AuthActivityView context) {
         this.activityReference = new WeakReference<>(context);
     }
 
@@ -25,9 +26,9 @@ public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {
     @Override
     protected void onPostExecute(List<Country> countries) {
         super.onPostExecute(countries);
-        ItneraryActivityView activity = activityReference.get();
+        AuthActivityView activity = activityReference.get();
         if (activity != null && !activity.isFinishing()) {
-            activity.onCountriesLoaded(countries);
+            AuthActivityView.onCountriesLoaded(countries);
         }
     }
 }

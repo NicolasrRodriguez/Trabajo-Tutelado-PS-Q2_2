@@ -13,11 +13,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.beastwall.localisation.model.Country;
 import com.example.triptracks.Domain.LogicaNegocio.AuthLogic;
 import com.example.triptracks.Domain.LogicaNegocio.AuthResult;
+import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityAuthViewBinding;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class AuthActivityView extends AppCompatActivity implements View.OnClickListener, AuthResult {
@@ -25,7 +29,7 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
     public static final int RESULT_SESION_CLOSED = 1;
 
     private ActivityAuthViewBinding binding;
-
+    public static List<Country> mCountries = new ArrayList<>();
     private final AuthLogic authLogic = new AuthLogic();//referencia a capa Dominio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
         binding.SingUpBut.setOnClickListener(this);
         binding.LogInBut.setOnClickListener(this);
         authLogic.setAuthResult(this);
+        new LoadCountriesTask(this).execute();
 
     }
     private String getLanguageFromPreferences() {
@@ -117,7 +122,9 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
         Toast.makeText(getApplicationContext(), R.string.athu_fail , Toast.LENGTH_LONG).show();
         Log.d("_AUTHTAG", " no se pudo iniciar o regsitrar");
     }
-
+    public static void onCountriesLoaded(List<Country> countries) {
+        mCountries = countries;
+    }
 
 
 }
