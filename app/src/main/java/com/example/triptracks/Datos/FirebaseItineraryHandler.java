@@ -44,6 +44,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                         Itinerary itinerary = snapshot.getValue(Itinerary.class);
                         if (itinerary != null) {
                             mItineraryList.add(itinerary);
+
                         }
                     }
                     onItinerariesUpdated.accept(mItineraryList);

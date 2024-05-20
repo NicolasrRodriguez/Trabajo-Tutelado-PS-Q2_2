@@ -42,6 +42,21 @@ public class Itinerary implements Parcelable {
         this.ImageUris = new ArrayList<>();
 
     }
+    public Itinerary(String id, String itineraryTitle, String country, String state,String city,String admin, ArrayList<String> colaborators,String startDate, String endDate,ArrayList<String> imageUris) {
+        this.id = id;
+
+        this.itineraryTitle = itineraryTitle;
+        this.country = country;
+        this.state = state;
+        this.city = city;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.Admin = admin;
+        this.Colaborators = colaborators;
+        this.ImageUris = imageUris;
+
+    }
+
 
     protected Itinerary(Parcel in) {
         id = in.readString();

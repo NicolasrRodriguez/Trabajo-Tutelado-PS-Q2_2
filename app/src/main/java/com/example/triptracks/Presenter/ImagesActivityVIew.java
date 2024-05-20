@@ -16,6 +16,7 @@ import android.view.View;
 import com.example.triptracks.Datos.FirebaseAuthData;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.ImageLogic;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.R;
@@ -33,7 +34,8 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
 
     private FirebaseAuthData firebaseAuth = new FirebaseAuthData();
 
-    private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
+
+    private ImageLogic imageLogic = new ImageLogic();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,13 +71,14 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
             this.finish();
         }
         else if (v == binding.escogerimagen){
+            Log.d("_IMGTAG","Escoger imagen ");
             Intent resultImageIntent = new Intent(MediaStore.ACTION_PICK_IMAGES);
             myStartActivityForResult.launch(resultImageIntent);
         }
         else if (v == binding.compartir) {
-            if (imageSelected != null) {
-                itinerary.addImageUri(imageSelected);
-            }
+            Log.d("_IMGTAG","Subir imagen " + imageSelected);
+
+            imageLogic.uploadImage(imageSelected,itinerary);
 
         }
     }
