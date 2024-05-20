@@ -67,9 +67,9 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
 
                     if (imageUrl != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(R.string.eliminar_documento);
-                        builder.setMessage(R.string.est_seguro_de_que_desea_eliminar_este_documento);
-                        builder.setPositiveButton(R.string.si, (dialog, which) -> {
+                        builder.setTitle(R.string.eliminar_imagen);
+                        builder.setMessage(R.string.est_seguro_de_que_desea_eliminar_esta_imagen);
+                        builder.setPositiveButton(R.string.str_but_OK, (dialog, which) -> { //cambiar a str_si
                             firebaseImages.deleteDocument(imageUrl,
                                     onSuccess -> {
                                         Log.d("Firebase", onSuccess);
@@ -83,7 +83,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
                                     },
                                     onFailure -> Log.e("Firebase", onFailure));
                         });
-                        builder.setNegativeButton(R.string.no, null);
+                        builder.setNegativeButton(R.string.str_borrar, null);//cambiar a str_no
                         builder.show();
 
                         return true;
@@ -106,7 +106,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
 
     private void showImageDialog(String imageUrl) {
         Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.dialog_image);
+        dialog.setContentView(R.layout.dialog_image_im);
 
         ImageView imageView = dialog.findViewById(R.id.imageView);
 

@@ -64,5 +64,7 @@
     <string name="modo_claro">Modo Claro</string>
     <string name="tema">Tema de la aplicación</string>
     <string name="galeria">Galeria</string>
+    <string name="eliminar_imagen">Eliminar Imagen?</string>
+    <string name="est_seguro_de_que_desea_eliminar_esta_imagen">Está seguro de que desea eliminar esta imagen?</string>
 
 </resources>
