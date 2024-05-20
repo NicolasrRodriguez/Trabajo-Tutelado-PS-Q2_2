@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
+import com.example.triptracks.Domain.Entities.Document;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +37,7 @@ public class FirebaseImages {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String downloadUrl = uri.toString();
-                                    saveDocumentInfo(documentId, documentName, documentDescription, downloadUrl, onSuccess, onFailure);
+                                    saveDocumentInfo(imageId, documentName, documentDescription, downloadUrl, onSuccess, onFailure);
                                 }
                             });
                         }
