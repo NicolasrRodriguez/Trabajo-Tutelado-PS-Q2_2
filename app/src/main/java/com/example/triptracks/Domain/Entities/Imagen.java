@@ -4,9 +4,14 @@ public class Imagen {
 
     private String imageUrl;
 
-    public Imagen(String imageUrl) {
+
+
+    public Imagen(String imageUrl ) {
         this.imageUrl = imageUrl;
+
     }
+
+
 
     public String getImageUrl() {
         return imageUrl;

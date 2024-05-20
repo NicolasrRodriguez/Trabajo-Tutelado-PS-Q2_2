@@ -22,7 +22,7 @@ import com.example.triptracks.R;
 
 import java.util.List;
 
-public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentViewHolder> {
+public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
 
     private Context context;
@@ -48,6 +48,11 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
     }
 
     @Override
+    public void onBindViewHolder(@NonNull ImageAdapter.ImageViewHolder holder, int position) {
+
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull DocumentViewHolder holder, int position) {
         Imagen imagen = images.get(position);
 
@@ -70,7 +75,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
                         builder.setTitle(R.string.eliminar_imagen);
                         builder.setMessage(R.string.est_seguro_de_que_desea_eliminar_esta_imagen);
                         builder.setPositiveButton(R.string.str_but_OK, (dialog, which) -> { //cambiar a str_si
-                            firebaseImages.deleteDocument(imageUrl,
+                            firebaseImages.deleteImage(imageUrl,imagen.getItinerary(),
                                     onSuccess -> {
                                         Log.d("Firebase", onSuccess);
                                         int currentPosition = holder.getAdapterPosition();
@@ -104,21 +109,16 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
         return images.size();
     }
 
-    private void showImageDialog(String imageUrl) {
+    private void showImageDialog(String imageUrl ) {
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_image_im);
 
         ImageView imageView = dialog.findViewById(R.id.imageView);
 
-        firebaseImages.getDocumentDetails(documentId,
-                document -> {
-                    Glide.with(context)
-                            .load(imageUrl)
-                            .into(imageView);
-                },
-                error -> {
-                    Log.e("Firebase", "Error fetching document details: " + error);
-                });
+        Glide.with(context)
+                .load(imageUrl)
+                .into(imageView);
+
 
         ImageView btnClose = dialog.findViewById(R.id.btnClose);
         btnClose.setTag(dialog);

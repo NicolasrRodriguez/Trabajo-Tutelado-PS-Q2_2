@@ -114,6 +114,8 @@ public class Itinerary implements Parcelable {
 
     public void addImageUri(String uri){ ImageUris.add(uri);}
 
+    public void quitImageUri(String uri){ ImageUris.remove(uri);}
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
