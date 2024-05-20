@@ -5,6 +5,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
+import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,14 +28,25 @@ public class FirebaseImages {
 
     private UserInfo user = FirebaseAuth.getInstance().getCurrentUser();
 
-    public void uploadImage(Uri image, String ItineraryId){
+    private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
+
+    public void uploadImage(Uri image, Itinerary oldItinerary){
+
         if (image != null && user != null) {
             String imageId = UUID.randomUUID().toString();
-            final StorageReference fileReference = ref.child("Itineraries/" + ItineraryId + "/Images/" + imageId + ".jpeg");
+            final StorageReference fileReference = ref.child("Itineraries/" + oldItinerary.getId() + "/Images/" + imageId + ".jpeg");
             fileReference.putFile(image)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String downloadUrl = uri.toString();
+                                    updateItinerary( oldItinerary,downloadUrl);
+                                }
+
+                            });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -45,6 +59,23 @@ public class FirebaseImages {
             Log.d("_IMAGETAG", "File URI or user is null");
         }
 
+    }
+
+    public void updateItinerary(Itinerary oldItinerary, String imageUrl){
+
+        Itinerary itineraryaux = new Itinerary(oldItinerary.getId(),oldItinerary.getItineraryTitle(),oldItinerary.getCountry(),
+                oldItinerary.getState(),oldItinerary.getCity(), oldItinerary.getAdmin(),oldItinerary.getColaborators(),
+                oldItinerary.getStartDate(),oldItinerary.getEndDate(),oldItinerary.getImagesuris());
+        itineraryaux.addImageUri(imageUrl);
+
+        UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);
+        updateItinerary.execute(itineraryaux,new ItineraryRepository.OperationCallback() {
+            @Override
+            public void onSuccess() {  Log.d("_IMGTAG","Uri de la imagen añadida"); }
+
+            @Override
+            public void onFailure(Exception e) {Log.d("_IMGTAG","Uri de la imagen no se pudo añadir");}
+        });
     }
 
 }
