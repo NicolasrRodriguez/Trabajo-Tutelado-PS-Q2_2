@@ -16,47 +16,49 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.triptracks.Datos.FirebaseImages;
+import com.example.triptracks.Domain.Entities.Imagen;
 import com.example.triptracks.R;
 
 import java.util.List;
 
-public class ImageAdapter {
+public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentViewHolder> {
 
 
     private Context context;
-    private List<Document> documents;
-    private FirebaseMediaHandler firebaseMediaHandler;
-    private OnDocumentDeletedListener onDocumentDeletedListener;
+    private List<Imagen> images;
+    private FirebaseImages firebaseImages;
+    private OnDocumentDeletedListener onImageDeletedListener;
 
-    public DocumentAdapter(Context context, List<Document> documents) {
+    public ImageAdapter(Context context, List<Imagen> images) {
         this.context = context;
-        this.documents = documents;
-        this.firebaseMediaHandler = new FirebaseMediaHandler();
+        this.images = images;
+        this.firebaseImages = new FirebaseImages();
     }
 
-    public void setOnDocumentDeletedListener(OnDocumentDeletedListener listener) {
-        this.onDocumentDeletedListener = listener;
+    public void setOnImageDeletedListenerDeletedListener(OnDocumentDeletedListener listener) {
+        this.onImageDeletedListener = listener;
     }
 
     @NonNull
     @Override
     public DocumentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_document, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_image, parent, false);
         return new DocumentViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DocumentViewHolder holder, int position) {
-        Document document = documents.get(position);
+        Imagen imagen = images.get(position);
 
-        if (document != null) {
-            if (document.getImageUrl() != null && !document.getImageUrl().isEmpty()) {
+        if (imagen != null) {
+            if (imagen.getImageUrl() != null && !imagen.getImageUrl().isEmpty()) {
                 Glide.with(context)
-                        .load(document.getImageUrl())
+                        .load(imagen.getImageUrl())
                         .into(holder.imageView);
 
-                holder.imageView.setTag(R.id.document_image, document.getImageUrl());
-                holder.imageView.setTag(R.id.document_id, document.getDocumentId());
+                holder.imageView.setTag(R.id.document_image, imagen.getImageUrl());
+                holder.imageView.setTag(R.id.document_id, imagen.getDocumentId());
                 holder.imageView.setOnClickListener(v -> {
                     String imageUrl = (String) v.getTag(R.id.document_image);
                     String documentId = (String) v.getTag(R.id.document_id);
