@@ -27,11 +27,16 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     private Context context;
     private List<Document> documents;
     private FirebaseMediaHandler firebaseMediaHandler;
+    private OnDocumentDeletedListener onDocumentDeletedListener;
 
     public DocumentAdapter(Context context, List<Document> documents) {
         this.context = context;
         this.documents = documents;
         this.firebaseMediaHandler = new FirebaseMediaHandler();
+    }
+
+    public void setOnDocumentDeletedListener(OnDocumentDeletedListener listener) {
+        this.onDocumentDeletedListener = listener;
     }
 
     @NonNull
@@ -63,19 +68,23 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
 
                     if (imageUrl != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle("Eliminar documento");
-                        builder.setMessage("¿Está seguro de que desea eliminar este documento?");
-                        builder.setPositiveButton("Sí", (dialog, which) -> {
+                        builder.setTitle(R.string.eliminar_documento);
+                        builder.setMessage(R.string.est_seguro_de_que_desea_eliminar_este_documento);
+                        builder.setPositiveButton(R.string.si, (dialog, which) -> {
                             firebaseMediaHandler.deleteDocument(imageUrl,
                                     onSuccess -> {
                                         Log.d("Firebase", onSuccess);
                                         int currentPosition = holder.getAdapterPosition();
                                         documents.remove(currentPosition);
                                         notifyItemRemoved(currentPosition);
+                                        notifyItemRangeChanged(currentPosition, getItemCount());
+                                        if (onDocumentDeletedListener != null) {
+                                            onDocumentDeletedListener.onDocumentDeleted();
+                                        }
                                     },
                                     onFailure -> Log.e("Firebase", onFailure));
                         });
-                        builder.setNegativeButton("No", null);
+                        builder.setNegativeButton(R.string.no, null);
                         builder.show();
 
                         return true;
@@ -144,5 +153,9 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             nameTextView = itemView.findViewById(R.id.document_name);
             descriptionTextView = itemView.findViewById(R.id.document_description);
         }
+    }
+
+    public interface OnDocumentDeletedListener {
+        void onDocumentDeleted();
     }
 }

@@ -72,7 +72,8 @@ public class FirebaseMediaHandler {
     }
     private void saveDocumentInfo(String documentId, String documentName, String documentDescription, String downloadUrl, Consumer<String> onSuccess, Consumer<String> onFailure) {
         if (user != null) {
-            Document document = new Document(documentId, documentName, documentDescription, downloadUrl);
+            long timestamp = System.currentTimeMillis();
+            Document document = new Document(documentId, documentName, documentDescription, downloadUrl, timestamp);
             databaseReference.child(documentId).setValue(document)
                     .addOnSuccessListener(aVoid -> {
                         onSuccess.accept("Document added successfully");
@@ -85,6 +86,7 @@ public class FirebaseMediaHandler {
             onFailure.accept("User not logged in");
         }
     }
+
 
 
 

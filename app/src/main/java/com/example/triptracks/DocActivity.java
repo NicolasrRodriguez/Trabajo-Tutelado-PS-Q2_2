@@ -2,25 +2,32 @@ package com.example.triptracks;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.triptracks.Datos.FirebaseMediaHandler;
 import com.example.triptracks.Domain.Entities.Document;
 import com.example.triptracks.Domain.LogicaNegocio.DocumentAdapter;
+import com.example.triptracks.Presenter.StackLayoutManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Locale;
 
 public class DocActivity extends AppCompatActivity {
 
@@ -31,30 +38,49 @@ public class DocActivity extends AppCompatActivity {
     private ArrayList<Document> documentList;
     private FirebaseUser user;
     private FirebaseMediaHandler firebaseMediaHandler;
+    private StackLayoutManager stackLayoutManager;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doc);
+        setLanguage(getLanguageFromPreferences());
+        setTitle(R.string.app_name);
         documentRecyclerView = findViewById(R.id.documents_list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        documentRecyclerView.setLayoutManager(linearLayoutManager);
+        stackLayoutManager = new StackLayoutManager(this);
+        documentRecyclerView.setLayoutManager(stackLayoutManager);
         documentList = new ArrayList<>();
         documentAdapter = new DocumentAdapter(this, documentList);
         documentRecyclerView.setAdapter(documentAdapter);
+        documentAdapter.setOnDocumentDeletedListener(this::refreshDocuments);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
         firebaseMediaHandler = new FirebaseMediaHandler();
         refreshDocuments();
     }
 
+    private String getLanguageFromPreferences() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getString("language_preference", "");
+    }
+
+    private void setLanguage(String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = getResources().getConfiguration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     private void refreshDocuments() {
         Log.d("DocActivity", "Loading documents from Firebase Realtime Database");
         if (user != null) {
             firebaseMediaHandler.getDocuments(documents -> {
                 Log.d("DocActivity", "Received documents: " + documents.size());
                 documentList.clear();
+                Collections.sort(documents, Comparator.comparingLong(Document::getTimestamp));
                 documentList.addAll(documents);
                 documentAdapter.notifyDataSetChanged();
             }, errorMessage -> {
@@ -66,7 +92,6 @@ public class DocActivity extends AppCompatActivity {
             Toast.makeText(DocActivity.this, "User is null", Toast.LENGTH_SHORT).show();
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -74,13 +99,34 @@ public class DocActivity extends AppCompatActivity {
             String documentName = data.getStringExtra("documentName");
             String documentDescription = data.getStringExtra("documentDescription");
             String imageUrl = data.getStringExtra("imageUrl");
-            Document document = new Document("", documentName, documentDescription, imageUrl);
-            documentList.add(0, document);
-            documentAdapter.notifyItemInserted(0);
-            documentRecyclerView.scrollToPosition(0);
+            long timestamp = System.currentTimeMillis();
+            Document document = new Document("", documentName, documentDescription, imageUrl, timestamp);
+            addDocument(document);
             refreshDocuments();
             Toast.makeText(this, "Document added successfully", Toast.LENGTH_SHORT).show();
         }
+    }
+    private void addDocument(Document document) {
+        documentList.add(0, document);
+        documentAdapter.notifyItemInserted(0);
+        documentRecyclerView.post(() -> {
+            stackLayoutManager.scrollToPosition(0);
+            documentRecyclerView.post(() -> {
+                View firstChild = stackLayoutManager.findViewByPosition(0);
+                if (firstChild != null) {
+                    int offset = (documentRecyclerView.getHeight() - firstChild.getHeight()) / 2;
+                    stackLayoutManager.scrollToPositionWithOffset(0, offset);
+                }
+            });
+        });
+    }
+
+    private void deleteDocument(int position) {
+        if (position < 0 || position >= documentList.size()) return;
+        documentList.remove(position);
+        documentAdapter.notifyItemRemoved(position);
+        documentAdapter.notifyItemRangeChanged(position, documentList.size());
+        documentRecyclerView.post(() -> stackLayoutManager.applyScaleAndElevation());
     }
 
     @Override

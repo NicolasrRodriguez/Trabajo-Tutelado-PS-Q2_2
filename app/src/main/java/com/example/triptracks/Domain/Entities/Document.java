@@ -5,16 +5,18 @@ public class Document {
     private String name;
     private String description;
     private String imageUrl;
+    private long timestamp;
 
     public Document() {
 
     }
 
-    public Document(String documentId, String name, String description, String imageUrl) {
+    public Document(String documentId, String name, String description, String imageUrl, long timestamp) {
         this.documentId = documentId;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.timestamp = timestamp;
     }
 
     public String getDocumentId() {
@@ -47,5 +49,13 @@ public class Document {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }
