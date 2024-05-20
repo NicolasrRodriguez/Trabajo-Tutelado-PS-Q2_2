@@ -1,5 +1,5 @@
 
-package com.example.triptracks.Domain.LogicaNegocio;
+package com.example.triptracks.Domain.LogicaNegocio.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

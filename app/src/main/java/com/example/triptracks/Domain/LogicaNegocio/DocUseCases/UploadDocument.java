@@ -1,4 +1,4 @@
-package com.example.triptracks.Domain.LogicaNegocio;
+package com.example.triptracks.Domain.LogicaNegocio.DocUseCases;
 
 import android.net.Uri;
 

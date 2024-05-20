@@ -54,7 +54,7 @@
         <activity android:name=".Presenter.ItineraryDetailActivity" />
         <activity android:name=".DocActivity" />
         <activity
-            android:name=".AddDocumentActivity"/>
+            android:name=".Presenter.AddDocumentActivityView"/>
 
     </application>
 

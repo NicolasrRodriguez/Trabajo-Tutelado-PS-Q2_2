@@ -19,8 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.triptracks.Datos.FirebaseMediaHandler;
 import com.example.triptracks.Domain.Entities.Document;
-import com.example.triptracks.Domain.LogicaNegocio.DocumentAdapter;
-import com.example.triptracks.Domain.LogicaNegocio.GetDocuments;
+import com.example.triptracks.Domain.LogicaNegocio.Adapter.DocumentAdapter;
+import com.example.triptracks.Domain.LogicaNegocio.DocUseCases.GetDocuments;
+import com.example.triptracks.Presenter.AddDocumentActivityView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -49,9 +50,6 @@ public class DocActivity extends AppCompatActivity {
         setLanguage(getLanguageFromPreferences());
         setTitle(R.string.app_name);
         documentRecyclerView = findViewById(R.id.documents_list);
-
-
-
         documentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         documentList = new ArrayList<>();
         documentAdapter = new DocumentAdapter(this, documentList);
@@ -142,7 +140,7 @@ public class DocActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_document_op) {
-            Intent intent = new Intent(DocActivity.this, AddDocumentActivity.class);
+            Intent intent = new Intent(DocActivity.this, AddDocumentActivityView.class);
             startActivityForResult(intent, ADD_DOCUMENT_REQUEST);
             return true;
         } else if (item.getItemId() == android.R.id.home) {

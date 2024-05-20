@@ -1,4 +1,4 @@
-package com.example.triptracks.Domain.LogicaNegocio;
+package com.example.triptracks.Domain.LogicaNegocio.DocUseCases;
 
 import com.example.triptracks.Domain.Entities.Document;
 import com.example.triptracks.Domain.Repository.DocumentRepository;

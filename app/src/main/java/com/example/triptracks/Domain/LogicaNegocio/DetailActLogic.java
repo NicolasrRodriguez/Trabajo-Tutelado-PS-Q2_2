@@ -1,4 +1,8 @@
 package com.example.triptracks.Domain.LogicaNegocio;
+import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.DeleteAllEvents;
+import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.DeleteItinerary;
+import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.ShareItinerary;
+import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.UpdateItinerary;
 import com.example.triptracks.Presenter.ItneraryActivityView;
 import static com.example.triptracks.Presenter.ItneraryActivityView.mAdapter;
 import android.content.Context;
@@ -8,7 +12,7 @@ import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Toast;
+
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;

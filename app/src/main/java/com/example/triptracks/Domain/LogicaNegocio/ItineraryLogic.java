@@ -5,10 +5,9 @@ import android.widget.DatePicker;
 
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.Adapter.ItineraryAdapter;
+import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.CreateItinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Locale;

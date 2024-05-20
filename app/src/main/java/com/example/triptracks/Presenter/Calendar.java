@@ -13,7 +13,7 @@ import androidx.preference.PreferenceManager;
 
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.LogicaNegocio.CalendarLogic;
-import com.example.triptracks.Domain.LogicaNegocio.LoadEvents;
+import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.LoadEvents;
 import com.example.triptracks.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import java.text.ParseException;

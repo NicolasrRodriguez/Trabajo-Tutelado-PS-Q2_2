@@ -4,6 +4,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.triptracks.Domain.Entities.Event;
+import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.DeleteOneEvent;
+import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.UpdateEvent;
+import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.getLoadedEvents;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.Presenter.ItineraryDetailActivity;
 import com.example.triptracks.Presenter.EventDecorator;

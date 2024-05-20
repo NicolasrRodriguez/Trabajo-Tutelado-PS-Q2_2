@@ -1,4 +1,4 @@
-package com.example.triptracks;
+package com.example.triptracks.Presenter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,11 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import com.example.triptracks.Datos.FirebaseMediaHandler;
-import com.example.triptracks.Domain.LogicaNegocio.UploadDocument;
+import com.example.triptracks.Domain.LogicaNegocio.DocUseCases.UploadDocument;
+import com.example.triptracks.R;
 
 import java.util.Locale;
 
-public class AddDocumentActivity extends AppCompatActivity {
+public class AddDocumentActivityView extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -52,16 +53,16 @@ public class AddDocumentActivity extends AppCompatActivity {
                 String documentName = etDocumentName.getText().toString().trim();
                 String documentDescription = etDocumentDescription.getText().toString().trim();
                 if (documentName.isEmpty()) {
-                    Toast.makeText(AddDocumentActivity.this, R.string.please_enter_document_name, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddDocumentActivityView.this, R.string.please_enter_document_name, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (selectedImageUri == null) {
-                    Toast.makeText(AddDocumentActivity.this, R.string.please_select_an_image, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddDocumentActivityView.this, R.string.please_select_an_image, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 uploadDocument.execute(selectedImageUri, documentName, documentDescription,
                         successMessage -> {
-                            Toast.makeText(AddDocumentActivity.this, successMessage, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddDocumentActivityView.this, successMessage, Toast.LENGTH_SHORT).show();
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("documentName", documentName);
                             resultIntent.putExtra("documentDescription", documentDescription);
@@ -70,7 +71,7 @@ public class AddDocumentActivity extends AppCompatActivity {
                             finish();
                         },
                         errorMessage -> {
-                            Toast.makeText(AddDocumentActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddDocumentActivityView.this, errorMessage, Toast.LENGTH_SHORT).show();
                         });
 
             }
