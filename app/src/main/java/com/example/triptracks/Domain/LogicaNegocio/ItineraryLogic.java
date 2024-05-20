@@ -26,8 +26,6 @@ public class ItineraryLogic {
 
     private FirebaseItineraryHandler firebaseItineraryHandler = new FirebaseItineraryHandler(this::updateItineraryList);
 
-    private FirebaseImages firebaseImages = new FirebaseImages();
-
 
 
     CreateItinerary createItinerary =  new CreateItinerary(firebaseItineraryHandler);;
@@ -42,7 +40,6 @@ public class ItineraryLogic {
         ArrayList<Itinerary> newItineraries = new ArrayList<>();
         newItineraries.add(itinerary);
         adapter.anadirelem(newItineraries);
-        firebaseImages.createImagesPath(itineraryId);
         createItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
             @Override
             public void onSuccess() {

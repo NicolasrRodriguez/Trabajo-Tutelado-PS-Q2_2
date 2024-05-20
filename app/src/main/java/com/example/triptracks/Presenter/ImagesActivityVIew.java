@@ -26,11 +26,10 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
 
     ActivityImagesViewBinding binding;
 
-    private String UserEmail;
 
     private Itinerary itinerary;
 
-    private String imageSelected;
+    private Uri imageSelected;
 
     private FirebaseAuthData firebaseAuth = new FirebaseAuthData();
 
@@ -41,7 +40,6 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         binding = ActivityImagesViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        UserEmail = firebaseAuth.email();
         binding.botonVolver.setOnClickListener(this);
         binding.escogerimagen.setOnClickListener(this);
         binding.compartir.setOnClickListener(this);
@@ -57,7 +55,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
                 assert result.getData() != null;
                 Uri iamgeuri = result.getData().getData();
                 assert iamgeuri != null;
-                imageSelected = iamgeuri.toString();
+                imageSelected = iamgeuri;
                 binding.image.setImageURI(iamgeuri);
             }
     );

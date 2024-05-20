@@ -1,7 +1,9 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
+import android.net.Uri;
 import android.util.Log;
 
+import com.example.triptracks.Datos.FirebaseImages;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
@@ -9,20 +11,19 @@ import com.example.triptracks.Domain.Repository.ItineraryRepository;
 public class ImageLogic {
 
     private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
+
+    private FirebaseImages firebaseImages = new FirebaseImages();
     private Itinerary itineraryaux;
 
-    public void uploadImage(String imageUri, Itinerary oldItinerary){
+    public void uploadImage(Uri imageUri, Itinerary oldItinerary){
         if (imageUri != null) {
 
-                itineraryaux = new Itinerary(oldItinerary.getId(),oldItinerary.getItineraryTitle(),oldItinerary.getCountry(),
+            firebaseImages.uploadImage(imageUri,oldItinerary.getId());
+            itineraryaux = new Itinerary(oldItinerary.getId(),oldItinerary.getItineraryTitle(),oldItinerary.getCountry(),
                         oldItinerary.getState(),oldItinerary.getCity(), oldItinerary.getAdmin(),oldItinerary.getColaborators(),
                         oldItinerary.getStartDate(),oldItinerary.getEndDate(),oldItinerary.getImagesuris());
+            itineraryaux.addImageUri(imageUri.toString());
 
-                Log.d("_IMGTAG","Ya hay imagenes");
-
-            Log.d("_IMGTAG","itineraio auxiliar creado con " + itineraryaux.getImagesuris() + "imagenes");
-            itineraryaux.addImageUri(imageUri);
-            Log.d("_IMGTAG","imagen añadida a la lista");
             UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);
             updateItinerary.execute(itineraryaux,new ItineraryRepository.OperationCallback() {
                 @Override
