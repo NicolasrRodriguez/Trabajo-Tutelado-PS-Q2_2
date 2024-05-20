@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 
+import com.example.triptracks.Datos.FirebaseImages;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
@@ -25,6 +26,8 @@ public class ItineraryLogic {
 
     private FirebaseItineraryHandler firebaseItineraryHandler = new FirebaseItineraryHandler(this::updateItineraryList);
 
+    private FirebaseImages firebaseImages = new FirebaseImages();
+
 
 
     CreateItinerary createItinerary =  new CreateItinerary(firebaseItineraryHandler);;
@@ -39,6 +42,7 @@ public class ItineraryLogic {
         ArrayList<Itinerary> newItineraries = new ArrayList<>();
         newItineraries.add(itinerary);
         adapter.anadirelem(newItineraries);
+        firebaseImages.createImagesPath(itineraryId);
         createItinerary.execute(itinerary, new ItineraryRepository.OperationCallback() {
             @Override
             public void onSuccess() {
