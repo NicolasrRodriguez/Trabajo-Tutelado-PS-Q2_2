@@ -57,30 +57,28 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
                         .load(imagen.getImageUrl())
                         .into(holder.imageView);
 
-                holder.imageView.setTag(R.id.document_image, imagen.getImageUrl());
-                holder.imageView.setTag(R.id.document_id, imagen.getDocumentId());
+                holder.imageView.setTag(R.id.image, imagen.getImageUrl());
                 holder.imageView.setOnClickListener(v -> {
-                    String imageUrl = (String) v.getTag(R.id.document_image);
-                    String documentId = (String) v.getTag(R.id.document_id);
-                    showImageDialog(documentId, imageUrl);
+                    String imageUrl = (String) v.getTag(R.id.image);
+                    showImageDialog(imageUrl);
                 });
                 holder.imageView.setOnLongClickListener(v -> {
-                    String imageUrl = (String) v.getTag(R.id.document_image);
+                    String imageUrl = (String) v.getTag(R.id.image);
 
                     if (imageUrl != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(R.string.eliminar_documento);
                         builder.setMessage(R.string.est_seguro_de_que_desea_eliminar_este_documento);
                         builder.setPositiveButton(R.string.si, (dialog, which) -> {
-                            firebaseMediaHandler.deleteDocument(imageUrl,
+                            firebaseImages.deleteDocument(imageUrl,
                                     onSuccess -> {
                                         Log.d("Firebase", onSuccess);
                                         int currentPosition = holder.getAdapterPosition();
-                                        documents.remove(currentPosition);
+                                        images.remove(currentPosition);
                                         notifyItemRemoved(currentPosition);
                                         notifyItemRangeChanged(currentPosition, getItemCount());
-                                        if (onDocumentDeletedListener != null) {
-                                            onDocumentDeletedListener.onDocumentDeleted();
+                                        if (onImageDeletedListener != null) {
+                                            onImageDeletedListener.onDocumentDeleted();
                                         }
                                     },
                                     onFailure -> Log.e("Firebase", onFailure));
@@ -96,31 +94,27 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
                 holder.nameTextView.setVisibility(View.GONE);
                 holder.descriptionTextView.setVisibility(View.GONE);
             } else {
-                holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.placeholder_image));
+                holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.background));
             }
         }
     }
 
     @Override
     public int getItemCount() {
-        return documents.size();
+        return images.size();
     }
 
-    private void showImageDialog(String documentId, String imageUrl) {
+    private void showImageDialog(String imageUrl) {
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_image);
 
         ImageView imageView = dialog.findViewById(R.id.imageView);
-        TextView titleTextView = dialog.findViewById(R.id.titleTextView);
-        TextView descriptionTextView = dialog.findViewById(R.id.descriptionTextView);
 
         firebaseImages.getDocumentDetails(documentId,
                 document -> {
                     Glide.with(context)
                             .load(imageUrl)
                             .into(imageView);
-                    titleTextView.setText(document.getName());
-                    descriptionTextView.setText(document.getDescription());
                 },
                 error -> {
                     Log.e("Firebase", "Error fetching document details: " + error);
@@ -150,9 +144,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.DocumentVie
 
         public DocumentViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.document_image);
-            nameTextView = itemView.findViewById(R.id.document_name);
-            descriptionTextView = itemView.findViewById(R.id.document_description);
+            imageView = itemView.findViewById(R.id.image);
         }
     }
 
