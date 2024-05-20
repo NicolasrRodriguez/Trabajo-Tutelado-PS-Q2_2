@@ -178,6 +178,7 @@ public class DetailActLogic {
         String editedCity = itinerary.getCity();
         String Admin = itinerary.getAdmin();
         ArrayList<String> colaboratos = itinerary.getColaborators();
+        ArrayList<String> images = itinerary.getImagesuris();
         if (it.spinnerCountry.getSelectedItem() != null) {
             String selectedCountry = it.spinnerCountry.getSelectedItem().toString();
             if (!selectedCountry.equals(it.getString(R.string.select_country))) {
@@ -207,6 +208,7 @@ public class DetailActLogic {
         itinerary.setCity(editedCity);
         itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
         itinerary.setColaborators(colaboratos);
+        itinerary.setImageUris(images);
         it.binding.itineraryTitle.setText(itinerary.getItineraryTitle());
         it.binding.itineraryCountry.setText(itinerary.getCountry());
         it.binding.itineraryState.setText(itinerary.getState());

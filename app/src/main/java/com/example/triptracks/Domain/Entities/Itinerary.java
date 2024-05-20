@@ -19,7 +19,7 @@ public class Itinerary implements Parcelable {
 
     private ArrayList<String> Colaborators;
 
-    private ArrayList<String> ImageUris;
+    private ArrayList<String> ImageUris = new ArrayList<>() ;
 
 
 
@@ -28,20 +28,6 @@ public class Itinerary implements Parcelable {
     }
 
 
-    public Itinerary(String id, String itineraryTitle, String country, String state,String city,String admin, ArrayList<String> colaborators,String startDate, String endDate) {
-        this.id = id;
-
-        this.itineraryTitle = itineraryTitle;
-        this.country = country;
-        this.state = state;
-        this.city = city;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.Admin = admin;
-        this.Colaborators = colaborators;
-        this.ImageUris = new ArrayList<>();
-
-    }
     public Itinerary(String id, String itineraryTitle, String country, String state,String city,String admin, ArrayList<String> colaborators,String startDate, String endDate,ArrayList<String> imageUris) {
         this.id = id;
 

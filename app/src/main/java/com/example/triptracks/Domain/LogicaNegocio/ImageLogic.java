@@ -13,14 +13,10 @@ public class ImageLogic {
 
     public void uploadImage(String imageUri, Itinerary oldItinerary){
         if (imageUri != null) {
-            Log.d("_IMGTAG","imagen no nula");
-                      Log.d("_IMGTAG","itineario aux");
 
-            Log.d("_IMGTAG","Imageuris = " +  oldItinerary.getImagesuris());
-                Log.d("_IMGTAG","No hay mas imagenes");
                 itineraryaux = new Itinerary(oldItinerary.getId(),oldItinerary.getItineraryTitle(),oldItinerary.getCountry(),
                         oldItinerary.getState(),oldItinerary.getCity(), oldItinerary.getAdmin(),oldItinerary.getColaborators(),
-                        oldItinerary.getStartDate(),oldItinerary.getEndDate());
+                        oldItinerary.getStartDate(),oldItinerary.getEndDate(),oldItinerary.getImagesuris());
 
                 Log.d("_IMGTAG","Ya hay imagenes");
 

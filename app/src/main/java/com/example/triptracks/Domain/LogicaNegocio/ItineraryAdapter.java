@@ -140,6 +140,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
                 itinerary.setCity(itinerario_actualizado.getCity());
                 itinerary.setAdmin(itinerario_actualizado.getAdmin());
                 itinerary.setColaborators(itinerario_actualizado.getColaborators());
+                itinerary.setImageUris(itinerario_actualizado.getImagesuris());
                 notifyItemChanged(i);
                 return;
             }
