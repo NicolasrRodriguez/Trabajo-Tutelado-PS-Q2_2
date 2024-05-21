@@ -125,11 +125,11 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
         updates.put("city", itinerary.getCity());
         updates.put("admin",itinerary.getAdmin());
         updates.put("colaborators", itinerary.getColaborators());
-        updates.put("imagesuris" , itinerary.getImagesuris());
+        updates.put("imageUris" , itinerary.getImageUris());
         updates.put("startDate", itinerary.getStartDate());
         updates.put("endDate", itinerary.getEndDate());
 
-        itineraryRef.updateChildren(updates)
+        itineraryRef.updateChildren(updates)//hacerlo para todos los colaboradores
                 .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario actualizado correctamente"))
                 .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
     }

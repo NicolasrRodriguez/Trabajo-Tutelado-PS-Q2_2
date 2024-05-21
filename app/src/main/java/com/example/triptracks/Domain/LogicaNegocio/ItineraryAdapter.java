@@ -2,6 +2,7 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -140,7 +141,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
                 itinerary.setCity(itinerario_actualizado.getCity());
                 itinerary.setAdmin(itinerario_actualizado.getAdmin());
                 itinerary.setColaborators(itinerario_actualizado.getColaborators());
-                itinerary.setImageUris(itinerario_actualizado.getImagesuris());
+                itinerary.setImageUris(itinerario_actualizado.getImageUris());
                 notifyItemChanged(i);
                 return;
             }

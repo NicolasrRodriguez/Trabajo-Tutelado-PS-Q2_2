@@ -16,20 +16,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.example.triptracks.Datos.FirebaseAuthData;
-import com.example.triptracks.Datos.FirebaseItineraryHandler;
-import com.example.triptracks.Domain.Entities.Imagen;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ImageAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ImageLogic;
-import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
-import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityImagesViewBinding;
-
-import java.util.List;
 
 public class ImagesActivityVIew extends AppCompatActivity implements View.OnClickListener {
 
@@ -51,6 +44,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
     private ImageLogic imageLogic = new ImageLogic();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("_IMAGETAG", "Arranco imagenesView");
         super.onCreate(savedInstanceState);
         binding = ActivityImagesViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -58,10 +52,21 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
         binding.botonVolver.setOnClickListener(this);
         itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
         assert itinerary != null;
-        imageAdapter = new ImageAdapter(itinerary.getImagesuris());
-        imagesRecyclerView = findViewById(R.id.images_list);
+        if (itinerary.getImageUris() != null){
+            Log.d("_IMAGETAG", "Voy a crear el adapter "  );
+            for (String iamge : itinerary.getImageUris()) {
+                Log.d("_IMAGETAG", "URL:" + iamge);
+            }
+            imageAdapter = new ImageAdapter(itinerary.getImageUris());
+            imagesRecyclerView = findViewById(R.id.images_list);
+            Log.d("_IMAGETAG", "Voy a asignar el adapter el adapter");
+            imagesRecyclerView.setAdapter(imageAdapter);
+            imagesRecyclerView.setLayoutManager(linearLayoutManager);
+        }
+        else {
+            Log.d("_IMAGETAG", "Aun no hay imagenes");
+        }
 
-        imagesRecyclerView.setAdapter(imageAdapter);
 
 
 

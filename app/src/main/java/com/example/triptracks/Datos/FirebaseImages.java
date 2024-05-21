@@ -16,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class FirebaseImages {
@@ -40,7 +41,7 @@ public class FirebaseImages {
                                 public void onSuccess(Uri uri) {
                                     String downloadUrl = uri.toString();
                                     Log.d("_IMGTAG","URL: " + downloadUrl);
-                                    updateitinerary( oldItinerary,downloadUrl);
+                                    updateitinerary( oldItinerary, downloadUrl);
                                 }
 
                             });
@@ -53,19 +54,33 @@ public class FirebaseImages {
                         }
                     });
         } else {
-            Log.d("_IMAGETAG", "File URI or user is null");
+            Log.d("_IMGTAG", "File URI or user is null");
         }
 
     }
 
     public void updateitinerary(Itinerary oldItinerary, String imageUrl){
+        ArrayList<String> newImages;
+        if (oldItinerary.getImageUris() != null){
+            Log.d("_IMM","en el itinerario hay " + oldItinerary.getImageUris().size());
+            newImages = oldItinerary.getImageUris();
+            newImages.add(imageUrl);
+        }
+        else{
+            Log.d("_IMM","no hay imagenes en el itinerario ");
+            newImages = new ArrayList<>();
+            newImages.add(imageUrl);
+        }
+
+        Log.d("_IMM","ahora hay  " + newImages.size() +"imagenes en el itinerario " );
 
         Itinerary itineraryaux = new Itinerary(oldItinerary.getId(),oldItinerary.getItineraryTitle(),oldItinerary.getCountry(),
                 oldItinerary.getState(),oldItinerary.getCity(), oldItinerary.getAdmin(),oldItinerary.getColaborators(),
-                oldItinerary.getStartDate(),oldItinerary.getEndDate(),oldItinerary.getImagesuris());
-        itineraryaux.addImageUri(imageUrl);
+                oldItinerary.getStartDate(),oldItinerary.getEndDate(),newImages);
 
-        Log.d("_IMGTAG","Itinerario auxiliar creado");
+        Log.d("_IMM","en el itinerario hay " + itineraryaux.getImageUris().size());
+
+        Log.d("_IMGTAG","Itinerario auxiliar creado "  + itineraryaux.getColaborators().size());
 
         UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);
         updateItinerary.execute(itineraryaux,new ItineraryRepository.OperationCallback() {

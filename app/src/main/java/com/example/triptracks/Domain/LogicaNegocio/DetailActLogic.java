@@ -102,7 +102,7 @@ public class DetailActLogic {
             collaborators.add(email);
             itinerary.setColaborators(collaborators);
             ShareItinerary shareItinerary = new ShareItinerary(it.firebaseItineraryHandler);
-            shareItinerary.execute(it.itinerary, email, new ItineraryRepository.OperationCallback() {
+            shareItinerary.execute(itinerary, email, new ItineraryRepository.OperationCallback() {
                 @Override
                 public void onSuccess() {}
                 @Override
@@ -178,7 +178,11 @@ public class DetailActLogic {
         String editedCity = itinerary.getCity();
         String Admin = itinerary.getAdmin();
         ArrayList<String> colaboratos = itinerary.getColaborators();
-        ArrayList<String> images = itinerary.getImagesuris();
+        ArrayList<String> images = new ArrayList<>();
+        if (itinerary.getImageUris() != null){
+             images = itinerary.getImageUris();
+            Log.d("_IMM", "hay " + images.size() + " iamgenes");
+        }
         if (it.spinnerCountry.getSelectedItem() != null) {
             String selectedCountry = it.spinnerCountry.getSelectedItem().toString();
             if (!selectedCountry.equals(it.getString(R.string.select_country))) {

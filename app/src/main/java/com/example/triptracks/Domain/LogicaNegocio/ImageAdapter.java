@@ -1,25 +1,14 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.Context;
-import android.media.Image;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.triptracks.Datos.FirebaseImages;
-import com.example.triptracks.Domain.Entities.Imagen;
 import com.example.triptracks.R;
 
 import java.util.List;

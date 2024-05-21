@@ -19,7 +19,7 @@ public class Itinerary implements Parcelable {
 
     private ArrayList<String> Colaborators;
 
-    private ArrayList<String> ImageUris = new ArrayList<>() ;
+    private ArrayList<String> ImageUris;
 
 
 
@@ -102,19 +102,18 @@ public class Itinerary implements Parcelable {
         return Colaborators;
     }
 
-    public ArrayList<String> getImagesuris() {
-        return ImageUris;
-    }
 
     public void setColaborators(ArrayList<String> colaborators) {
         Colaborators = colaborators;
     }
 
-    public  void  setImageUris(ArrayList<String> imageUris) {ImageUris = imageUris;}
+    public ArrayList<String> getImageUris() {
+        return ImageUris;
+    }
 
-    public void addImageUri(String uri){ ImageUris.add(uri);}
-
-    public void quitImageUri(String uri){ ImageUris.remove(uri);}
+    public void setImageUris(ArrayList<String> imageUris) {
+        ImageUris = imageUris;
+    }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

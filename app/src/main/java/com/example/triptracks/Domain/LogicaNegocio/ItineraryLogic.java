@@ -33,10 +33,10 @@ public class ItineraryLogic {
     public void addItems(String itineraryName, String countryName, String stateName, String cityName,String startDate,String endDate ,String UserEmail) {
 
         String itineraryId = firebaseItineraryHandler.setId();
-        ArrayList<String> shared = new  ArrayList<>();
-        shared.add(UserEmail);
+        ArrayList<String> colaborators = new  ArrayList<>();
+        colaborators.add(UserEmail);
         ArrayList<String> images = new  ArrayList<>();
-        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName,UserEmail ,shared,startDate,endDate,images);
+        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName,UserEmail ,colaborators,startDate,endDate,images);
         ArrayList<Itinerary> newItineraries = new ArrayList<>();
         newItineraries.add(itinerary);
         adapter.anadirelem(newItineraries);

@@ -18,6 +18,7 @@ public class ImageLogic {
     public void uploadImage(Uri imageUri, Itinerary oldItinerary){
         if (imageUri != null) {
 
+            Log.d("_IMM","en el itinerario hay ");
             firebaseImages.uploadImage(imageUri,oldItinerary);
 
 
