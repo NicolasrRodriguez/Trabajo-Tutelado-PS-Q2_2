@@ -1,12 +1,10 @@
 package com.example.triptracks.Datos;
 
-import android.media.Image;
 import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.triptracks.Domain.Entities.Imagen;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
@@ -14,20 +12,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class FirebaseImages {
 
@@ -50,7 +39,8 @@ public class FirebaseImages {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String downloadUrl = uri.toString();
-                                    updateItinerary( oldItinerary,downloadUrl);
+                                    Log.d("_IMGTAG","URL: " + downloadUrl);
+                                    updateitinerary( oldItinerary,downloadUrl);
                                 }
 
                             });
@@ -68,12 +58,14 @@ public class FirebaseImages {
 
     }
 
-    public void updateItinerary(Itinerary oldItinerary, String imageUrl){
+    public void updateitinerary(Itinerary oldItinerary, String imageUrl){
 
         Itinerary itineraryaux = new Itinerary(oldItinerary.getId(),oldItinerary.getItineraryTitle(),oldItinerary.getCountry(),
                 oldItinerary.getState(),oldItinerary.getCity(), oldItinerary.getAdmin(),oldItinerary.getColaborators(),
                 oldItinerary.getStartDate(),oldItinerary.getEndDate(),oldItinerary.getImagesuris());
         itineraryaux.addImageUri(imageUrl);
+
+        Log.d("_IMGTAG","Itinerario auxiliar creado");
 
         UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);
         updateItinerary.execute(itineraryaux,new ItineraryRepository.OperationCallback() {

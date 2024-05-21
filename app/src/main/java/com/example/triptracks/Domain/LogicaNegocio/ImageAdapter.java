@@ -26,9 +26,9 @@ import java.util.List;
 
 public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    private List<Imagen> images;
+    private List<String> images;
 
-    public ImageAdapter(List<Imagen> images) {
+    public ImageAdapter(List<String> images) {
         this.images = images;
     }
 
@@ -58,7 +58,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ImageAdapter.ImageViewHolder holder, int position) {
-        Glide.with(holder.getImageView()).load(images.get(position).getImageUrl()).into(holder.getImageView());
+        Glide.with(holder.getImageView()).load(images.get(position)).into(holder.getImageView());
 
     }
 

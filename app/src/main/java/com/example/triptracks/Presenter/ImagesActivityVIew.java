@@ -13,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -42,7 +44,6 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
 
     RecyclerView imagesRecyclerView;
 
-    private List<Imagen> images;
 
     ImageAdapter imageAdapter;
 
@@ -54,9 +55,13 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
         binding = ActivityImagesViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        binding.botonVolver.setOnClickListener(this);
         itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
-        imageAdapter = new ImageAdapter(images);
+        assert itinerary != null;
+        imageAdapter = new ImageAdapter(itinerary.getImagesuris());
         imagesRecyclerView = findViewById(R.id.images_list);
+
+        imagesRecyclerView.setAdapter(imageAdapter);
 
 
 
@@ -69,10 +74,30 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
                 Uri iamgeuri = result.getData().getData();
                 assert iamgeuri != null;
                 imageSelected = iamgeuri;
+                Log.d("_IMGTAG",iamgeuri.toString());
+                imageLogic.uploadImage(iamgeuri,itinerary);
 
-                binding.image.setImageURI(iamgeuri);
             }
     );
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.images_act_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Intent resultIntent = new Intent();
+        setResult(AuthActivityView.RESULT_SESION_CLOSED, resultIntent);
+        if (id == R.id.subirFoto) {
+            Intent resultImageIntent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+            myStartActivityForResult.launch(resultImageIntent);
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
     @Override
@@ -81,17 +106,6 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
             Intent resultIntent = new Intent();
             this.setResult(ItineraryDetailActivity.RESULT_OK, resultIntent);
             this.finish();
-        }
-        else if (v == binding.escogerimagen){
-            Log.d("_IMGTAG","Escoger imagen ");
-            Intent resultImageIntent = new Intent(MediaStore.ACTION_PICK_IMAGES);
-            myStartActivityForResult.launch(resultImageIntent);
-        }
-        else if (v == binding.compartir) {
-            Log.d("_IMGTAG","Subir imagen " + imageSelected);
-
-            imageLogic.uploadImage(imageSelected,itinerary);
-
         }
     }
 }
