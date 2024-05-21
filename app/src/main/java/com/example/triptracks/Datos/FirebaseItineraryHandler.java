@@ -208,20 +208,6 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
     }
 
 
-    @Override
-    public void deleteOneEvent(String itineraryId, String eventId,OperationCallback callback) {
-        if (itineraryId == null || eventId == null) {
-            Log.e("Firebase", "Error: Itinerary ID or Event ID is null.");
-            return;
-        }
-
-        DatabaseReference eventRef = ref.child(itineraryId).child("events").child(eventId);
-        eventRef.removeValue()
-                .addOnSuccessListener(aVoid -> callback.onSuccess())
-                .addOnFailureListener(callback::onFailure);
-
-
-    }
 
     @Override
     public void updateEvent(Itinerary itinerary , Event event,OperationCallback callback) {
@@ -247,13 +233,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
         eventsRef.child(key).setValue(event);
     }
 
-    @Override
-    public void deleteAllEvents(String itineraryId,OperationCallback callback) {
-        DatabaseReference eventsRef = ref.child(itineraryId).child("events");
-        eventsRef.removeValue()
-                .addOnSuccessListener(aVoid -> callback.onSuccess())
-                .addOnFailureListener(callback::onFailure);
-    }
+
 
     public void createEvent(CalendarDay date, String activity, ItineraryDetailActivity it) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
@@ -292,6 +272,85 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                     .addOnSuccessListener(aVoid -> Log.d("Firebase", "Evento sincronizado correctamente con " + collaborator))
                     .addOnFailureListener(e -> Log.e("Firebase", "Error al sincronizar evento con " + collaborator, e));
         }
+    }
+
+    @Override
+    public void deleteOneEvent(String itineraryId, String eventId, OperationCallback callback) {
+        if (itineraryId == null || eventId == null) {
+            Log.e("Firebase", "Error: Itinerary ID or Event ID is null.");
+            return;
+        }
+
+        DatabaseReference eventRef = ref.child(itineraryId).child("events").child(eventId);
+        eventRef.removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firebase", "Evento eliminado correctamente.");
+                    deleteOneEventFromCollaborators(itineraryId, eventId, callback);
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(callback::onFailure);
+    }
+
+    private void deleteOneEventFromCollaborators(String itineraryId, String eventId, OperationCallback callback) {
+        ref.child(itineraryId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Itinerary itinerary = dataSnapshot.getValue(Itinerary.class);
+                if (itinerary != null) {
+                    for (String collaborator : itinerary.getColaborators()) {
+                        String collaboratorPath = collaborator.replace(".", ",");
+                        DatabaseReference collaboratorEventRef = FirebaseDatabase.getInstance().getReference("users")
+                                .child(collaboratorPath).child("itineraries").child(itineraryId).child("events").child(eventId);
+
+                        collaboratorEventRef.removeValue()
+                                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Evento eliminado correctamente de " + collaborator))
+                                .addOnFailureListener(e -> Log.e("Firebase", "Error al eliminar evento de " + collaborator, e));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("Firebase", "Error al obtener itinerario para eliminar evento de colaboradores", databaseError.toException());
+            }
+        });
+    }
+
+    @Override
+    public void deleteAllEvents(String itineraryId, OperationCallback callback) {
+        DatabaseReference eventsRef = ref.child(itineraryId).child("events");
+        eventsRef.removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firebase", "Todos los eventos eliminados correctamente.");
+                    deleteAllEventsfromcollaborators(itineraryId, callback);
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(callback::onFailure);
+    }
+
+    private void deleteAllEventsfromcollaborators(String itineraryId, OperationCallback callback) {
+        ref.child(itineraryId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Itinerary itinerary = dataSnapshot.getValue(Itinerary.class);
+                if (itinerary != null) {
+                    for (String collaborator : itinerary.getColaborators()) {
+                        String collaboratorPath = collaborator.replace(".", ",");
+                        DatabaseReference collaboratorEventsRef = FirebaseDatabase.getInstance().getReference("users")
+                                .child(collaboratorPath).child("itineraries").child(itineraryId).child("events");
+
+                        collaboratorEventsRef.removeValue()
+                                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Todos los eventos eliminados correctamente de " + collaborator))
+                                .addOnFailureListener(e -> Log.e("Firebase", "Error al eliminar todos los eventos de " + collaborator, e));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("Firebase", "Error al obtener itinerario para eliminar todos los eventos de colaboradores", databaseError.toException());
+            }
+        });
     }
 
     public String setId(){
