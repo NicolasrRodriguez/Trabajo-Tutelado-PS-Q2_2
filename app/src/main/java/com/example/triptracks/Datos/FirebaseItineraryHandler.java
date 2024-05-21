@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
+import com.example.triptracks.Presenter.EventDecorator;
+import com.example.triptracks.Presenter.ItineraryDetailActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -14,7 +16,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,7 +151,6 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
     @Override
     public void shareItinerary(Itinerary itinerary , String Target,OperationCallback callback){
         if (itinerary.getId() != null) {
-                //acutaliza la propia base de datos
                 ref.child(itinerary.getId()).setValue(itinerary)
                         .addOnSuccessListener(aVoid -> callback.onSuccess())
                         .addOnFailureListener(callback::onFailure);
@@ -156,7 +160,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                 }
 
 
-                //crea el itinerario para el usuario Target
+
                 String targetUserPath = Target.replace(".", ",");
                 DatabaseReference Targetref = FirebaseDatabase.getInstance().getReference("users")
                         .child(targetUserPath).child("itineraries");
@@ -249,6 +253,45 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
         eventsRef.removeValue()
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(callback::onFailure);
+    }
+
+    public void createEvent(CalendarDay date, String activity, ItineraryDetailActivity it) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ","))
+                .child("itineraries").child(it.itinerary.getId()).child("events");
+        String id = databaseReference.push().getKey();
+        it.category = it.spinner_evento.getSelectedItem().toString();
+        if (id != null) {
+            if (it.category.equals("Exploration")) {
+                it.category = "Exploración";
+            } else if (it.category.equals("Gastronomy")) {
+                it.category = "Gastronomía";
+            } else if (it.category.equals("Entertainment")) {
+                it.category = "Entretenimiento";
+            }
+
+            Event event = new Event(id, date.getDate().toString(), it.category, activity);
+            databaseReference.child(id).setValue(event)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("Firebase", "Evento guardado correctamente.");
+                        shareEvent(it.itinerary, event);
+                    })
+                    .addOnFailureListener(e -> Log.e("Firebase", "Error al guardar el evento", e));
+            it.eventDecorator = new EventDecorator(it, Collections.singleton(date), it.category);
+            it.binding.calendarView.addDecorator(it.eventDecorator);
+        }
+    }
+
+    private void shareEvent(Itinerary itinerary, Event event) {
+        for (String collaborator : itinerary.getColaborators()) {
+            String collaboratorPath = collaborator.replace(".", ",");
+            DatabaseReference collaboratorRef = FirebaseDatabase.getInstance().getReference("users")
+                    .child(collaboratorPath).child("itineraries").child(itinerary.getId()).child("events").child(event.getId());
+
+            collaboratorRef.setValue(event)
+                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Evento sincronizado correctamente con " + collaborator))
+                    .addOnFailureListener(e -> Log.e("Firebase", "Error al sincronizar evento con " + collaborator, e));
+        }
     }
 
     public String setId(){

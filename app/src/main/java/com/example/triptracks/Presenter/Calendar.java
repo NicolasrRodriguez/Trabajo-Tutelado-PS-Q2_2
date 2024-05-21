@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
+import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.LogicaNegocio.CalendarLogic;
 import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.LoadEvents;
@@ -61,7 +62,7 @@ public class Calendar {
                     .setPositiveButton(it. getResources().getString(R.string.aceptar), (dialogInterface, i) -> {
                         String activity = input.getText().toString();
                         if (!activity.isEmpty()) {
-                            calendlogic.createEvent(date,activity);
+                            it.firebaseItineraryHandler.createEvent(date,activity,it);
                         }
                     })
                     .setNegativeButton(it. getResources().getString(R.string.cancelar), null)

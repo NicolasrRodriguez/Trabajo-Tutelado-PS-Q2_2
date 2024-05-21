@@ -1,9 +1,11 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.triptracks.Domain.Entities.Event;
+import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.DeleteOneEvent;
 import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.UpdateEvent;
 import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.getLoadedEvents;
@@ -29,28 +31,7 @@ public class CalendarLogic {
         this.it = it;
     }
 
-    public void createEvent(CalendarDay date, String activity){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ","))
-                .child("itineraries").child(it.itinerary.getId()).child("events");
-        String id = databaseReference.push().getKey();
-        it.category = it.spinner_evento.getSelectedItem().toString();
-        if (id != null) {
-            if( it.category.equals("Exploration")){
-                it.category = "Exploración";
-            } else if (it.category.equals("Gastronomy")) {
-                it.category ="Gastronomía";
 
-            } else if (it.category.equals("Entertainment")) {
-                it.category ="Entretenimiento";
-            }
-
-            Event event = new Event(id, date.getDate().toString(), it.category, activity);
-            databaseReference.child(id).setValue(event);
-            it.eventDecorator =new EventDecorator(it, Collections.singleton(date), it.category);
-            it.binding.calendarView.addDecorator(it.eventDecorator);
-        }
-    }
 
     public Event findEventByDate(CalendarDay date) {
         getLoadedEvents getLoadedEvents = new getLoadedEvents(it.firebaseItineraryHandler);
