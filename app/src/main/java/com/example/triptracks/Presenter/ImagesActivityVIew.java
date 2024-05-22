@@ -120,6 +120,11 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
 
     }
 
+    @Override
+    public void onItemLongClick(int position) {
+
+    }
+
     private void showImageDialog(String imageUrl) {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.full_image_dialog);

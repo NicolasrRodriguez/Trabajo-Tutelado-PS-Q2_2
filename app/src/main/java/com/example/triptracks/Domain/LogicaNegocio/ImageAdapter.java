@@ -16,7 +16,7 @@ import com.example.triptracks.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder>{
+public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
     private List<String> images;
 
@@ -26,6 +26,10 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
         this.images = images;
         this.imagesOnclick= imagesOnclick;
     }
+
+
+
+
 
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder{
