@@ -17,14 +17,21 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
 
     private List<String> images;
 
-    public ImageAdapter(List<String> images) {
+    private ItineraryAdapter.OnItemClickListener listener;
+
+    public ImageAdapter(List<String> images , ItineraryAdapter.OnItemClickListener listener) {
         this.images = images;
+        this.listener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder{
 
         private final ImageView imageView;
-        public ImageViewHolder(@NonNull View itemView) {
+        public ImageViewHolder(@NonNull View itemView, final ItineraryAdapter.OnItemClickListener listener) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.image);
@@ -41,7 +48,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
     public ImageAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image,parent,false);
-        return new ImageViewHolder(view);
+        return new ImageViewHolder(view , listener);
     }
 
 

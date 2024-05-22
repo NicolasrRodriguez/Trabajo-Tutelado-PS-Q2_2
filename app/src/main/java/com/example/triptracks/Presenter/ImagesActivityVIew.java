@@ -24,7 +24,7 @@ import com.example.triptracks.Domain.LogicaNegocio.ImageLogic;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityImagesViewBinding;
 
-public class ImagesActivityVIew extends AppCompatActivity implements View.OnClickListener {
+public class ImagesActivityVIew extends AppCompatActivity implements ImageAdapter.OnItemClickListener {
 
     ActivityImagesViewBinding binding;
 
@@ -39,6 +39,8 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
 
 
     private final ImageLogic imageLogic = new ImageLogic();
+
+    public static int selectedPosition = RecyclerView.NO_POSITION;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("_IMAGETAG", "Arranco imagenesView");
@@ -53,7 +55,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
             for (String iamge : itinerary.getImageUris()) {
                 Log.d("_IMAGETAG", "URL:" + iamge);
             }
-            imageAdapter = new ImageAdapter(itinerary.getImageUris());
+            imageAdapter = new ImageAdapter(itinerary.getImageUris(), this::onItemClick);
             imagesRecyclerView = findViewById(R.id.images_list);
             Log.d("_IMAGETAG", "Voy a asignar el adapter el adapter");
             imagesRecyclerView.setAdapter(imageAdapter);
@@ -102,8 +104,12 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View v) {
 
+    @Override
+    public void onItemClick(int position) {
+        Log.d("_IMGRCLY","Clickado en posicion" + position);
+        if (position != RecyclerView.NO_POSITION) {
+            Log.d("_IMGRCLY","Clickado en posicion" + position);
+        }
     }
 }
