@@ -122,23 +122,14 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
 
     private void showImageDialog(String imageUrl) {
         Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_image);
+        dialog.setContentView(R.layout.full_image_dialog);
 
         ImageView imageView = dialog.findViewById(R.id.imageView);
-        TextView titleTextView = dialog.findViewById(R.id.titleTextView);
-        TextView descriptionTextView = dialog.findViewById(R.id.descriptionTextView);
 
-        firebaseMediaHandler.getDocumentDetails(documentId,
-                document -> {
-                    Glide.with(context)
+        Glide.with(this)
                             .load(imageUrl)
                             .into(imageView);
-                    titleTextView.setText(document.getName());
-                    descriptionTextView.setText(document.getDescription());
-                },
-                error -> {
-                    Log.e("Firebase", "Error fetching document details: " + error);
-                });
+
 
         ImageView btnClose = dialog.findViewById(R.id.btnClose);
         btnClose.setTag(dialog);
