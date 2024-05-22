@@ -123,16 +123,11 @@ public class FirebaseImages {
 
         Log.d("_IMM","ahora hay  " + newImages.size() +"imagenes en el itinerario " );
 
-        Itinerary itineraryaux = new Itinerary(oldItinerary.getId(),oldItinerary.getItineraryTitle(),oldItinerary.getCountry(),
-                oldItinerary.getState(),oldItinerary.getCity(), oldItinerary.getAdmin(),oldItinerary.getColaborators(),
-                oldItinerary.getStartDate(),oldItinerary.getEndDate(),newImages);
-
-        Log.d("_IMM","en el itinerario hay " + itineraryaux.getImageUris().size());
-
-        Log.d("_IMGTAG","Itinerario auxiliar creado "  + itineraryaux.getColaborators().size());
+        oldItinerary.setImageUris(newImages);
 
 
-        updateItinerary.execute(itineraryaux,new ItineraryRepository.OperationCallback() {
+
+        updateItinerary.execute(oldItinerary,new ItineraryRepository.OperationCallback() {
             @Override
             public void onSuccess() {  Log.d("_IMGTAG","Uri de la imagen añadida"); }
 
