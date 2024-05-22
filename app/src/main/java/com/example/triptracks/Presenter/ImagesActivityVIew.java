@@ -3,6 +3,7 @@ package com.example.triptracks.Presenter;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresExtension;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -115,14 +116,22 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
 
     @Override
     public void onItemClick(int position) {
-        Log.d("_IMGRCLY","Clickado en posicion" + position);//ensaeñar imagen completa con un dialogo con botones de borrar y volver
+        Log.d("_IMGRCLY","Clickado en posicion" + position);//enseñar imagen completa con un dialogo
         showImageDialog(imageAdapter.dataAt(position));
 
     }
 
     @Override
     public void onItemLongClick(int position) {
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.eliminar_imagen);
+        builder.setMessage(R.string.est_seguro_de_que_desea_eliminar_esta_imagen);
+        builder.setPositiveButton(R.string.str_but_OK, (dialog, which) -> {
+           //elimianr imagen en la posición position del view y de las bases de datos
+            imageAdapter.removeelem(position);
+        });
+        builder.setNegativeButton(R.string.str_cancelar, null);
+        builder.show();
     }
 
     private void showImageDialog(String imageUrl) {

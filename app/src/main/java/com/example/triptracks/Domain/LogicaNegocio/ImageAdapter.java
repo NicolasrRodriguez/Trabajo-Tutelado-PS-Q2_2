@@ -1,5 +1,6 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,18 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
                     }
                 }
             });
+
+            imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(imagesOnclick != null) {
+                        if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                            imagesOnclick.onItemLongClick(getAdapterPosition());
+                        }
+                    }
+                    return true;
+                }
+            });
         }
 
         public ImageView getImageView() {
@@ -60,6 +73,13 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
     public void anadirelem() {
         int startIndex = images.size();
         notifyItemChanged(startIndex + 1);
+    }
+
+    public void removeelem(int pos){
+        Log.d("_IMGRCLY","Clickado en posicion");
+        images.remove(pos);
+        notifyItemRemoved(pos);
+
     }
 
     public String  dataAt(int pos){
