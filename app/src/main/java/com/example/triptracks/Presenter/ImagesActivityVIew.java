@@ -31,6 +31,8 @@ import com.example.triptracks.Domain.LogicaNegocio.ImagesOnclick;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityImagesViewBinding;
 
+import java.util.ArrayList;
+
 public class ImagesActivityVIew extends AppCompatActivity implements ImagesOnclick {
 
     ActivityImagesViewBinding binding;
@@ -57,21 +59,24 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
         assert itinerary != null;
-        if (itinerary.getImageUris() != null){
-            Log.d("_IMAGETAG", "Voy a crear el adapter "  );
+        if (itinerary.getImageUris() != null) {
+            Log.d("_IMAGETAG", "Voy a crear el adapter ");
             for (String iamge : itinerary.getImageUris()) {
                 Log.d("_IMAGETAG", "URL:" + iamge);
             }
-            imageAdapter = new ImageAdapter(itinerary.getImageUris(),this);
-            imageLogic.setAdapter(imageAdapter);
-            imagesRecyclerView = findViewById(R.id.images_list);
-            Log.d("_IMAGETAG", "Voy a asignar el adapter el adapter");
-            imagesRecyclerView.setAdapter(imageAdapter);
-            imagesRecyclerView.setLayoutManager(linearLayoutManager);
+            imageAdapter = new ImageAdapter(itinerary.getImageUris(), this);
+
         }
         else {
             Log.d("_IMAGETAG", "Aun no hay imagenes");
+            imageAdapter = new ImageAdapter(new ArrayList<>(), this);
         }
+
+        imageLogic.setAdapter(imageAdapter);
+        imagesRecyclerView = findViewById(R.id.images_list);
+        Log.d("_IMAGETAG", "Voy a asignar el adapter el adapter");
+        imagesRecyclerView.setAdapter(imageAdapter);
+        imagesRecyclerView.setLayoutManager(linearLayoutManager);
 
 
 

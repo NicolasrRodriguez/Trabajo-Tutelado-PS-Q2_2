@@ -1,5 +1,6 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -73,10 +74,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
         }
     }
 
-    public void anadirelem() {
-        int startIndex = images.size();
-        notifyItemChanged(startIndex + 1);
-    }
+
 
     public void removeelem(int pos){
         Log.d("_IMGRCLY","Clickado en posicion");
@@ -84,6 +82,12 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
         images.remove(pos);
         notifyItemRemoved(pos);
         firebaseImages.removeImage(url);
+
+    }
+
+    public void addElement(String url){
+        images.add(url);
+        notifyItemInserted(images.size()-1);
 
     }
 

@@ -1,5 +1,6 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.util.Log;
 
@@ -10,6 +11,8 @@ import com.example.triptracks.Domain.Repository.ItineraryRepository;
 
 import java.util.ArrayList;
 
+import javax.security.auth.callback.Callback;
+
 public class ImageLogic {
 
     private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
@@ -17,17 +20,18 @@ public class ImageLogic {
     private FirebaseImages firebaseImages = new FirebaseImages();
 
     private ImageAdapter adapter;
-    private Itinerary itineraryaux;
 
     public void setAdapter(ImageAdapter adapter) {
         firebaseImages.setAdapter(adapter);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void uploadImage(Uri imageUri, Itinerary oldItinerary){
         if (imageUri != null) {
 
-            Log.d("_IMM","en el itinerario hay ");
-            firebaseImages.uploadImage(imageUri,oldItinerary);
+            Log.d("_IMM","Actualizo el itinerario ");
+
+            firebaseImages.uploadImage(imageUri, oldItinerary);
 ;
 
 

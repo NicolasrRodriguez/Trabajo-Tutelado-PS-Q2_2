@@ -20,11 +20,18 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import javax.security.auth.callback.Callback;
+
 public class FirebaseImages {
 
     private StorageReference ref = FirebaseStorage.getInstance().getReference();
 
     private UserInfo user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+    private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
+
+    UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);
 
     private ImageAdapter adapter;
 
@@ -32,9 +39,6 @@ public class FirebaseImages {
         this.adapter = adapter;
     }
 
-    private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
-
-    UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);
 
     public void uploadImage(Uri image, Itinerary oldItinerary){
 
@@ -51,7 +55,7 @@ public class FirebaseImages {
                                     String downloadUrl = uri.toString();
                                     Log.d("_IMGTAG","URL: " + downloadUrl);
                                     updateitinerary( oldItinerary, downloadUrl);
-
+                                    adapter.addElement(downloadUrl);
                                 }
 
                             });
@@ -90,9 +94,6 @@ public class FirebaseImages {
         }
 
 
-        adapter.anadirelem();
-        ////actualiza el recyclerview
-
         Log.d("_IMM","ahora hay  " + newImages.size() +"imagenes en el itinerario " );
 
         Itinerary itineraryaux = new Itinerary(oldItinerary.getId(),oldItinerary.getItineraryTitle(),oldItinerary.getCountry(),
@@ -111,6 +112,7 @@ public class FirebaseImages {
             @Override
             public void onFailure(Exception e) {Log.d("_IMGTAG","Uri de la imagen no se pudo añadir");}
         });
+
     }
 
 
