@@ -16,7 +16,7 @@ import com.example.triptracks.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> implements View.OnCreateContextMenuListener{
+public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder>{
 
     private List<String> images;
 
@@ -27,14 +27,6 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
         this.imagesOnclick= imagesOnclick;
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder{
 
@@ -64,6 +56,10 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
     public void anadirelem() {
         int startIndex = images.size();
         notifyItemChanged(startIndex + 1);
+    }
+
+    public String  dataAt(int pos){
+        return  this.images.get(pos);
     }
 
 

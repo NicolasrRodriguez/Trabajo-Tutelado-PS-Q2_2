@@ -116,7 +116,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
     @Override
     public void onItemClick(int position) {
         Log.d("_IMGRCLY","Clickado en posicion" + position);//ensaeñar imagen completa con un dialogo con botones de borrar y volver
-
+        showImageDialog(imageAdapter.dataAt(position));
 
     }
 
