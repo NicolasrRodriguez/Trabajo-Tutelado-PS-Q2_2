@@ -12,4 +12,13 @@
         android:background="@android:color/white"
         android:contentDescription="Image" />
 
+    <ImageView
+        android:id="@+id/btnClose"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_arrow_left"
+        android:clickable="true"
+        android:onClick="onCloseButtonClick" />
+
 </RelativeLayout>
