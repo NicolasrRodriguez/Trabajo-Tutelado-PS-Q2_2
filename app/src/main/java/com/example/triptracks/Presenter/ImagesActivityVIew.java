@@ -31,9 +31,6 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
 
     private Itinerary itinerary;
 
-    private Uri imageSelected;
-
-    private FirebaseAuthData firebaseAuth = new FirebaseAuthData();
 
     RecyclerView imagesRecyclerView;
 
@@ -41,7 +38,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
     ImageAdapter imageAdapter;
 
 
-    private ImageLogic imageLogic = new ImageLogic();
+    private final ImageLogic imageLogic = new ImageLogic();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("_IMAGETAG", "Arranco imagenesView");
@@ -77,7 +74,6 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
                 assert result.getData() != null;
                 Uri iamgeuri = result.getData().getData();
                 assert iamgeuri != null;
-                imageSelected = iamgeuri;
                 Log.d("_IMGTAG",iamgeuri.toString());
                 imageLogic.uploadImage(iamgeuri,itinerary);
 
