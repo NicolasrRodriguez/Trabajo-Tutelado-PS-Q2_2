@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.triptracks.Datos.FirebaseImages;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.R;
 
@@ -22,6 +23,8 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
     private List<String> images;
 
     private ImagesOnclick imagesOnclick;
+
+    private FirebaseImages firebaseImages = new FirebaseImages();
 
     public ImageAdapter(List<String> images , ImagesOnclick imagesOnclick) {
         this.images = images;
@@ -77,8 +80,10 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
 
     public void removeelem(int pos){
         Log.d("_IMGRCLY","Clickado en posicion");
+        String url = images.get(pos);
         images.remove(pos);
         notifyItemRemoved(pos);
+        firebaseImages.removeImage(url);
 
     }
 

@@ -69,9 +69,11 @@ public class FirebaseImages {
 
     }
 
-    public void  removeImage(){
+    public void  removeImage(String url){
+        StorageReference ref =  FirebaseStorage.getInstance().getReferenceFromUrl(url);
+        ref.delete();
 
-        Log.d("_RM", "Eliminando imagen");
+        Log.d("_IMGRCLY", "Eliminando imagen");
     }
 
     public void updateitinerary(Itinerary oldItinerary, String imageUrl){
@@ -110,6 +112,7 @@ public class FirebaseImages {
             public void onFailure(Exception e) {Log.d("_IMGTAG","Uri de la imagen no se pudo añadir");}
         });
     }
+
 
 
 
