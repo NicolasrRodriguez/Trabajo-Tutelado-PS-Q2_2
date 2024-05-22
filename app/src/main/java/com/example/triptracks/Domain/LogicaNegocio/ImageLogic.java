@@ -20,7 +20,7 @@ public class ImageLogic {
     private Itinerary itineraryaux;
 
     public void setAdapter(ImageAdapter adapter) {
-        this.adapter = adapter;
+        firebaseImages.setAdapter(adapter);
     }
 
     public void uploadImage(Uri imageUri, Itinerary oldItinerary){
@@ -28,7 +28,7 @@ public class ImageLogic {
 
             Log.d("_IMM","en el itinerario hay ");
             firebaseImages.uploadImage(imageUri,oldItinerary);
-            firebaseImages.setAdapter(adapter);
+;
 
 
         }

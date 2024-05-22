@@ -21,10 +21,11 @@ import com.example.triptracks.Datos.FirebaseAuthData;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ImageAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ImageLogic;
+import com.example.triptracks.Domain.LogicaNegocio.ImagesOnclick;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityImagesViewBinding;
 
-public class ImagesActivityVIew extends AppCompatActivity implements ImageAdapter.OnItemClickListener {
+public class ImagesActivityVIew extends AppCompatActivity implements ImagesOnclick {
 
     ActivityImagesViewBinding binding;
 
@@ -55,7 +56,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImageAdapte
             for (String iamge : itinerary.getImageUris()) {
                 Log.d("_IMAGETAG", "URL:" + iamge);
             }
-            imageAdapter = new ImageAdapter(itinerary.getImageUris(), this::onItemClick);
+            imageAdapter = new ImageAdapter(itinerary.getImageUris(),this);
             imageLogic.setAdapter(imageAdapter);
             imagesRecyclerView = findViewById(R.id.images_list);
             Log.d("_IMAGETAG", "Voy a asignar el adapter el adapter");
@@ -109,9 +110,8 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImageAdapte
 
     @Override
     public void onItemClick(int position) {
-        Log.d("_IMGRCLY","Clickado en posicion" + position);
-        if (position != RecyclerView.NO_POSITION) {
-            Log.d("_IMGRCLY","Clickado en posicion" + position);
-        }
+        Log.d("_IMGRCLY","Clickado en posicion" + position);//ensaeñar imagen completa con un dialogo con botones de borrar y volver
+
+
     }
 }

@@ -34,6 +34,8 @@ public class FirebaseImages {
 
     private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
 
+    UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);
+
     public void uploadImage(Uri image, Itinerary oldItinerary){
 
         if (image != null && user != null) {
@@ -67,6 +69,11 @@ public class FirebaseImages {
 
     }
 
+    public void  removeImage(){
+
+        Log.d("_RM", "Eliminando imagen");
+    }
+
     public void updateitinerary(Itinerary oldItinerary, String imageUrl){
         ArrayList<String> newImages;
         if (oldItinerary.getImageUris() != null){
@@ -80,7 +87,9 @@ public class FirebaseImages {
             newImages.add(imageUrl);
         }
 
-        adapter.anadirelem();//actualiza el recyclerview
+
+        adapter.anadirelem();
+        ////actualiza el recyclerview
 
         Log.d("_IMM","ahora hay  " + newImages.size() +"imagenes en el itinerario " );
 
@@ -92,7 +101,7 @@ public class FirebaseImages {
 
         Log.d("_IMGTAG","Itinerario auxiliar creado "  + itineraryaux.getColaborators().size());
 
-        UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);
+
         updateItinerary.execute(itineraryaux,new ItineraryRepository.OperationCallback() {
             @Override
             public void onSuccess() {  Log.d("_IMGTAG","Uri de la imagen añadida"); }

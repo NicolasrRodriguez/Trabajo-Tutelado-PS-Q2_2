@@ -97,10 +97,12 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                             eventsRef.removeValue()
                                     .addOnSuccessListener(aVoid -> {
                                         updateItineraryFields(itineraryRef, itinerary);
+                                        Log.d("_IMGTAG","Campos actualizados");
                                         callback.onSuccess();
                                     })
                                     .addOnFailureListener(callback::onFailure);
                         }else{
+                            Log.d("_IMGTAG","Actualizo los campos mal");
                             updateItineraryFields(itineraryRef, itinerary);
                         }
                     }
@@ -116,7 +118,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
     private void updateItineraryFields(DatabaseReference itineraryRef, Itinerary itinerary) {
 
-
+        Log.d("_IMGTAG","Actualizo los campos");
         Map<String, Object> updates = new HashMap<>();
         updates.put("id", itinerary.getId());
         updates.put("itineraryTitle", itinerary.getItineraryTitle());

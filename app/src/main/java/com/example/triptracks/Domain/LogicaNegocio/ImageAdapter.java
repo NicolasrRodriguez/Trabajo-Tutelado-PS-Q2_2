@@ -1,5 +1,6 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +16,20 @@ import com.example.triptracks.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
+public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> implements View.OnCreateContextMenuListener{
 
     private List<String> images;
 
-    private ItineraryAdapter.OnItemClickListener listener;
+    private ImagesOnclick imagesOnclick;
 
-    public ImageAdapter(List<String> images , ItineraryAdapter.OnItemClickListener listener) {
+    public ImageAdapter(List<String> images , ImagesOnclick imagesOnclick) {
         this.images = images;
-        this.listener = listener;
+        this.imagesOnclick= imagesOnclick;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
     }
 
     public interface OnItemClickListener {
@@ -33,10 +39,21 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
     public static class ImageViewHolder extends RecyclerView.ViewHolder{
 
         private final ImageView imageView;
-        public ImageViewHolder(@NonNull View itemView, final ItineraryAdapter.OnItemClickListener listener) {
+        public ImageViewHolder(@NonNull View itemView , ImagesOnclick imagesOnclick) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.image);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(imagesOnclick != null){
+                        if(getAdapterPosition() != RecyclerView.NO_POSITION){
+                            imagesOnclick.onItemClick(getAdapterPosition());
+                        }
+                    }
+                }
+            });
         }
 
         public ImageView getImageView() {
@@ -55,7 +72,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
     public ImageAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image,parent,false);
-        return new ImageViewHolder(view , listener);
+        return new ImageViewHolder(view, imagesOnclick);
     }
 
 
