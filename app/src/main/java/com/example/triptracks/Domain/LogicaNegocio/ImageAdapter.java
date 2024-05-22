@@ -25,11 +25,14 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
 
     private ImagesOnclick imagesOnclick;
 
+    public  Itinerary itinerary;
+
     private FirebaseImages firebaseImages = new FirebaseImages();
 
-    public ImageAdapter(List<String> images , ImagesOnclick imagesOnclick) {
+    public ImageAdapter(List<String> images , ImagesOnclick imagesOnclick, Itinerary itinerary) {
         this.images = images;
         this.imagesOnclick= imagesOnclick;
+        this.itinerary = itinerary;
     }
 
 
@@ -81,7 +84,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
         String url = images.get(pos);
         images.remove(pos);
         notifyItemRemoved(pos);
-        firebaseImages.removeImage(url);
+        firebaseImages.removeImage(url, itinerary);
 
     }
 

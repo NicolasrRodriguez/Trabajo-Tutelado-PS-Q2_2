@@ -74,16 +74,32 @@ public class FirebaseImages {
 
     }
 
-    public void  removeImage(String url){
+    public void  removeImage(String url, Itinerary itinerary){
         removeFromStorage(url);
-
+        removeFromitinerary(url,itinerary);
 
         Log.d("_IMGRCLY", "Eliminando imagen");
     }
 
+    public void removeFromitinerary(String url , Itinerary itinerary){
+        ArrayList<String> newImages = itinerary.getImageUris();
+        newImages.remove(url);
+        itinerary.setImageUris(newImages);
+
+        updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
+            @Override
+            public void onSuccess() {  Log.d("_IMGTAG","Uri de la imagen añadida"); }
+
+            @Override
+            public void onFailure(Exception e) {Log.d("_IMGTAG","Uri de la imagen no se pudo añadir");}
+        });
+
+    }
     private void removeFromStorage(String url){
         StorageReference ref =  FirebaseStorage.getInstance().getReferenceFromUrl(url);
         ref.delete();
+
+
 
     }
 

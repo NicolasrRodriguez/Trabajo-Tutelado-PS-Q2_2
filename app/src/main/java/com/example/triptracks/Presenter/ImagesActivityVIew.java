@@ -64,12 +64,12 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
             for (String iamge : itinerary.getImageUris()) {
                 Log.d("_IMAGETAG", "URL:" + iamge);
             }
-            imageAdapter = new ImageAdapter(itinerary.getImageUris(), this);
+            imageAdapter = new ImageAdapter(itinerary.getImageUris(), this, itinerary);
 
         }
         else {
             Log.d("_IMAGETAG", "Aun no hay imagenes");
-            imageAdapter = new ImageAdapter(new ArrayList<>(), this);
+            imageAdapter = new ImageAdapter(new ArrayList<>(), this, itinerary);
         }
 
         imageLogic.setAdapter(imageAdapter);
