@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.ImageAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.UpdateItinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,6 +26,12 @@ public class FirebaseImages {
 
     private UserInfo user = FirebaseAuth.getInstance().getCurrentUser();
 
+    private ImageAdapter adapter;
+
+    public void setAdapter(ImageAdapter adapter) {
+        this.adapter = adapter;
+    }
+
     private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
 
     public void uploadImage(Uri image, Itinerary oldItinerary){
@@ -42,6 +49,7 @@ public class FirebaseImages {
                                     String downloadUrl = uri.toString();
                                     Log.d("_IMGTAG","URL: " + downloadUrl);
                                     updateitinerary( oldItinerary, downloadUrl);
+
                                 }
 
                             });
@@ -71,6 +79,8 @@ public class FirebaseImages {
             newImages = new ArrayList<>();
             newImages.add(imageUrl);
         }
+
+        adapter.anadirelem();//actualiza el recyclerview
 
         Log.d("_IMM","ahora hay  " + newImages.size() +"imagenes en el itinerario " );
 

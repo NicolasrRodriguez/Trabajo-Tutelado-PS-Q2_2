@@ -56,6 +56,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImageAdapte
                 Log.d("_IMAGETAG", "URL:" + iamge);
             }
             imageAdapter = new ImageAdapter(itinerary.getImageUris(), this::onItemClick);
+            imageLogic.setAdapter(imageAdapter);
             imagesRecyclerView = findViewById(R.id.images_list);
             Log.d("_IMAGETAG", "Voy a asignar el adapter el adapter");
             imagesRecyclerView.setAdapter(imageAdapter);
@@ -78,6 +79,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImageAdapte
                 assert iamgeuri != null;
                 Log.d("_IMGTAG",iamgeuri.toString());
                 imageLogic.uploadImage(iamgeuri,itinerary);
+
 
             }
     );
