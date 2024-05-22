@@ -86,8 +86,9 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
     }
 
     public void addElement(String url){
+        int startIndex = images.size();
         images.add(url);
-        notifyItemInserted(images.size()-1);
+        notifyItemInserted(startIndex);
 
     }
 

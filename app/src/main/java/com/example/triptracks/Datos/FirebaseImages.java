@@ -1,5 +1,6 @@
 package com.example.triptracks.Datos;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.util.Log;
 
@@ -55,7 +56,7 @@ public class FirebaseImages {
                                     String downloadUrl = uri.toString();
                                     Log.d("_IMGTAG","URL: " + downloadUrl);
                                     updateitinerary( oldItinerary, downloadUrl);
-                                    adapter.addElement(downloadUrl);
+
                                 }
 
                             });
@@ -74,12 +75,19 @@ public class FirebaseImages {
     }
 
     public void  removeImage(String url){
-        StorageReference ref =  FirebaseStorage.getInstance().getReferenceFromUrl(url);
-        ref.delete();
+        removeFromStorage(url);
+
 
         Log.d("_IMGRCLY", "Eliminando imagen");
     }
 
+    private void removeFromStorage(String url){
+        StorageReference ref =  FirebaseStorage.getInstance().getReferenceFromUrl(url);
+        ref.delete();
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     public void updateitinerary(Itinerary oldItinerary, String imageUrl){
         ArrayList<String> newImages;
         if (oldItinerary.getImageUris() != null){
@@ -112,6 +120,8 @@ public class FirebaseImages {
             @Override
             public void onFailure(Exception e) {Log.d("_IMGTAG","Uri de la imagen no se pudo añadir");}
         });
+
+        adapter.notifyDataSetChanged();
 
     }
 

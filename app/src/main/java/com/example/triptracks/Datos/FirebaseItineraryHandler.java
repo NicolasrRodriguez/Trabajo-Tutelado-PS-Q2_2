@@ -14,6 +14,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,7 +142,19 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
     @Override
     public void deleteItinerary(Itinerary itinerary,OperationCallback callback) {
+
         if (itinerary.getId() != null) {
+            ArrayList<String> images =itinerary.getImageUris();
+            if(images != null){
+                Log.d("_RMIMG", "Hay imagenes que borrar");
+                for (String url:images) {
+                    StorageReference ref =  FirebaseStorage.getInstance().getReferenceFromUrl(url);
+                    ref.delete();
+                }
+            }
+            else {
+                Log.d("_RMIMG", "NO Hay imagenes que borrar");
+            }
             ref.child(itinerary.getId()).removeValue()
                     .addOnSuccessListener(aVoid -> callback.onSuccess())
                     .addOnFailureListener(callback::onFailure);

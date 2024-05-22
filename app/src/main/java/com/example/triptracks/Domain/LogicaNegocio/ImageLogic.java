@@ -25,14 +25,13 @@ public class ImageLogic {
         firebaseImages.setAdapter(adapter);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void uploadImage(Uri imageUri, Itinerary oldItinerary){
         if (imageUri != null) {
 
             Log.d("_IMM","Actualizo el itinerario ");
 
             firebaseImages.uploadImage(imageUri, oldItinerary);
-;
+
 
 
         }
