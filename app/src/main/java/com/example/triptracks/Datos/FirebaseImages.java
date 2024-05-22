@@ -89,13 +89,16 @@ public class FirebaseImages {
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateitinerary(Itinerary oldItinerary, String imageUrl){
+        boolean local = false;
         ArrayList<String> newImages;
         if (oldItinerary.getImageUris() != null){
+
             Log.d("_IMM","en el itinerario hay " + oldItinerary.getImageUris().size());
             newImages = oldItinerary.getImageUris();
             newImages.add(imageUrl);
         }
         else{
+            local = true;
             Log.d("_IMM","no hay imagenes en el itinerario ");
             newImages = new ArrayList<>();
             newImages.add(imageUrl);
@@ -121,7 +124,13 @@ public class FirebaseImages {
             public void onFailure(Exception e) {Log.d("_IMGTAG","Uri de la imagen no se pudo añadir");}
         });
 
-        adapter.notifyDataSetChanged();
+        if(local){
+            adapter.addElement(imageUrl);
+        }else{
+            adapter.notifyDataSetChanged();
+        }
+
+
 
     }
 
