@@ -49,7 +49,6 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
         binding = ActivityImagesViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        binding.botonVolver.setOnClickListener(this);
         itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
         assert itinerary != null;
         if (itinerary.getImageUris() != null){
@@ -90,27 +89,25 @@ public class ImagesActivityVIew extends AppCompatActivity implements View.OnClic
         getMenuInflater().inflate(R.menu.images_act_menu, menu);
         return true;
     }
+    @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Intent resultIntent = new Intent();
-        setResult(AuthActivityView.RESULT_SESION_CLOSED, resultIntent);
         if (id == R.id.subirFoto) {
             Intent resultImageIntent = new Intent(MediaStore.ACTION_PICK_IMAGES);
             myStartActivityForResult.launch(resultImageIntent);
 
+        } else if (id == R.id.Volver) {
+            Intent resultIntent = new Intent();
+            this.setResult(ItineraryDetailActivity.RESULT_OK, resultIntent);
+            this.finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
     @Override
     public void onClick(View v) {
-        if(v == binding.botonVolver){
-            Intent resultIntent = new Intent();
-            this.setResult(ItineraryDetailActivity.RESULT_OK, resultIntent);
-            this.finish();
-        }
+
     }
 }

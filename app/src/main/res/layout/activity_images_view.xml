@@ -8,13 +8,6 @@
     android:orientation="vertical"
     tools:context=".Presenter.ImagesActivityVIew">
 
-    <Button
-        android:id="@+id/botonVolver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Volver">
-
-    </Button>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/images_list"

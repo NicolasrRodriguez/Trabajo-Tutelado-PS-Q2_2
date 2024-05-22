@@ -7,4 +7,9 @@
         android:title="@string/str_opcion1"
        app:showAsAction="ifRoom" />
 
+    <item android:id="@+id/Volver"
+        android:icon="@android:drawable/ic_media_previous"
+        android:title="@string/str_opcion1"
+        app:showAsAction="ifRoom" />
+
 </menu>
