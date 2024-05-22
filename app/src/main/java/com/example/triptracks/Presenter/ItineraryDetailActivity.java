@@ -19,10 +19,15 @@ import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DetailActLogic;
 import com.example.triptracks.Domain.Service.MapServiceImp;
+
 import com.example.triptracks.R;
+import com.example.triptracks.SettingsActivity;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,6 +62,11 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     Fragment fragmentcalendar;
     public Spinner spinner_evento;
     public String category;
+
+    public static final String KEY_ITINERARY = "itinerary";
+
+
+
     DetailActLogic detailActLogic;
 
     public ItineraryDetailActivity() {}
@@ -134,6 +144,14 @@ public class ItineraryDetailActivity extends AppCompatActivity {
                 .show();
     }
 
+    ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    Log.d("_TAG","Succesfully returned to MainActivity");
+                }
+            }
+    );
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,7 +162,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         Intent resultIntent = new Intent();
-        setResult(AuthActivity.RESULT_SESION_CLOSED, resultIntent);
+        setResult(AuthActivityView.RESULT_SESION_CLOSED, resultIntent);
         if (id == R.id.menu_compartir) {
             Log.d("_ITDETTAG", "Compartir itinerario");
             showDialog();
@@ -160,6 +178,11 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             binding.layoutmapcontainer.setVisibility(View.GONE);
             binding.map.setVisibility(View.GONE);
             showCalendarFragment();
+            return true;
+        } else if (id == R.id.menu_galeria) {
+            Intent intent = new Intent(this, ImagesActivityVIew.class);
+            intent.putExtra(ItneraryActivityView.KEY_ITINERARY, itinerary);
+            myStartActivityForResult.launch(intent);;
             return true;
         }
 

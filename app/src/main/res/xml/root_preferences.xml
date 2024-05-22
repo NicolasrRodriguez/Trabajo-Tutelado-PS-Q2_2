@@ -9,4 +9,17 @@
         android:entryValues="@array/language_values"
         android:defaultValue="en"
         android:dialogTitle="@string/pref_dialog_title_language" />
+
+
+    <CheckBoxPreference
+        android:key="theme"
+        android:defaultValue="false"
+        android:title="@string/tema"
+        android:summaryOff="@string/modo_claro"
+        android:summaryOn="@string/modo_oscuro">
+
+    </CheckBoxPreference>
+
+
+
 </PreferenceScreen>

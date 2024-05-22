@@ -19,6 +19,8 @@ public class Itinerary implements Parcelable {
 
     private ArrayList<String> Colaborators;
 
+    private ArrayList<String> ImageUris;
+
 
 
 
@@ -26,7 +28,7 @@ public class Itinerary implements Parcelable {
     }
 
 
-    public Itinerary(String id, String itineraryTitle, String country, String state,String city,String admin, ArrayList<String> colaborators,String startDate, String endDate) {
+    public Itinerary(String id, String itineraryTitle, String country, String state,String city,String admin, ArrayList<String> colaborators,String startDate, String endDate,ArrayList<String> imageUris) {
         this.id = id;
 
         this.itineraryTitle = itineraryTitle;
@@ -37,8 +39,10 @@ public class Itinerary implements Parcelable {
         this.endDate = endDate;
         this.Admin = admin;
         this.Colaborators = colaborators;
+        this.ImageUris = imageUris;
 
     }
+
 
     protected Itinerary(Parcel in) {
         id = in.readString();
@@ -50,6 +54,7 @@ public class Itinerary implements Parcelable {
         endDate = in.readString();
         Admin = in.readString();
         Colaborators = in.createStringArrayList();
+        ImageUris = in.createStringArrayList();
 
     }
 
@@ -64,6 +69,7 @@ public class Itinerary implements Parcelable {
         dest.writeString(endDate);
         dest.writeString(Admin);
         dest.writeStringList(Colaborators);
+        dest.writeStringList(ImageUris);
     }
 
     @Override
@@ -96,8 +102,17 @@ public class Itinerary implements Parcelable {
         return Colaborators;
     }
 
+
     public void setColaborators(ArrayList<String> colaborators) {
         Colaborators = colaborators;
+    }
+
+    public ArrayList<String> getImageUris() {
+        return ImageUris;
+    }
+
+    public void setImageUris(ArrayList<String> imageUris) {
+        ImageUris = imageUris;
     }
 
     public String getId() { return id; }

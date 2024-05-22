@@ -23,6 +23,8 @@
         android:id="@+id/menu_opcion_cerrarSesion"
         android:icon="@android:drawable/ic_lock_power_off"
         android:title="@string/CerarSesion"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
+
+
 
 </menu>

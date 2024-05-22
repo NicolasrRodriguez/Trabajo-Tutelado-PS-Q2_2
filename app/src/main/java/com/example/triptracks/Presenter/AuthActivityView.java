@@ -4,10 +4,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +31,8 @@ import java.util.Locale;
 public class AuthActivityView extends AppCompatActivity implements View.OnClickListener, AuthResult {
 
     public static final int RESULT_SESION_CLOSED = 1;
+
+    private SharedPreferences preferences;
 
     private ActivityAuthViewBinding binding;
     public static List<Country> mCountries = new ArrayList<>();
@@ -61,7 +67,27 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
         binding.LogInBut.setText(getResources().getString(R.string.log_in));
         binding.EmailEdit.setHint(getResources().getString(R.string.Email));
         binding.PassEdit.setHint(getResources().getString(R.string.Contraseña));
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);//this.getPreferences(Context.MODE_PRIVATE);
+        setThemeApp(preferences.getBoolean("theme",false));
+
     }
+
+    private void setThemeApp(boolean theme){
+
+        if (theme){
+            Log.d("_TAG1","Modo Oscuro");
+
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else{
+            Log.d("_TAG1","Modo Claro");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+
+    }
+
+
 
     private void setLanguage(String language) {
         Locale locale = new Locale(language);

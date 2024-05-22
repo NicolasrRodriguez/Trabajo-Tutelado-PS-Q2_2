@@ -1,3 +1,4 @@
+
 package com.example.triptracks;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -91,7 +92,6 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
     private void LogIn(String email, String pass){
         Log.d("_AUTHTAG", "Iniciando Sesion de: " + email);
-
         Intent intent = new Intent(this, ItneraryActivityView.class);
         intent.putExtra("UserEmail" , email);
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

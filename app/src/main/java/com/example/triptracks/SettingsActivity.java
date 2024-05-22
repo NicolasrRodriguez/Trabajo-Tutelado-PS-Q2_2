@@ -11,7 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import java.util.Locale;
-import java.util.Objects;
+
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -78,3 +78,4 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 }
+

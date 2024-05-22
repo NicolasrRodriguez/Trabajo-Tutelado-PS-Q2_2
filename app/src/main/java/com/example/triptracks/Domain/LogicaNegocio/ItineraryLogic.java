@@ -1,8 +1,10 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.annotation.SuppressLint;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 
+import com.example.triptracks.Datos.FirebaseImages;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.Adapter.ItineraryAdapter;
@@ -30,9 +32,10 @@ public class ItineraryLogic {
     public void addItems(String itineraryName, String countryName, String stateName, String cityName,String startDate,String endDate ,String UserEmail) {
 
         String itineraryId = firebaseItineraryHandler.setId();
-        ArrayList<String> shared = new  ArrayList<>();
-        shared.add(UserEmail);
-        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName,UserEmail ,shared,startDate,endDate);
+        ArrayList<String> colaborators = new  ArrayList<>();
+        colaborators.add(UserEmail);
+        ArrayList<String> images = new  ArrayList<>();
+        Itinerary itinerary = new Itinerary(itineraryId, itineraryName, countryName, stateName, cityName,UserEmail ,colaborators,startDate,endDate,images);
         ArrayList<Itinerary> newItineraries = new ArrayList<>();
         newItineraries.add(itinerary);
         adapter.anadirelem(newItineraries);

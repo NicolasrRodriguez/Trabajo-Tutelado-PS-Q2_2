@@ -18,6 +18,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,6 +52,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                         Itinerary itinerary = snapshot.getValue(Itinerary.class);
                         if (itinerary != null) {
                             mItineraryList.add(itinerary);
+
                         }
                     }
                     onItinerariesUpdated.accept(mItineraryList);
@@ -101,10 +105,12 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                             eventsRef.removeValue()
                                     .addOnSuccessListener(aVoid -> {
                                         updateItineraryFields(itineraryRef, itinerary);
+                                        Log.d("_IMGTAG","Campos actualizados");
                                         callback.onSuccess();
                                     })
                                     .addOnFailureListener(callback::onFailure);
                         }else{
+                            Log.d("_IMGTAG","Actualizo los campos mal");
                             updateItineraryFields(itineraryRef, itinerary);
                         }
                     }
@@ -120,7 +126,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
     private void updateItineraryFields(DatabaseReference itineraryRef, Itinerary itinerary) {
 
-
+        Log.d("_IMGTAG","Actualizo los campos");
         Map<String, Object> updates = new HashMap<>();
         updates.put("id", itinerary.getId());
         updates.put("itineraryTitle", itinerary.getItineraryTitle());
@@ -129,10 +135,11 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
         updates.put("city", itinerary.getCity());
         updates.put("admin",itinerary.getAdmin());
         updates.put("colaborators", itinerary.getColaborators());
+        updates.put("imageUris" , itinerary.getImageUris());
         updates.put("startDate", itinerary.getStartDate());
         updates.put("endDate", itinerary.getEndDate());
 
-        itineraryRef.updateChildren(updates)
+        itineraryRef.updateChildren(updates)//hacerlo para todos los colaboradores
                 .addOnSuccessListener(aVoid -> Log.d("Firebase", "Itinerario actualizado correctamente"))
                 .addOnFailureListener(e -> Log.e("Firebase", "Fallo al actualizar el itinerario", e));
     }
@@ -140,7 +147,19 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
     @Override
     public void deleteItinerary(Itinerary itinerary,OperationCallback callback) {
+
         if (itinerary.getId() != null) {
+            ArrayList<String> images =itinerary.getImageUris();
+            if(images != null){
+                Log.d("_RMIMG", "Hay imagenes que borrar");
+                for (String url:images) {
+                    StorageReference ref =  FirebaseStorage.getInstance().getReferenceFromUrl(url);
+                    ref.delete();
+                }
+            }
+            else {
+                Log.d("_RMIMG", "NO Hay imagenes que borrar");
+            }
             ref.child(itinerary.getId()).removeValue()
                     .addOnSuccessListener(aVoid -> callback.onSuccess())
                     .addOnFailureListener(callback::onFailure);

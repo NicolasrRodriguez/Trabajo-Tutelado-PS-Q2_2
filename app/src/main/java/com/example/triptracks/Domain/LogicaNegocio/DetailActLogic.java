@@ -6,6 +6,8 @@ import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.UpdateItine
 import com.example.triptracks.Presenter.AuthActivityView;
 import com.example.triptracks.Presenter.ItneraryActivityView;
 import static com.example.triptracks.Presenter.ItneraryActivityView.mAdapter;
+
+import static com.example.triptracks.Presenter.ItneraryActivityView.mAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 
 import com.example.triptracks.Presenter.ItineraryDetailActivity;
+import com.example.triptracks.Presenter.ItneraryActivityView;
 import com.example.triptracks.R;
 import com.google.firebase.auth.FirebaseUser;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -107,7 +110,7 @@ public class DetailActLogic {
             collaborators.add(email);
             itinerary.setColaborators(collaborators);
             ShareItinerary shareItinerary = new ShareItinerary(it.firebaseItineraryHandler);
-            shareItinerary.execute(it.itinerary, email, new ItineraryRepository.OperationCallback() {
+            shareItinerary.execute(itinerary, email, new ItineraryRepository.OperationCallback() {
                 @Override
                 public void onSuccess() {}
                 @Override
@@ -183,6 +186,11 @@ public class DetailActLogic {
         String editedCity = itinerary.getCity();
         String Admin = itinerary.getAdmin();
         ArrayList<String> colaboratos = itinerary.getColaborators();
+        ArrayList<String> images = new ArrayList<>();
+        if (itinerary.getImageUris() != null){
+             images = itinerary.getImageUris();
+            Log.d("_IMM", "hay " + images.size() + " iamgenes");
+        }
         if (it.spinnerCountry.getSelectedItem() != null) {
             String selectedCountry = it.spinnerCountry.getSelectedItem().toString();
             if (!selectedCountry.equals(it.getString(R.string.select_country))) {
@@ -212,6 +220,7 @@ public class DetailActLogic {
         itinerary.setCity(editedCity);
         itinerary.setAdmin(Admin);//seguramente hay que tocarlo por que no se deberia poder modificar el Admin
         itinerary.setColaborators(colaboratos);
+        itinerary.setImageUris(images);
         it.binding.itineraryTitle.setText(itinerary.getItineraryTitle());
         it.binding.itineraryCountry.setText(itinerary.getCountry());
         it.binding.itineraryState.setText(itinerary.getState());

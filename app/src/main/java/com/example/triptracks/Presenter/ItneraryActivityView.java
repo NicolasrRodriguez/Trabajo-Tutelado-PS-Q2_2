@@ -4,8 +4,11 @@ import static com.example.triptracks.Presenter.AuthActivityView.mCountries;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,7 +36,6 @@ import android.widget.Toast;
 import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
-import com.example.triptracks.AuthActivity;
 import com.example.triptracks.Datos.FirebaseAuthData;
 import com.example.triptracks.DocActivity;
 import com.example.triptracks.Domain.Entities.Itinerary;
@@ -47,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ItneraryActivityView extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener{
+public class ItneraryActivityView extends AppCompatActivity implements ItineraryAdapter.OnItemClickListener, ItineraryAdapter.OnContextMenuClickListener , SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String KEY_ITINERARY = "itinerary";
     public static final int RESULT_DELETE = 1;
@@ -91,6 +94,8 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         itineraryLogic.setAdapter(mAdapter);
         setTitle(R.string.app_name);
 
+        setupSharedPreferences();
+
 
     }
     @Override
@@ -100,6 +105,8 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
             updateLanguage();
         }
     }
+
+
 
 
     private void updateLanguage() {
@@ -112,6 +119,11 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
         // Notificar a la actividad que las configuraciones han cambiado
         recreate();
+    }
+
+    private void setupSharedPreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
 
@@ -147,7 +159,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         Intent resultIntent = new Intent();
-        setResult(AuthActivity.RESULT_SESION_CLOSED, resultIntent);
+        setResult(AuthActivityView.RESULT_SESION_CLOSED, resultIntent);
         if (id == R.id.menu_opcion_1) {
             showDialog(); //crea un nuevo itinerario
             return true;
@@ -162,6 +174,12 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         }else if (id == R.id.menu_documentacion) {
             Intent documentacionIntent = new Intent(this, DocActivity.class);
             startActivity(documentacionIntent);
+            return true;
+        }
+        else if (item.getItemId() == R.id.menu_settings ) {
+            Log.d("_TAG", "Menu settings");
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -395,5 +413,25 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
+        if (key.equals("theme")) {
+            setThemefun(sharedPreferences.getBoolean("theme",false));
+        }
+    }
+
+    private void setThemefun(boolean theme) {
+
+        if (theme){
+            Log.d("_TAG1","Modo Oscuro");
+
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else{
+            Log.d("_TAG1","Modo Claro");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 }

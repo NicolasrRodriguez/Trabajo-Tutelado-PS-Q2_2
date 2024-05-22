@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mis Itinerarios</string>
+    <string name="app_name">TripTracks</string>
     <string name="str_but_añadir">Añadir Elementos</string>
     <string name="str_but_borrar">Eliminar Elementos</string>
     <string name="str_borrar">Eliminar</string>
@@ -98,5 +98,13 @@
     <string name="document_name">Nombre del documento</string>
     <string name="document_description">Descripción del documento</string>
     <string name="select_image">Seleccionar imagen</string>
+
+    <string name="opciones">Opciones</string>
+    <string name="modo_oscuro">Modo Oscuro</string>
+    <string name="modo_claro">Modo Claro</string>
+    <string name="tema">Tema de la aplicación</string>
+    <string name="galeria">Galeria</string>
+    <string name="eliminar_imagen">Eliminar Imagen?</string>
+    <string name="est_seguro_de_que_desea_eliminar_esta_imagen">Está seguro de que desea eliminar esta imagen?</string>
 
 </resources>
