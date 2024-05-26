@@ -3,6 +3,7 @@ package com.example.triptracks.Domain.LogicaNegocio.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,9 +24,11 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
     private OnItemClickListener listener;
     private boolean showFirstButtonsOnly = false;
     private OnContextMenuClickListener contextMenuClickListener;
+    Context context;
 
 
-    public ItineraryAdapter(ArrayList<Itinerary> myDataset, OnItemClickListener listener, OnContextMenuClickListener contextMenuClickListener) {
+    public ItineraryAdapter(Context context, ArrayList<Itinerary> myDataset, OnItemClickListener listener, OnContextMenuClickListener contextMenuClickListener) {
+        this.context = context;
         this.mDataset = myDataset;
         this.listener = listener;
         this.contextMenuClickListener = contextMenuClickListener;
@@ -63,14 +66,12 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
             binding.itineraryCountry.setText(itinerary.getCountry());
         }
     }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItineraryTileBinding binding = ItineraryTileBinding.inflate(inflater, parent, false);
-        return new MyViewHolder(binding, listener, context);
+        return new MyViewHolder(binding, listener, parent.getContext());
     }
 
 
@@ -83,6 +84,14 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.MyVi
         holder.binding.itineraryCountry.setVisibility(View.GONE);
         holder.binding.itineraryState.setVisibility(View.GONE);
         holder.binding.itineraryCity.setVisibility(View.GONE);
+
+        int flags = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (flags == Configuration.UI_MODE_NIGHT_YES) {
+            holder.binding.itineraryTitle.setBackgroundResource(R.drawable.background_black);
+        } else {
+            holder.binding.itineraryTitle.setBackgroundResource(R.drawable.background);
+        }
+
         if (showFirstButtonsOnly) {
             holder.binding.butBorrar.setVisibility(View.GONE);
             holder.binding.butEdit.setVisibility(View.GONE);

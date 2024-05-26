@@ -3,6 +3,7 @@ package com.example.triptracks.Presenter;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,6 +81,8 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
         itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
         assert itinerary != null;
+        int nightModeFlags = this.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
         binding.itineraryTitle.setText(itinerary.getItineraryTitle());
         binding.itineraryCountry.setText(itinerary.getCountry());
         binding.itineraryState.setText(itinerary.getState());
@@ -90,6 +93,23 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         binding.layoutmapcontainer.setVisibility(View.GONE);
         binding.layoutcalendarcontainer.setVisibility(View.GONE);
         binding.getRoot().setBackgroundResource(R.drawable.fondo);
+        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+            binding.itineraryTitle.setBackgroundResource(R.drawable.background_black);
+            binding.itineraryCountry.setBackgroundResource(R.drawable.background_black);
+            binding.itineraryState.setBackgroundResource(R.drawable.background_black);
+            binding.itineraryCity.setBackgroundResource(R.drawable.background_black);
+            binding.spinnerCountryAct2.setBackgroundResource(R.drawable.background_black);
+            binding.spinnerStateAct2.setBackgroundResource(R.drawable.background_black);
+            binding.spinnerCityAct2.setBackgroundResource(R.drawable.background_black);
+        } else {
+            binding.itineraryTitle.setBackgroundResource(R.drawable.background);
+            binding.itineraryCountry.setBackgroundResource(R.drawable.background);
+            binding.itineraryState.setBackgroundResource(R.drawable.background);
+            binding.itineraryCity.setBackgroundResource(R.drawable.background);
+            binding.spinnerCountryAct2.setBackgroundResource(R.drawable.background);
+            binding.spinnerStateAct2.setBackgroundResource(R.drawable.background);
+            binding.spinnerCityAct2.setBackgroundResource(R.drawable.background);
+        }
 
         firebaseItineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
         calendar = new Calendar(this);

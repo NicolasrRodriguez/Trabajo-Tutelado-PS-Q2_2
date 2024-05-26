@@ -85,7 +85,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         UserEmail = firebaseAuth.email();
-        mAdapter = new ItineraryAdapter(mItineraryList, this, this);
+        mAdapter = new ItineraryAdapter(this,mItineraryList, this, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.categoriesRv.setLayoutManager(linearLayoutManager);
         binding.categoriesRv.setAdapter(mAdapter);
@@ -112,13 +112,12 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
 
     private void updateLanguage() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String language = preferences.getString("language_preference", ""); // Obtener el idioma preferido
+        String language = preferences.getString("language_preference", "");
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Configuration config = getResources().getConfiguration();
         config.locale = locale;
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
-        // Notificar a la actividad que las configuraciones han cambiado
         recreate();
     }
 
