@@ -79,7 +79,7 @@
     <string name="select_image">Select image</string>
 
     <string name="CerarSesion">Cerrar Sesion</string>
-    <string name="str_but_volver">Volver</string>
+    <string name="str_but_volver">Back</string>
     <string name="str_startdate">Fecha de inicio</string>
     <string name="str_enddate">Fecha de finalización</string>
     <string name="str_but_compartir">Compartir</string>

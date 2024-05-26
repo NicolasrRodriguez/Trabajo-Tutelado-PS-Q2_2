@@ -1,8 +1,6 @@
-package com.example.triptracks.Domain.LogicaNegocio;
+package com.example.triptracks.Domain.LogicaNegocio.Adapter;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.triptracks.Datos.FirebaseImages;
 import com.example.triptracks.Domain.Entities.Itinerary;
+import com.example.triptracks.Domain.LogicaNegocio.ImagesOnclick;
 import com.example.triptracks.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {

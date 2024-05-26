@@ -1,17 +1,12 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
-import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.util.Log;
 
 import com.example.triptracks.Datos.FirebaseImages;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
-import com.example.triptracks.Domain.Repository.ItineraryRepository;
-
-import java.util.ArrayList;
-
-import javax.security.auth.callback.Callback;
+import com.example.triptracks.Domain.LogicaNegocio.Adapter.ImageAdapter;
 
 public class ImageLogic {
 

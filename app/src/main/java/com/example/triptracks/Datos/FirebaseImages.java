@@ -7,7 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.triptracks.Domain.Entities.Itinerary;
-import com.example.triptracks.Domain.LogicaNegocio.ImageAdapter;
+import com.example.triptracks.Domain.LogicaNegocio.Adapter.ImageAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.UpdateItinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -20,8 +20,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.UUID;
-
-import javax.security.auth.callback.Callback;
 
 public class FirebaseImages {
 

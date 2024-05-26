@@ -17,15 +17,12 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.triptracks.Datos.FirebaseAuthData;
 import com.example.triptracks.Domain.Entities.Itinerary;
-import com.example.triptracks.Domain.LogicaNegocio.ImageAdapter;
+import com.example.triptracks.Domain.LogicaNegocio.Adapter.ImageAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ImageLogic;
 import com.example.triptracks.Domain.LogicaNegocio.ImagesOnclick;
 import com.example.triptracks.R;
@@ -86,15 +83,20 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
     ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                assert result.getData() != null;
-                Uri iamgeuri = result.getData().getData();
-                assert iamgeuri != null;
-                Log.d("_IMGTAG",iamgeuri.toString());
-                imageLogic.uploadImage(iamgeuri,itinerary);
-
-
+                if (result.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    if (imageUri != null) {
+                        Log.d("_IMGTAG", imageUri.toString());
+                        imageLogic.uploadImage(imageUri, itinerary);
+                    } else {
+                        Log.e("_IMGTAG", "Image URI is null");
+                    }
+                } else {
+                    Log.e("_IMGTAG", "Intent data is null");
+                }
             }
     );
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
