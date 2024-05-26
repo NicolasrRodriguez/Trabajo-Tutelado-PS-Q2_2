@@ -46,7 +46,6 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
         setTitle(R.string.app_name);
         binding = ActivityAuthViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.text.setText("diablo");//QUITAR ESTE TEXTVIEW CUANDO SE QUITE AuthActivity
         binding.SingUpBut.setOnClickListener(this);
         binding.LogInBut.setOnClickListener(this);
         authLogic.setAuthResult(this);

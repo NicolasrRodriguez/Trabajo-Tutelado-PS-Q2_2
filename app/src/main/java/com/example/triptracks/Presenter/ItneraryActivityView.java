@@ -87,7 +87,6 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.categoriesRv.setLayoutManager(linearLayoutManager);
         binding.categoriesRv.setAdapter(mAdapter);
-        binding.diferenciador.setText("2");//DIFERENCIADOR QUITRA AL ELIMINAR ITINACTIVITY
         registerForContextMenu(binding.categoriesRv);
 
         mAdapter.mostrarbotones(true);

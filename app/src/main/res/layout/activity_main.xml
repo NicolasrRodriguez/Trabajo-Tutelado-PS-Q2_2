@@ -6,15 +6,6 @@
     tools:context=".Presenter.ItneraryActivityView"
     android:background="@drawable/fondo">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/diferenciador"
-        android:text="1"
-        tools:ignore="MissingConstraints">
-
-    </TextView>
-
     <FrameLayout
         android:id="@+id/headerContainer"
         android:layout_width="0dp"
@@ -23,7 +14,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
     </FrameLayout>
 
     <FrameLayout
@@ -41,5 +31,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
-
+.
 </androidx.constraintlayout.widget.ConstraintLayout>
