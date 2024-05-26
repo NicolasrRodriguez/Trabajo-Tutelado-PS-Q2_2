@@ -21,7 +21,7 @@
     <string name="str_opcion_2">Opción 2</string>
     <string name="str_opcion3">Opción 3</string>
     <string name="str_opcion_4">Opción 4</string>
-    <string name="Informacion">Informacion</string>
+    <string name="Informacion">Información</string>
     <string name="Borrar">Eliminar</string>
     <string name="error_message">Error</string>
     <string name="error_nombre_itinerario">Nombre del Itinerario Incompleto</string>

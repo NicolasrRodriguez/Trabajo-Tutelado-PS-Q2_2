@@ -78,14 +78,14 @@
     <string name="document_description">Document description</string>
     <string name="select_image">Select image</string>
 
-    <string name="CerarSesion">Cerrar Sesion</string>
+    <string name="CerarSesion">Log Out</string>
     <string name="str_but_volver">Back</string>
-    <string name="str_startdate">Fecha de inicio</string>
-    <string name="str_enddate">Fecha de finalización</string>
+    <string name="str_startdate">Start Date</string>
+    <string name="str_enddate">End Date</string>
     <string name="str_but_compartir">Compartir</string>
-    <string name="str_compartir">Compartir</string>
-    <string name="str_cancelar">Cancelar</string>
-    <string name="athu_fail">Fallo al intentar autenticarse</string>
+    <string name="str_compartir">Share</string>
+    <string name="str_cancelar">Cancel</string>
+    <string name="athu_fail">Authentication attempt failed</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
@@ -108,8 +108,8 @@
     <string name="tema">Application Theme</string>
     <string name="galeria">Galery</string>
     <string name="eliminar_imagen">Remove Image?</string>
-    <string name="email_incompleto">Email field is uncomplete</string>
-    <string name="pass_incompleta">Password field is uncomplete</string>
+    <string name="email_incompleto">Email field is incomplete</string>
+    <string name="pass_incompleta">Password field is incomplete</string>
     <string name="est_seguro_de_que_desea_eliminar_esta_imagen">Are you sure you want to delete this image?</string>
 
 </resources>
