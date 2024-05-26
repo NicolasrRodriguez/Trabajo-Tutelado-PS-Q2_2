@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_opcion_1"
-        android:icon="@drawable/add"
+        android:icon="@drawable/airplane"
         android:title="@string/str_opcion1"
         app:showAsAction="ifRoom"/>
 

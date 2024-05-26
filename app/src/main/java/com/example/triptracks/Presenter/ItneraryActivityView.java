@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -60,6 +61,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
     private static final int SETTINGS_REQUEST_CODE = 100;
 
     private String UserEmail;
+    private Drawable background;
 
 
     private ItineraryLogic itineraryLogic = new ItineraryLogic();//referencia a capa logica de negocio
