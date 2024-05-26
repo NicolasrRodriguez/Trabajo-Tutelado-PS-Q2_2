@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +38,7 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
     private ActivityAuthViewBinding binding;
     public static List<Country> mCountries = new ArrayList<>();
     private final AuthLogic authLogic = new AuthLogic();//referencia a capa Dominio
+    private Drawable background;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -50,7 +52,7 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
         binding.LogInBut.setOnClickListener(this);
         authLogic.setAuthResult(this);
         new LoadCountriesTask(this).execute();
-
+        background = binding.EmailEdit.getBackground();
     }
     private String getLanguageFromPreferences() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -68,6 +70,7 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
         binding.PassEdit.setHint(getResources().getString(R.string.Contraseña));
         preferences = PreferenceManager.getDefaultSharedPreferences(this);//this.getPreferences(Context.MODE_PRIVATE);
         setThemeApp(preferences.getBoolean("theme",false));
+        binding.EmailEdit.setBackground(background);
 
     }
 
@@ -111,6 +114,27 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
 
         String email = binding.EmailEdit.getText().toString();
         String pass = binding.PassEdit.getText().toString();
+        boolean incompleto = false;
+
+        if (email.isEmpty()) {
+            binding.EmailEdit.setError(getString(R.string.email_incompleto));
+            binding.EmailEdit.setBackgroundResource(R.drawable.error_background);
+            incompleto = true;
+        } else {
+            binding.EmailEdit.setBackground(background);
+        }
+
+        if (pass.isEmpty()) {
+            binding.PassEdit.setError(getString(R.string.pass_incompleta));
+            binding.PassEdit.setBackgroundResource(R.drawable.error_background);
+            incompleto = true;
+        }else{
+            binding.PassEdit.setBackground(background);
+        }
+        if (incompleto) {
+            return;
+        }
+
 
 
         Log.d("_AUTHTAG", "Intent creado");

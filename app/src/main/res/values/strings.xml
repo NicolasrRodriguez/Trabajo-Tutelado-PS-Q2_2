@@ -108,6 +108,8 @@
     <string name="tema">Application Theme</string>
     <string name="galeria">Galery</string>
     <string name="eliminar_imagen">Remove Image?</string>
+    <string name="email_incompleto">Email field is uncomplete</string>
+    <string name="pass_incompleta">Password field is uncomplete</string>
     <string name="est_seguro_de_que_desea_eliminar_esta_imagen">Are you sure you want to delete this image?</string>
 
 </resources>

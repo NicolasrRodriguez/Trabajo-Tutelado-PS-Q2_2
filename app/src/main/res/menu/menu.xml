@@ -3,13 +3,13 @@
 
     <item
         android:id="@+id/menu_opcion_1"
-        android:icon="@android:drawable/ic_input_add"
+        android:icon="@drawable/add"
         android:title="@string/str_opcion1"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_documentacion"
-        android:icon="@drawable/ic_arrow_right"
+        android:icon="@drawable/passport"
         android:title="@string/Documentacion"
         app:showAsAction="ifRoom" />
 
@@ -24,7 +24,4 @@
         android:icon="@android:drawable/ic_lock_power_off"
         android:title="@string/CerarSesion"
         app:showAsAction="ifRoom" />
-
-
-
 </menu>
