@@ -2,7 +2,7 @@
     <string name="app_name">TripTracks</string>
     <string name="str_but_añadir">Añadir Elementos</string>
     <string name="str_but_borrar">Eliminar Elementos</string>
-    <string name="str_borrar">Eliminar</string>
+    <string name="str_borrar">Borrar</string>
     <string name="str_but_OK">OK</string>
     <string name="str_but_editar">Editar</string>
     <string name="str_mensaje_dialog">Agregar Itinerario</string>
