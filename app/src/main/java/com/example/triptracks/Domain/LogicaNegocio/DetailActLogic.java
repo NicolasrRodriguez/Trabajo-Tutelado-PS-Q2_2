@@ -7,7 +7,6 @@ import com.example.triptracks.Presenter.AuthActivityView;
 import com.example.triptracks.Presenter.ItneraryActivityView;
 import static com.example.triptracks.Presenter.ItneraryActivityView.mAdapter;
 
-import static com.example.triptracks.Presenter.ItneraryActivityView.mAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -25,7 +24,6 @@ import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 
 import com.example.triptracks.Presenter.ItineraryDetailActivity;
-import com.example.triptracks.Presenter.ItneraryActivityView;
 import com.example.triptracks.R;
 import com.google.firebase.auth.FirebaseUser;
 import com.prolificinteractive.materialcalendarview.CalendarDay;

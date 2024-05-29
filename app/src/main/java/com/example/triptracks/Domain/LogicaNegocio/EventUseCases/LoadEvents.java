@@ -1,7 +1,6 @@
 package com.example.triptracks.Domain.LogicaNegocio.EventUseCases;
 
 import com.example.triptracks.Domain.Entities.Event;
-import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 
 import java.util.List;

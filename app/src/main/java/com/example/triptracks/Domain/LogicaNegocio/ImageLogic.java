@@ -10,11 +10,9 @@ import com.example.triptracks.Domain.LogicaNegocio.Adapter.ImageAdapter;
 
 public class ImageLogic {
 
-    private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
 
     private FirebaseImages firebaseImages = new FirebaseImages();
 
-    private ImageAdapter adapter;
 
     public void setAdapter(ImageAdapter adapter) {
         firebaseImages.setAdapter(adapter);

@@ -1,10 +1,8 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.annotation.SuppressLint;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 
-import com.example.triptracks.Datos.FirebaseImages;
 import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.Adapter.ItineraryAdapter;

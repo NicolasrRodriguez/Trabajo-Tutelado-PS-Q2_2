@@ -10,7 +10,7 @@
     <EditText
         android:id="@+id/EmailEdit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="58dp"
         android:ems="10"
         android:hint="@string/Email"
         android:inputType="textEmailAddress" />
@@ -18,7 +18,7 @@
     <EditText
         android:id="@+id/PassEdit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:ems="10"
         android:hint="@string/Contraseña"
         android:inputType="textPassword" />

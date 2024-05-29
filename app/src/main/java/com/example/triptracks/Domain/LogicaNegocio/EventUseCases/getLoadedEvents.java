@@ -4,7 +4,7 @@ import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 
 import java.util.List;
-import java.util.function.Consumer;
+
 
 public class getLoadedEvents {
     private final ItineraryRepository repository;

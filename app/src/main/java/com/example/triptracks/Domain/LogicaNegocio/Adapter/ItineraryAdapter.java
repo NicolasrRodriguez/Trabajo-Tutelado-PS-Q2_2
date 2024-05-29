@@ -4,7 +4,6 @@ package com.example.triptracks.Domain.LogicaNegocio.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;

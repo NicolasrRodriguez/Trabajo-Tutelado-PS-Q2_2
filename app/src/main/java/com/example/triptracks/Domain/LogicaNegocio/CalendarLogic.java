@@ -1,25 +1,17 @@
 package com.example.triptracks.Domain.LogicaNegocio;
 
-import android.util.Log;
+
 import android.widget.EditText;
 import android.widget.Spinner;
-
 import com.example.triptracks.Domain.Entities.Event;
-import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.DeleteOneEvent;
 import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.UpdateEvent;
 import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.getLoadedEvents;
 import com.example.triptracks.Domain.Repository.ItineraryRepository;
 import com.example.triptracks.Presenter.ItineraryDetailActivity;
-import com.example.triptracks.Presenter.EventDecorator;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;

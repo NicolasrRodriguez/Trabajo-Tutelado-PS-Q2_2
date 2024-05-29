@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import com.beastwall.localisation.Localisation;
 import com.beastwall.localisation.model.Country;
 import com.example.triptracks.Presenter.AuthActivityView;
-import com.example.triptracks.Presenter.ItneraryActivityView;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

@@ -2,11 +2,9 @@ package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.util.Log;
 
-import com.beastwall.localisation.model.Country;
 import com.example.triptracks.Datos.FirebaseAuthData;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 public class AuthLogic implements FirebaseAuthData.ResultCallback {
