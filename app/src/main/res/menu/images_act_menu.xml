@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/subirFoto"
-        android:icon="@android:drawable/ic_input_add"
+        android:icon="@drawable/upload"
         android:title="@string/str_opcion1"
        app:showAsAction="ifRoom" />
 
@@ -11,5 +11,12 @@
         android:icon="@android:drawable/ic_media_previous"
         android:title="@string/str_opcion1"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/camara"
+        android:icon="@android:drawable/ic_menu_camera"
+        android:title="@string/str_opcion1"
+        app:showAsAction="ifRoom" />
+
+
 
 </menu>

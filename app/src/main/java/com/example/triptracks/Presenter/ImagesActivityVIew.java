@@ -5,11 +5,16 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresExtension;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +33,10 @@ import com.example.triptracks.Domain.LogicaNegocio.ImagesOnclick;
 import com.example.triptracks.R;
 import com.example.triptracks.databinding.ActivityImagesViewBinding;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ImagesActivityVIew extends AppCompatActivity implements ImagesOnclick {
 
@@ -45,6 +53,12 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
 
 
     private final ImageLogic imageLogic = new ImageLogic();
+
+
+    private String currentPhotoPath;
+
+    private int REQUEST_IMAGE_CAPTURE = 235616346;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +83,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
         }
 
         imageLogic.setAdapter(imageAdapter);
+        imageLogic.setContext(this);
         imagesRecyclerView = findViewById(R.id.images_list);
         Log.d("_IMAGEVIEW", "Voy a asignar el adapter el adapter");
         imagesRecyclerView.setAdapter(imageAdapter);
@@ -79,11 +94,23 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            File photo = new File(currentPhotoPath);
+            Uri contentUri = Uri.fromFile(photo);
+            imageLogic.uploadImage(contentUri,itinerary);
+        }
+    }
+
+
     ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getData() != null) {
                     Uri imageUri = result.getData().getData();
+                    Log.d("_IMAGEVIEW",result.getData().getExtras().toString());
                     if (imageUri != null) {
                         Log.d("_IMAGEVIEW", imageUri.toString());
                         imageLogic.uploadImage(imageUri, itinerary);
@@ -114,10 +141,48 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
             Intent resultIntent = new Intent();
             this.setResult(ItineraryDetailActivity.RESULT_OK, resultIntent);
             this.finish();
+        } else if (id == R.id.camara) {
+            if (this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)){//comprueba si hay camara
+                if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(this,new String[]{
+                            android.Manifest.permission.CAMERA
+                    }, 100);
+
+
+                }
+                else {
+                    Log.d("_IMAGEVIEW","Tengo permisos");
+                    Intent camara = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (camara.resolveActivity(getPackageManager()) != null) {
+                        File imageFile = null;
+                        try {
+                            imageFile = imageLogic.createImageFile();
+                            Log.d("_IMAGEVIEW","fichero creado view");
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        if (imageFile != null) {
+                            currentPhotoPath = imageFile.getAbsolutePath();
+                            Uri photoURI = FileProvider.getUriForFile(this,
+                                    "com.example.triptracks.fileprovider",
+                                    imageFile);
+
+                            camara.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            startActivityForResult(camara, REQUEST_IMAGE_CAPTURE);
+
+                        }
+
+
+
+                    }
+                }
+            }
+
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
     @Override
