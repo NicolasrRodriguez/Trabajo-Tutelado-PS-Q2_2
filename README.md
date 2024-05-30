@@ -1,4 +1,4 @@
-# Gestor de Viajes 
+# Gestor de Viajes Q2_2
 
 ## Introducción
 Este proyecto consiste en la creación de una app móvil usando Android Studio, que es un gestor de viajes. Las funcionalidades básicas de la app permitirían al usuario crear, modificar y compartir itinerarios de viaje con otros usuarios. Dentro de cada itinerario, se podrán planificar las actividades que se desean realizar, así como su visualización en un calendario integrado. Dentro de este calendario, el usuario podrá marcar como realizadas las actividades aún no realizadas para ese itinerario, siguiendo un buen progreso de viaje. A nivel de itinerario también habrá una sección que le permitirá al usuario hacer una gestión de documentos, teniendo así de forma organizada los documentos necesarios para ese viaje, esto sería independiente para cada usuario.Una vez haya pasado la fecha de finalización del viaje, el itinerario se marcaría como finalizado, por lo que no se podrían seguir añadiendo actividades ni destinos, quedando guardado y sirviendo solo para visualización.
