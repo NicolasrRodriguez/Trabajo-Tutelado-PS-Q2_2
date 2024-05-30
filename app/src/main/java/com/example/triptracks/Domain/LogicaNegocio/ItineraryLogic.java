@@ -27,7 +27,7 @@ public class ItineraryLogic {
 
     CreateItinerary createItinerary =  new CreateItinerary(firebaseItineraryHandler);;
 
-    public void addItems(String itineraryName, String countryName, String stateName, String cityName,String startDate,String endDate ,String UserEmail) {
+    public void addItems(String itineraryName, String countryName, String stateName, String cityName,String startDate,String endDate ,String UserEmail) {//añade un nuevo itinerario
 
         String itineraryId = firebaseItineraryHandler.setId();
         ArrayList<String> colaborators = new  ArrayList<>();
@@ -53,7 +53,7 @@ public class ItineraryLogic {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void updateItineraryList(ArrayList<Itinerary> itineraries) {
+    private void updateItineraryList(ArrayList<Itinerary> itineraries) {//actualiza el RecyclerView y le notifica el cambio
         adapter.updateData(itineraries);
         adapter.notifyDataSetChanged();
     }

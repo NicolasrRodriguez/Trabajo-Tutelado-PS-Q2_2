@@ -77,12 +77,12 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
     private void setThemeApp(boolean theme){
 
         if (theme){
-            Log.d("_TAG1","Modo Oscuro");
+            Log.d("_AUTHTAG","Modo Oscuro");
 
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
         else{
-            Log.d("_TAG1","Modo Claro");
+            Log.d("_AUTHTAG","Modo Claro");
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
@@ -91,7 +91,7 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
 
 
 
-    private void setLanguage(String language) {
+    private void setLanguage(String language) {//establece el idioma en funcion de las preferencias
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Configuration config = getResources().getConfiguration();

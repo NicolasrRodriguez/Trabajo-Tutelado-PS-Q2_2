@@ -71,7 +71,7 @@ public class MapServiceImp implements Map, OnMapReadyCallback {
             }
         } else {
 
-            Log.e("ItineraryDetailActivity", "GoogleMap is null");
+            Log.e("_MAPSERV", "GoogleMap is null");
         }
     }
 

@@ -23,16 +23,16 @@ import java.util.UUID;
 
 public class FirebaseImages {
 
-    private StorageReference ref = FirebaseStorage.getInstance().getReference();
+    private StorageReference ref = FirebaseStorage.getInstance().getReference(); //Referencia a la base de datos "Storage"
 
-    private UserInfo user = FirebaseAuth.getInstance().getCurrentUser();
+    private UserInfo user = FirebaseAuth.getInstance().getCurrentUser(); //usuario que realiza las operaciones
 
 
-    private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {});
+    private FirebaseItineraryHandler itineraryHandler = new FirebaseItineraryHandler(updatedItineraries -> {}); //Clase que se encarga de gestionar los itinerairos en la base de datos
 
-    UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);
+    UpdateItinerary updateItinerary = new UpdateItinerary(itineraryHandler);//Funcion  para actualizar el itinerario
 
-    private ImageAdapter adapter;
+    private ImageAdapter adapter;//adapter del RecyclerView de imagenes
 
     public void setAdapter(ImageAdapter adapter) {
         this.adapter = adapter;
@@ -42,9 +42,9 @@ public class FirebaseImages {
     public void uploadImage(Uri image, Itinerary oldItinerary){
 
         if (image != null && user != null) {
-            String imageId = UUID.randomUUID().toString();
+            String imageId = UUID.randomUUID().toString();//id aleatoria para la imagen
             final StorageReference fileReference = ref.child("Itineraries/" + oldItinerary.getId() + "/Images/" + imageId + ".jpeg");
-            fileReference.putFile(image)
+            fileReference.putFile(image)//carga  la imagen en la base de datos "Storage"
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -52,8 +52,8 @@ public class FirebaseImages {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String downloadUrl = uri.toString();
-                                    Log.d("_IMGTAG","URL: " + downloadUrl);
-                                    updateitinerary( oldItinerary, downloadUrl);
+                                    Log.d("_FIREMASEIMG","URL: " + downloadUrl);
+                                    updateitinerary( oldItinerary, downloadUrl);//Añade la URL al itinerario en la base de datos "RealTime"
 
                                 }
 
@@ -67,16 +67,16 @@ public class FirebaseImages {
                         }
                     });
         } else {
-            Log.d("_IMGTAG", "File URI or user is null");
+            Log.d("_FIREMASEIMG", "File URI or user is null");
         }
 
     }
 
     public void  removeImage(String url, Itinerary itinerary){
-        removeFromStorage(url);
-        removeFromitinerary(url,itinerary);
+        removeFromStorage(url);//Borra la imagen de la base de datos "Storage"
+        removeFromitinerary(url,itinerary);//Borra la imagen del itinerario en la base de datos "RealTime"
 
-        Log.d("_IMGRCLY", "Eliminando imagen");
+        Log.d("_FIREMASEIMG", "Eliminando imagen");
     }
 
     public void removeFromitinerary(String url , Itinerary itinerary){
@@ -84,67 +84,55 @@ public class FirebaseImages {
         newImages.remove(url);
         itinerary.setImageUris(newImages);
 
-        updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
+        updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {//Acutaliza el itinerario quitando la imagen
             @Override
-            public void onSuccess() {  Log.d("_IMGTAG","Uri de la imagen añadida"); }
+            public void onSuccess() {  Log.d("_FIREMASEIMG","Uri de la imagen añadida"); }
 
             @Override
-            public void onFailure(Exception e) {Log.d("_IMGTAG","Uri de la imagen no se pudo añadir");}
+            public void onFailure(Exception e) {Log.d("_FIREMASEIMG","Uri de la imagen no se pudo añadir");}
         });
-
     }
+
     private void removeFromStorage(String url){
-        StorageReference ref =  FirebaseStorage.getInstance().getReferenceFromUrl(url);
+        StorageReference ref =  FirebaseStorage.getInstance().getReferenceFromUrl(url); //Borra la imagen de la base de datos
         ref.delete();
-
-
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void updateitinerary(Itinerary oldItinerary, String imageUrl){
+    public void updateitinerary(Itinerary oldItinerary, String imageUrl){//Añade la imagen a la lista de URLs del itinerario
         boolean local = false;
         ArrayList<String> newImages;
-        if (oldItinerary.getImageUris() != null){
-
-            Log.d("_IMM","en el itinerario hay " + oldItinerary.getImageUris().size());
+        if (oldItinerary.getImageUris() != null){// Si ya hay imagenes la añade
+            Log.d("_FIREMASEIMG","en el itinerario hay " + oldItinerary.getImageUris().size());
             newImages = oldItinerary.getImageUris();
             newImages.add(imageUrl);
         }
-        else{
+        else{//Si no hay imegenes crea una lista nueva para añadirlas
             local = true;
-            Log.d("_IMM","no hay imagenes en el itinerario ");
+            Log.d("_FIREMASEIMG","no hay imagenes en el itinerario ");
             newImages = new ArrayList<>();
             newImages.add(imageUrl);
         }
 
-
-        Log.d("_IMM","ahora hay  " + newImages.size() +"imagenes en el itinerario " );
+        Log.d("_FIREMASEIMG","ahora hay  " + newImages.size() +"imagenes en el itinerario " );
 
         oldItinerary.setImageUris(newImages);
 
-
-
-        updateItinerary.execute(oldItinerary,new ItineraryRepository.OperationCallback() {
+        updateItinerary.execute(oldItinerary,new ItineraryRepository.OperationCallback() {//Actualiza el itinerario con la nueva imagen
             @Override
-            public void onSuccess() {  Log.d("_IMGTAG","Uri de la imagen añadida"); }
+            public void onSuccess() {  Log.d("_FIREMASEIMG","Uri de la imagen añadida"); }
 
             @Override
-            public void onFailure(Exception e) {Log.d("_IMGTAG","Uri de la imagen no se pudo añadir");}
+            public void onFailure(Exception e) {Log.d("_FIREMASEIMG","Uri de la imagen no se pudo añadir");}
         });
 
+        //notifica al adapter para actualizar el RecyclerView
         if(local){
             adapter.addElement(imageUrl);
         }else{
             adapter.notifyDataSetChanged();
         }
 
-
-
     }
-
-
-
-
 
 }

@@ -39,7 +39,7 @@ public class FirebaseMediaHandler implements DocumentRepository {
             String userPath = user.getEmail().replace(".", ",");
             databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userPath).child("documents");
         } else {
-            Log.e("FirebaseAuth", "User not logged in.");
+            Log.e("_FIREBASEAUTH", "User not logged in.");
         }
     }
 

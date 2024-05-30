@@ -37,7 +37,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
     private FirebaseItineraryHandler() {}
 
-    public FirebaseItineraryHandler(Consumer<ArrayList<Itinerary>> onItinerariesUpdated) {
+    public FirebaseItineraryHandler(Consumer<ArrayList<Itinerary>> onItinerariesUpdated) {//Recupera los itinerarios de un usuario y los muestra en el RecyclerView
         if (user != null) {
             String userPath = user.getEmail().replace(".", ",");
             ref = FirebaseDatabase.getInstance().getReference("users")
@@ -60,17 +60,17 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.w("Firebase", "Fallo al leer el valor.", databaseError.toException());
+                    Log.w("_FIREBASEITN", "Fallo al leer el valor.", databaseError.toException());
                 }
             });
         } else {
-            Log.e("FirebaseAuth", "User no loggeado.");
+            Log.e("_FIREBASEITN", "User no loggeado.");
         }
     }
 
 
     @Override
-    public void saveItinerary(Itinerary itinerary,OperationCallback callback) {
+    public void saveItinerary(Itinerary itinerary,OperationCallback callback) {//Guarda un nuevo itinerario
         String key = ref.push().getKey();
         if (key == null) return;
         itinerary.setId(key);
@@ -81,7 +81,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
 
     @Override
-    public void updateItinerary(Itinerary itinerary,OperationCallback callback) {
+    public void updateItinerary(Itinerary itinerary,OperationCallback callback) {//actualiza un itinerario
         for (String colaborator: itinerary.getColaborators()) {
             String colaboratorPath = colaborator.replace(".", ",");
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
@@ -105,12 +105,11 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                             eventsRef.removeValue()
                                     .addOnSuccessListener(aVoid -> {
                                         updateItineraryFields(itineraryRef, itinerary);
-                                        Log.d("_IMGTAG","Campos actualizados");
+                                        Log.d("_FIREBASEITN","Campos actualizados");
                                         callback.onSuccess();
                                     })
                                     .addOnFailureListener(callback::onFailure);
                         }else{
-                            Log.d("_IMGTAG","Actualizo los campos mal");
                             updateItineraryFields(itineraryRef, itinerary);
                         }
                     }
@@ -118,7 +117,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.e("Firebase", "Fallo al obtener el itinerario actual", databaseError.toException());
+                    Log.e("_FIREBASEITN", "Fallo al obtener el itinerario actual", databaseError.toException());
                 }
             });
         }
@@ -126,7 +125,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
     private void updateItineraryFields(DatabaseReference itineraryRef, Itinerary itinerary) {
 
-        Log.d("_IMGTAG","Actualizo los campos");
+        Log.d("_FIREBASEITN","Actualizo los campos");
         Map<String, Object> updates = new HashMap<>();
         updates.put("id", itinerary.getId());
         updates.put("itineraryTitle", itinerary.getItineraryTitle());
@@ -146,19 +145,19 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
 
     @Override
-    public void deleteItinerary(Itinerary itinerary,OperationCallback callback) {
+    public void deleteItinerary(Itinerary itinerary,OperationCallback callback) {//Borra un itienrario
 
         if (itinerary.getId() != null) {
             ArrayList<String> images =itinerary.getImageUris();
             if(images != null){
-                Log.d("_RMIMG", "Hay imagenes que borrar");
+                Log.d("_FIREBASEITN", "Hay imagenes que borrar");
                 for (String url:images) {
                     StorageReference ref =  FirebaseStorage.getInstance().getReferenceFromUrl(url);
                     ref.delete();
                 }
             }
             else {
-                Log.d("_RMIMG", "NO Hay imagenes que borrar");
+                Log.d("_FIREBASEITN", "NO Hay imagenes que borrar");
             }
             ref.child(itinerary.getId()).removeValue()
                     .addOnSuccessListener(aVoid -> callback.onSuccess())
@@ -168,7 +167,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
 
     @Override
-    public void shareItinerary(Itinerary itinerary , String Target,OperationCallback callback){
+    public void shareItinerary(Itinerary itinerary , String Target,OperationCallback callback){//Comparte un itinerario
         if (itinerary.getId() != null) {
                 ref.child(itinerary.getId()).setValue(itinerary)
                         .addOnSuccessListener(aVoid -> callback.onSuccess())
@@ -183,7 +182,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                 String targetUserPath = Target.replace(".", ",");
                 DatabaseReference Targetref = FirebaseDatabase.getInstance().getReference("users")
                         .child(targetUserPath).child("itineraries");
-                Log.d("Firebase", "Compartierndo Itinerario con " + Target + "desde:" + itinerary.getAdmin());
+                Log.d("_FIREBASEITN", "Compartierndo Itinerario con " + Target + "desde:" + itinerary.getAdmin());
 
                 Targetref.child(itinerary.getId()).setValue(itinerary)
                         .addOnSuccessListener(aVoid -> callback.onSuccess())
@@ -198,7 +197,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
 
     @Override
-    public void loadEvents(String itineraryId, Consumer<List<Event>> callback) {
+    public void loadEvents(String itineraryId, Consumer<List<Event>> callback) {//Carga los eventos de un itinerario
         DatabaseReference eventsRef = ref.child(itineraryId).child("events");
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
@@ -215,7 +214,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.w("Firebase", "loadEvents:onCancelled", databaseError.toException());
+                Log.w("_FIREBASEITN", "loadEvents:onCancelled", databaseError.toException());
             }
         };
         eventsRef.addValueEventListener(eventListener);
@@ -224,12 +223,12 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
     @Override
     public List<Event> getLoadedEvents() {
         return new ArrayList<>(loadedEvents);
-    }
+    }//Devuelve los eventos de un itinerario
 
 
 
     @Override
-    public void updateEvent(Itinerary itinerary , Event event,OperationCallback callback) {
+    public void updateEvent(Itinerary itinerary , Event event,OperationCallback callback) {//Actualiza un evento
 
         if (event.getId() != null) {
             for (String colaborator : itinerary.getColaborators()) {
@@ -241,12 +240,12 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                         .addOnFailureListener(callback::onFailure);
             }
         } else {
-            Log.e("Firebase", "Error: El evento no tiene ID y no puede ser actualizado.");
+            Log.e("_FIREBASEITN", "Error: El evento no tiene ID y no puede ser actualizado.");
         }
     }
 
 
-    public void saveEvent( Event event , DatabaseReference eventsRef , String key) {
+    public void saveEvent( Event event , DatabaseReference eventsRef , String key) {//Guarda un nuevo evento
 
         if (key == null) return;
         eventsRef.child(key).setValue(event);
@@ -254,7 +253,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
 
 
 
-    public void createEvent(CalendarDay date, String activity, ItineraryDetailActivity it) {
+    public void createEvent(CalendarDay date, String activity, ItineraryDetailActivity it) {//Crea un nuevo evento
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ","))
                 .child("itineraries").child(it.itinerary.getId()).child("events");
@@ -272,10 +271,10 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
             Event event = new Event(id, date.getDate().toString(), it.category, activity);
             databaseReference.child(id).setValue(event)
                     .addOnSuccessListener(aVoid -> {
-                        Log.d("Firebase", "Evento guardado correctamente.");
+                        Log.d("_FIREBASEITN", "Evento guardado correctamente.");
                         shareEvent(it.itinerary, event);
                     })
-                    .addOnFailureListener(e -> Log.e("Firebase", "Error al guardar el evento", e));
+                    .addOnFailureListener(e -> Log.e("_FIREBASEITN", "Error al guardar el evento", e));
             it.eventDecorator = new EventDecorator(it, Collections.singleton(date), it.category);
             it.binding.calendarView.addDecorator(it.eventDecorator);
         }
@@ -288,22 +287,22 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                     .child(collaboratorPath).child("itineraries").child(itinerary.getId()).child("events").child(event.getId());
 
             collaboratorRef.setValue(event)
-                    .addOnSuccessListener(aVoid -> Log.d("Firebase", "Evento sincronizado correctamente con " + collaborator))
-                    .addOnFailureListener(e -> Log.e("Firebase", "Error al sincronizar evento con " + collaborator, e));
+                    .addOnSuccessListener(aVoid -> Log.d("_FIREBASEITN", "Evento sincronizado correctamente con " + collaborator))
+                    .addOnFailureListener(e -> Log.e("_FIREBASEITN", "Error al sincronizar evento con " + collaborator, e));
         }
     }
 
     @Override
     public void deleteOneEvent(String itineraryId, String eventId, OperationCallback callback) {
         if (itineraryId == null || eventId == null) {
-            Log.e("Firebase", "Error: Itinerary ID or Event ID is null.");
+            Log.e("_FIREBASEITN", "Error: Itinerary ID or Event ID is null.");
             return;
         }
 
         DatabaseReference eventRef = ref.child(itineraryId).child("events").child(eventId);
         eventRef.removeValue()
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("Firebase", "Evento eliminado correctamente.");
+                    Log.d("_FIREBASEITN", "Evento eliminado correctamente.");
                     deleteOneEventFromCollaborators(itineraryId, eventId, callback);
                     callback.onSuccess();
                 })
@@ -322,15 +321,15 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                                 .child(collaboratorPath).child("itineraries").child(itineraryId).child("events").child(eventId);
 
                         collaboratorEventRef.removeValue()
-                                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Evento eliminado correctamente de " + collaborator))
-                                .addOnFailureListener(e -> Log.e("Firebase", "Error al eliminar evento de " + collaborator, e));
+                                .addOnSuccessListener(aVoid -> Log.d("_FIREBASEITN", "Evento eliminado correctamente de " + collaborator))
+                                .addOnFailureListener(e -> Log.e("_FIREBASEITN", "Error al eliminar evento de " + collaborator, e));
                     }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase", "Error al obtener itinerario para eliminar evento de colaboradores", databaseError.toException());
+                Log.e("_FIREBASEITN", "Error al obtener itinerario para eliminar evento de colaboradores", databaseError.toException());
             }
         });
     }
@@ -340,7 +339,7 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
         DatabaseReference eventsRef = ref.child(itineraryId).child("events");
         eventsRef.removeValue()
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("Firebase", "Todos los eventos eliminados correctamente.");
+                    Log.d("_FIREBASEITN", "Todos los eventos eliminados correctamente.");
                     deleteAllEventsfromcollaborators(itineraryId, callback);
                     callback.onSuccess();
                 })
@@ -359,20 +358,20 @@ public class FirebaseItineraryHandler implements ItineraryRepository {
                                 .child(collaboratorPath).child("itineraries").child(itineraryId).child("events");
 
                         collaboratorEventsRef.removeValue()
-                                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Todos los eventos eliminados correctamente de " + collaborator))
-                                .addOnFailureListener(e -> Log.e("Firebase", "Error al eliminar todos los eventos de " + collaborator, e));
+                                .addOnSuccessListener(aVoid -> Log.d("_FIREBASEITN", "Todos los eventos eliminados correctamente de " + collaborator))
+                                .addOnFailureListener(e -> Log.e("_FIREBASEITN", "Error al eliminar todos los eventos de " + collaborator, e));
                     }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase", "Error al obtener itinerario para eliminar todos los eventos de colaboradores", databaseError.toException());
+                Log.e("_FIREBASEITN", "Error al obtener itinerario para eliminar todos los eventos de colaboradores", databaseError.toException());
             }
         });
     }
 
-    public String setId(){
+    public String setId(){//Establece un id unico para cada itinerario
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").
                 child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",")).child("itineraries");

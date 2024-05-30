@@ -21,15 +21,15 @@ public class ImageLogic {
     public void uploadImage(Uri imageUri, Itinerary oldItinerary){
         if (imageUri != null) {
 
-            Log.d("_IMM","Actualizo el itinerario ");
+            Log.d("_IMGLOGIC","Actualizo el itinerario ");
 
-            firebaseImages.uploadImage(imageUri, oldItinerary);
+            firebaseImages.uploadImage(imageUri, oldItinerary);//llama a la base de datos para actualizar el itinerario
 
 
 
         }
         else{
-            Log.d("_IMGTAG","No hay imagen");
+            Log.d("_IMGLOGIC","No hay imagen");
 
         }
     }

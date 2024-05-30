@@ -102,13 +102,13 @@ public class DetailActLogic {
         }
     }
 
-    public void share(String email) {
+    public void share(String email) {//Comparte el itinerario con el usuario especificado
         ArrayList<String> collaborators = itinerary.getColaborators();
         if (!collaborators.contains(email) && Objects.equals(user.getEmail(), itinerary.getAdmin())) {
             collaborators.add(email);
             itinerary.setColaborators(collaborators);
             ShareItinerary shareItinerary = new ShareItinerary(it.firebaseItineraryHandler);
-            shareItinerary.execute(itinerary, email, new ItineraryRepository.OperationCallback() {
+            shareItinerary.execute(itinerary, email, new ItineraryRepository.OperationCallback() {//llama a la base de datos para compartir el itinerario
                 @Override
                 public void onSuccess() {}
                 @Override
@@ -118,7 +118,7 @@ public class DetailActLogic {
         Log.d("_ITDETTAG", "Compartiendo con " + email + " por " + it.itinerary.getAdmin());
     }
 
-    public void llenarListaPaises(List<String> countryNames) {
+    public void llenarListaPaises(List<String> countryNames) {//añade todos los paises cargados a la lista
         countryNames.add(it.getString(R.string.select_country));
         for (Country country : AuthActivityView.mCountries) {
             countryNames.add(country.getName());
@@ -176,7 +176,7 @@ public class DetailActLogic {
         imm.hideSoftInputFromWindow(titleEditText.getWindowToken(), 0);
     }
 
-    private void updatefields(){
+    private void updatefields(){//actualiza los campos de los itinerarios
 
         String editedTitle = it.binding.itineraryTitle.getText().toString();
         String editedCountry = itinerary.getCountry();
@@ -225,7 +225,7 @@ public class DetailActLogic {
         it. binding.itineraryCity.setText(itinerary.getCity());
         it. mapServiceImp.initializeMap();
         mAdapter.actualizar_por_id(itinerary);
-        UpdateItinerary updateItinerary = new UpdateItinerary(it.firebaseItineraryHandler);
+        UpdateItinerary updateItinerary = new UpdateItinerary(it.firebaseItineraryHandler);//llama la base de datos para actualizar el itinerario
         updateItinerary.execute(itinerary,new ItineraryRepository.OperationCallback() {
             @Override
             public void onSuccess() {}

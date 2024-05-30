@@ -78,7 +78,7 @@ public class ImageAdapter  extends RecyclerView.Adapter<ImageAdapter.ImageViewHo
 
 
     public void removeelem(int pos){
-        Log.d("_IMGRCLY","Clickado en posicion");
+        Log.d("_IMGADAPT","Clickado en posicion");
         String url = images.get(pos);
         images.remove(pos);
         notifyItemRemoved(pos);

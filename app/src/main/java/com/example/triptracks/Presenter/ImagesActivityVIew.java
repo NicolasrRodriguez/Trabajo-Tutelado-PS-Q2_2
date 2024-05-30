@@ -46,32 +46,31 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
 
     private final ImageLogic imageLogic = new ImageLogic();
 
-    public static int selectedPosition = RecyclerView.NO_POSITION;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("_IMAGETAG", "Arranco imagenesView");
+        Log.d("_IMAGEVIEW", "Arranco imagenesView");
         super.onCreate(savedInstanceState);
         binding = ActivityImagesViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         itinerary = getIntent().getParcelableExtra(ItneraryActivityView.KEY_ITINERARY);
         assert itinerary != null;
-        if (itinerary.getImageUris() != null) {
-            Log.d("_IMAGETAG", "Voy a crear el adapter ");
+        if (itinerary.getImageUris() != null) {//si hay imagenes carga la lista de la base de datos
+            Log.d("_IMAGEVIEW", "Voy a crear el adapter ");
             for (String iamge : itinerary.getImageUris()) {
-                Log.d("_IMAGETAG", "URL:" + iamge);
+                Log.d("_IMAGEVIEW", "URL:" + iamge);
             }
             imageAdapter = new ImageAdapter(itinerary.getImageUris(), this, itinerary);
 
         }
-        else {
-            Log.d("_IMAGETAG", "Aun no hay imagenes");
+        else {//si no hay imagenes inizailiza la lista para el adapter
+            Log.d("_IMAGEVIEW", "Aun no hay imagenes");
             imageAdapter = new ImageAdapter(new ArrayList<>(), this, itinerary);
         }
 
         imageLogic.setAdapter(imageAdapter);
         imagesRecyclerView = findViewById(R.id.images_list);
-        Log.d("_IMAGETAG", "Voy a asignar el adapter el adapter");
+        Log.d("_IMAGEVIEW", "Voy a asignar el adapter el adapter");
         imagesRecyclerView.setAdapter(imageAdapter);
         imagesRecyclerView.setLayoutManager(linearLayoutManager);
 
@@ -86,13 +85,13 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
                 if (result.getData() != null) {
                     Uri imageUri = result.getData().getData();
                     if (imageUri != null) {
-                        Log.d("_IMGTAG", imageUri.toString());
+                        Log.d("_IMAGEVIEW", imageUri.toString());
                         imageLogic.uploadImage(imageUri, itinerary);
                     } else {
-                        Log.e("_IMGTAG", "Image URI is null");
+                        Log.e("_IMAGEVIEW", "Image URI is null");
                     }
                 } else {
-                    Log.e("_IMGTAG", "Intent data is null");
+                    Log.e("_IMAGEVIEW", "Intent data is null");
                 }
             }
     );
@@ -123,7 +122,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
 
     @Override
     public void onItemClick(int position) {
-        Log.d("_IMGRCLY","Clickado en posicion" + position);//enseñar imagen completa con un dialogo
+        Log.d("_IMAGEVIEW","Clickado en posicion" + position);//enseñar imagen completa con un dialogo
         showImageDialog(imageAdapter.dataAt(position));
 
     }
@@ -141,7 +140,7 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
         builder.show();
     }
 
-    private void showImageDialog(String imageUrl) {
+    private void showImageDialog(String imageUrl) {//muestra la iamfen completa
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.full_image_dialog);
 

@@ -76,7 +76,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
                             deleteDocumentUseCase.execute(
                                     imageUrl,
                                     onSuccess -> {
-                                        Log.d("Firebase", onSuccess);
+                                        Log.d("_DOCADAPTER", onSuccess);
                                         int currentPosition = holder.getAdapterPosition();
                                         documents.remove(currentPosition);
                                         notifyItemRemoved(currentPosition);
@@ -86,7 +86,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
                                         }
                                     },
                                     onFailure -> {
-                                        Log.e("Firebase", onFailure);
+                                        Log.e("_DOCADAPTER", onFailure);
                                     }
                             );
 
@@ -128,7 +128,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
                     descriptionTextView.setText(document.getDescription());
                 },
                 error -> {
-                    Log.e("Firebase", "Error fetching document details: " + error);
+                    Log.e("_DOCADAPTER", "Error fetching document details: " + error);
                 }
         );
 

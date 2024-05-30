@@ -9,7 +9,7 @@ import com.example.triptracks.Presenter.AuthActivityView;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {
+public class LoadCountriesTask extends AsyncTask<Void, Void, List<Country>> {//tarea en segundo plano para cargar los paises
     private WeakReference<AuthActivityView> activityReference;
 
     public LoadCountriesTask(AuthActivityView context) {

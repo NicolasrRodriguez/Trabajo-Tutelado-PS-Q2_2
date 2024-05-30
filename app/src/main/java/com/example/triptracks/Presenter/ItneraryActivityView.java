@@ -146,7 +146,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
                         mAdapter.actualizar_por_id(updatedItinerary);
                     }
                 } else if (result.getResultCode() == RESULT_OK) {
-                    Log.d("_TAG","Succesfully returned to MainActivity");
+                    Log.d("_ITINVIEWA","Succesfully returned to MainActivity");
                 }
             }
     );
@@ -167,7 +167,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
             firebaseAuth.closeSes();//cierra la sesion y acaba la actividad
             finish();
         }  else if (item.getItemId() == R.id.menu_settings) {
-            Log.d("_TAG", "menu settings");
+            Log.d("_ITINVIEWA", "menu settings");
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivityForResult(intent, SETTINGS_REQUEST_CODE);
             return true;
@@ -177,7 +177,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
             return true;
         }
         else if (item.getItemId() == R.id.menu_settings ) {
-            Log.d("_TAG", "Menu settings");
+            Log.d("_ITINVIEWA", "Menu settings");
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
@@ -382,7 +382,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
 
     @Override
     public void onItemClick(int position) {
-        Log.d("_TAG1","Clickado en posicion" + position);
+        Log.d("_ITINVIEWA","Clickado en posicion" + position);
         if (position != RecyclerView.NO_POSITION) {
             Itinerary selectedItinerary = mAdapter.getItem(position);
             detalle_actividad(selectedItinerary);
@@ -391,7 +391,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
 
     @Override
     public void onContextMenuClick(int position) {
-        Log.d("_TAG1","menu contextual de posicion" + position);
+        Log.d("_ITINVIEWA","menu contextual de posicion" + position);
         Itinerary selectedItinerary = mItineraryList.get(position);
         Intent intent = new Intent(this, ItineraryDetailActivity.class);
         intent.putExtra(ItneraryActivityView.KEY_ITINERARY, selectedItinerary);
@@ -408,7 +408,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
                 return true;
             }
         }else {
-            Log.d("_TAG1","Selected position no cambia");
+            Log.d("_ITINVIEWA","Selected position no cambia");
 
         }
 
@@ -425,12 +425,12 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
     private void setThemefun(boolean theme) {
 
         if (theme){
-            Log.d("_TAG1","Modo Oscuro");
+            Log.d("_ITINVIEWA","Modo Oscuro");
 
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
         else{
-            Log.d("_TAG1","Modo Claro");
+            Log.d("_ITINVIEWA","Modo Claro");
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
     }

@@ -71,9 +71,9 @@ public class FirebaseAuthData extends AppCompatActivity {
 
     public void closeSes(){
         FirebaseAuth.getInstance().signOut();
-    }
+    }//cierra la sesion
 
-    public String  email(){
+    public String  email(){//devuelve el email del usuario logeado
         return Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
     }
 

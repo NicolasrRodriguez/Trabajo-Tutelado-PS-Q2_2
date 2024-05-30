@@ -167,7 +167,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    Log.d("_TAG","Succesfully returned to MainActivity");
+                    Log.d("_ITDETA","Succesfully returned to MainActivity");
                 }
             }
     );
@@ -183,7 +183,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
         Intent resultIntent = new Intent();
         setResult(AuthActivityView.RESULT_SESION_CLOSED, resultIntent);
         if (id == R.id.menu_compartir) {
-            Log.d("_ITDETTAG", "Compartir itinerario");
+            Log.d("_ITDETA", "Compartir itinerario");
             showDialog();
         }
         if (id == R.id.action_show_map) {
@@ -221,12 +221,12 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String text = Targetemail.getText().toString();//juan123456@gmail.com
                 detailActLogic.share(text);
-                Log.d("_ITDETTAG", "Compartiendo con " + text + "por " + itinerary.getAdmin());
+                Log.d("_ITDETA", "Compartiendo con " + text + "por " + itinerary.getAdmin());
             }
         });
         builder.setNegativeButton(R.string.str_cancelar, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d("_ITDETTAG", "Cancelado compartir");
+                Log.d("_ITDETA", "Cancelado compartir");
             }
         });
         AlertDialog alert = builder.create();
