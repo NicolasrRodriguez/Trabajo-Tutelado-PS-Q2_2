@@ -9,14 +9,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -38,11 +36,9 @@ import com.beastwall.localisation.model.City;
 import com.beastwall.localisation.model.Country;
 import com.beastwall.localisation.model.State;
 import com.example.triptracks.Datos.FirebaseAuthData;
-import com.example.triptracks.DocActivity;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.Adapter.ItineraryAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryLogic;
-import com.example.triptracks.Domain.LogicaNegocio.LoadCountriesTask;
 import com.example.triptracks.R;
 import com.example.triptracks.SettingsActivity;
 import com.example.triptracks.databinding.ActivityMainBinding;
@@ -172,7 +168,7 @@ public class ItneraryActivityView extends AppCompatActivity implements Itinerary
             startActivityForResult(intent, SETTINGS_REQUEST_CODE);
             return true;
         }else if (id == R.id.menu_documentacion) {
-            Intent documentacionIntent = new Intent(this, DocActivity.class);
+            Intent documentacionIntent = new Intent(this, DocActivityView.class);
             startActivity(documentacionIntent);
             return true;
         }
