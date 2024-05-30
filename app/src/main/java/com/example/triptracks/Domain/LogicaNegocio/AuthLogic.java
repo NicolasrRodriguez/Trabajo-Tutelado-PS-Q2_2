@@ -2,7 +2,7 @@ package com.example.triptracks.Domain.LogicaNegocio;
 
 import android.util.Log;
 
-import com.example.triptracks.Datos.FirebaseAuthData;
+import com.example.triptracks.Data.FirebaseAuthData;
 
 
 

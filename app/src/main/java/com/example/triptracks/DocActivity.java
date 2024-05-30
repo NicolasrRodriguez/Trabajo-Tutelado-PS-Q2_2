@@ -17,7 +17,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.triptracks.Datos.FirebaseMediaHandler;
+import com.example.triptracks.Data.FirebaseMediaHandler;
 import com.example.triptracks.Domain.Entities.Document;
 import com.example.triptracks.Domain.LogicaNegocio.Adapter.DocumentAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.DocUseCases.GetDocuments;

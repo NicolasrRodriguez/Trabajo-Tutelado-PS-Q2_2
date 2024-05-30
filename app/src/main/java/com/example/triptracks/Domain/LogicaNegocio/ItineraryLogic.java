@@ -3,7 +3,7 @@ package com.example.triptracks.Domain.LogicaNegocio;
 import android.annotation.SuppressLint;
 import android.widget.DatePicker;
 
-import com.example.triptracks.Datos.FirebaseItineraryHandler;
+import com.example.triptracks.Data.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.Adapter.ItineraryAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.ItineraryUseCases.CreateItinerary;

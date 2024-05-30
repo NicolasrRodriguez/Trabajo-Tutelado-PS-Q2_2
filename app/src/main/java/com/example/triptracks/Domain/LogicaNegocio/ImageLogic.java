@@ -6,8 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import com.example.triptracks.Datos.FirebaseImages;
-import com.example.triptracks.Datos.FirebaseItineraryHandler;
+import com.example.triptracks.Data.FirebaseImages;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.Adapter.ImageAdapter;
 

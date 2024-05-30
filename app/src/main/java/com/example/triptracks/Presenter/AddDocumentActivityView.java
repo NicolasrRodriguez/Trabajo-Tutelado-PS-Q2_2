@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
-import com.example.triptracks.Datos.FirebaseMediaHandler;
+import com.example.triptracks.Data.FirebaseMediaHandler;
 import com.example.triptracks.Domain.LogicaNegocio.DocUseCases.UploadDocument;
 import com.example.triptracks.R;
 

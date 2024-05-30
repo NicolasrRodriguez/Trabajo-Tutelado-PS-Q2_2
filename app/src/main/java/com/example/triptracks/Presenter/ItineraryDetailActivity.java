@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.triptracks.Datos.FirebaseItineraryHandler;
+import com.example.triptracks.Data.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.DetailActLogic;
 import com.example.triptracks.Domain.Service.MapServiceImp;

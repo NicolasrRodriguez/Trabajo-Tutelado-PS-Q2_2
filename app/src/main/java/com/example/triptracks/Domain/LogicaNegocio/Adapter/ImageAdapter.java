@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.triptracks.Datos.FirebaseImages;
+import com.example.triptracks.Data.FirebaseImages;
 import com.example.triptracks.Domain.Entities.Itinerary;
 import com.example.triptracks.Domain.LogicaNegocio.ImagesOnclick;
 import com.example.triptracks.R;

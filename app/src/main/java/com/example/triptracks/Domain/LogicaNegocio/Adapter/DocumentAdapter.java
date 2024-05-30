@@ -15,7 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.triptracks.Datos.FirebaseMediaHandler;
+import com.example.triptracks.Data.FirebaseMediaHandler;
 import com.example.triptracks.Domain.Entities.Document;
 import com.example.triptracks.Domain.LogicaNegocio.DocUseCases.DeleteDocument;
 import com.example.triptracks.Domain.LogicaNegocio.DocUseCases.GetDocDetails;

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
-import com.example.triptracks.Datos.FirebaseItineraryHandler;
 import com.example.triptracks.Domain.Entities.Event;
 import com.example.triptracks.Domain.LogicaNegocio.CalendarLogic;
 import com.example.triptracks.Domain.LogicaNegocio.EventUseCases.LoadEvents;
