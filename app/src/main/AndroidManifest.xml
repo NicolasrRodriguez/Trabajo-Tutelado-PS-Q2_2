@@ -31,7 +31,7 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".Presenter.ImagesActivityVIew"
+            android:name=".Presenter.ImagesActivityView"
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"

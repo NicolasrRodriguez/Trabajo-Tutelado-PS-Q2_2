@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/fondo"
     android:orientation="vertical"
-    tools:context=".Presenter.ImagesActivityVIew">
+    tools:context=".Presenter.ImagesActivityView">
 
 
     <androidx.recyclerview.widget.RecyclerView

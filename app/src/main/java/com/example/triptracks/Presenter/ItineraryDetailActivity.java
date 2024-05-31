@@ -199,7 +199,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
             showCalendarFragment();
             return true;
         } else if (id == R.id.menu_galeria) {
-            Intent intent = new Intent(this, ImagesActivityVIew.class);
+            Intent intent = new Intent(this, ImagesActivityView.class);
             intent.putExtra(ItneraryActivityView.KEY_ITINERARY, itinerary);
             myStartActivityForResult.launch(intent);;
             return true;

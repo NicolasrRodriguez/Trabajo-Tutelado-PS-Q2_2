@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,9 +35,8 @@ import com.example.triptracks.databinding.ActivityImagesViewBinding;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class ImagesActivityVIew extends AppCompatActivity implements ImagesOnclick {
+public class ImagesActivityView extends AppCompatActivity implements ImagesOnclick {
 
     ActivityImagesViewBinding binding;
 
