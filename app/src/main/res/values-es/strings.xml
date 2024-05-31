@@ -44,7 +44,6 @@
     <string name="str_but_compartir">Compartir</string>
     <string name="str_compartir">Compartir</string>
     <string name="str_cancelar">Cancelar</string>
-    <string name="athu_fail">Fallo en la Autenticación</string>
     <string name="title_activity_settings">Actividad de Configuración</string>
     <string name="str_menu_share">Compartir</string>
     <string name="str_menu_settings">Configuración</string>
@@ -98,7 +97,6 @@
     <string name="document_name">Nombre del documento</string>
     <string name="document_description">Descripción del documento</string>
     <string name="select_image">Seleccionar imagen</string>
-
     <string name="opciones">Opciones</string>
     <string name="modo_oscuro">Modo Oscuro</string>
     <string name="modo_claro">Modo Claro</string>
@@ -108,5 +106,7 @@
     <string name="email_incompleto">Campo de email incompleto</string>
     <string name="pass_incompleta">Campo de contraseña incompleto</string>
     <string name="est_seguro_de_que_desea_eliminar_esta_imagen">Está seguro de que desea eliminar esta imagen?</string>
+    <string name="athu_fail">El intento de autenticación falló</string>
+
 
 </resources>
