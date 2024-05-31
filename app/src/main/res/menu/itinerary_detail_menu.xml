@@ -8,7 +8,7 @@
         app:showAsAction="ifRoom" />
 
     <item android:id="@+id/menu_galeria"
-        android:icon="@android:drawable/ic_menu_camera"
+        android:icon="@drawable/gallery_icon"
         android:title="@string/galeria"
         app:showAsAction="ifRoom" />
 

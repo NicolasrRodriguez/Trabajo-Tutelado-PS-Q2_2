@@ -174,7 +174,7 @@ public class ItineraryDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.itinirary_detail_menu, menu);
+        getMenuInflater().inflate(R.menu.itinerary_detail_menu, menu);
         return true;
     }
     @Override
