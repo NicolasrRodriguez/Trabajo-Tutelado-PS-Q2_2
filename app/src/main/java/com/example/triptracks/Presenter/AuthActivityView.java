@@ -168,7 +168,7 @@ public class AuthActivityView extends AppCompatActivity implements View.OnClickL
     @Override
     public void onReultFail() {//autenticacion fallida
         //avisa de que ha fallado
-        Toast.makeText(getApplicationContext(), R.string.athu_fail , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.athu_fail) , Toast.LENGTH_LONG).show();
         Log.d("_AUTHTAG", " no se pudo iniciar o regsitrar");
     }
     public static void onCountriesLoaded(List<Country> countries) {

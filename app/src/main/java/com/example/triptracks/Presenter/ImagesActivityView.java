@@ -110,6 +110,7 @@ public class ImagesActivityView extends AppCompatActivity implements ImagesOncli
     );
 
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
