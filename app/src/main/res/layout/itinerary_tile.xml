@@ -1,0 +1,245 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/but_borrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_borrar" />
+
+        <Button
+            android:id="@+id/but_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_but_editar"
+            android:layout_marginStart="8dp" />
+
+        <Button
+            android:id="@+id/but_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_but_OK"
+            android:layout_marginStart="8dp" />
+
+        <Button
+            android:id="@+id/but_volver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_but_volver"
+            android:layout_marginStart="8dp" />
+
+
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/itineraryTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonLayout"
+        android:focusable="false"
+        android:background="@drawable/background"
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/element"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/itineraryTitle"
+        android:layout_marginTop="8dp"
+        tools:text="Element" />
+
+    <LinearLayout
+        android:id="@+id/layoutCountry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/element"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pa_s"
+            android:textSize="18sp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:textColor="@android:color/white"/>
+
+        <EditText
+            android:id="@+id/itineraryCountry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:background="@drawable/background"
+            android:gravity="center"
+            android:layout_marginStart="8dp"/>
+        <Spinner
+            android:id="@+id/spinnerCountryAct2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/background"
+            android:gravity="center"
+            android:visibility="gone"
+            android:prompt="@string/select_country"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/layoutCountry"
+        android:visibility="gone"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/region"
+            android:textSize="18sp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:textColor="@android:color/white"/>
+
+        <EditText
+            android:id="@+id/itineraryState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:background="@drawable/background"
+            android:gravity="center"
+            android:layout_marginStart="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerStateAct2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/background"
+            android:gravity="center"
+            android:visibility="gone"
+            android:prompt="@string/select_state"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/layoutState"
+        android:visibility="gone"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ciudad"
+            android:textSize="18sp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:textColor="@android:color/white"/>
+
+        <EditText
+            android:id="@+id/itineraryCity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:background="@drawable/background"
+            android:gravity="center"
+            android:layout_marginStart="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerCityAct2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/background"
+            android:gravity="center"
+            android:visibility="gone"
+            android:prompt="@string/select_city"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutmapcontainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/layoutCity"
+        android:visibility="gone"
+        android:layout_marginTop="16dp">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/mapContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="32dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true" >
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutcalendarcontainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/layoutCity"
+        android:visibility="gone"
+        android:layout_marginTop="16dp">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/calendarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="32dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true" >
+
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </androidx.cardview.widget.CardView>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

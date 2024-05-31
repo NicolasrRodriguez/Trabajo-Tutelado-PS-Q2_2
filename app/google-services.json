@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "958916289058",
+    "project_id": "triptracks-2779f",
+    "storage_bucket": "triptracks-2779f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958916289058:android:b6a02d658e8d9e14b8e07b",
+        "android_client_info": {
+          "package_name": "com.example.triptracks"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNb0uLoKdiOsUIqXBVOWK0TQOdXsVyc10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

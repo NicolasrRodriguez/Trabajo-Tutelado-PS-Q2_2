@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources><style name="BlueDateTextAppearance">
+    <item name="android:textColor">@android:color/holo_blue_light</item>
+</style>
+    <style name="DialogTextStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">start|center_vertical</item>
+    </style>
+</resources>
