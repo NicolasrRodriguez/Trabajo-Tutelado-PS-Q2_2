@@ -62,7 +62,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Presenter.ItineraryDetailActivity" />
-        <activity android:name=".DocActivity" />
+        <activity android:name=".Presenter.DocActivityView" />
         <activity
             android:name=".Presenter.AddDocumentActivityView"/>
 

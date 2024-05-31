@@ -1,4 +1,4 @@
-package com.example.triptracks;
+package com.example.triptracks.Presenter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -21,7 +21,7 @@ import com.example.triptracks.Data.FirebaseMediaHandler;
 import com.example.triptracks.Domain.Entities.Document;
 import com.example.triptracks.Domain.LogicaNegocio.Adapter.DocumentAdapter;
 import com.example.triptracks.Domain.LogicaNegocio.DocUseCases.GetDocuments;
-import com.example.triptracks.Presenter.AddDocumentActivityView;
+import com.example.triptracks.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
-public class DocActivity extends AppCompatActivity {
+public class DocActivityView extends AppCompatActivity {
 
     private static final int ADD_DOCUMENT_REQUEST = 1;
 
@@ -77,25 +77,25 @@ public class DocActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     private void refreshDocuments() {
-        Log.d("DocActivity", "Loading documents from Firebase Realtime Database");
+        Log.d("DocActivityView", "Loading documents from Firebase Realtime Database");
         if (user != null) {
 
             getDocuments.execute(
                     documents -> {
-                        Log.d("DocActivity", "Received documents: " + documents.size());
+                        Log.d("DocActivityView", "Received documents: " + documents.size());
                         documentList.clear();
                         Collections.sort(documents, Comparator.comparingLong(Document::getTimestamp));
                         documentList.addAll(documents);
                         documentAdapter.notifyDataSetChanged();
                     },
                     errorMessage -> {
-                        Log.e("DocActivity", "Error loading documents: " + errorMessage);
-                        Toast.makeText(DocActivity.this, "Error loading documents: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        Log.e("DocActivityView", "Error loading documents: " + errorMessage);
+                        Toast.makeText(DocActivityView.this, "Error loading documents: " + errorMessage, Toast.LENGTH_SHORT).show();
                     }
             );
         } else {
-            Log.e("DocActivity", "User is null");
-            Toast.makeText(DocActivity.this, "User is null", Toast.LENGTH_SHORT).show();
+            Log.e("DocActivityView", "User is null");
+            Toast.makeText(DocActivityView.this, "User is null", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -140,7 +140,7 @@ public class DocActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_document_op) {
-            Intent intent = new Intent(DocActivity.this, AddDocumentActivityView.class);
+            Intent intent = new Intent(DocActivityView.this, AddDocumentActivityView.class);
             startActivityForResult(intent, ADD_DOCUMENT_REQUEST);
             return true;
         } else if (item.getItemId() == android.R.id.home) {
