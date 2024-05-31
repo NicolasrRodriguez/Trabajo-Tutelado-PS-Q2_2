@@ -83,7 +83,6 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
         }
 
         imageLogic.setAdapter(imageAdapter);
-        imageLogic.setContext(this);
         imagesRecyclerView = findViewById(R.id.images_list);
         Log.d("_IMAGEVIEW", "Voy a asignar el adapter el adapter");
         imagesRecyclerView.setAdapter(imageAdapter);
@@ -93,6 +92,24 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
 
 
     }
+
+    ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    if (imageUri != null) {
+                        Log.d("_IMAGEVIEW", imageUri.toString());
+                        imageLogic.uploadImage(imageUri, itinerary);
+                    } else {
+                        Log.e("_IMAGEVIEW", "Image URI is null");
+                    }
+                } else {
+                    Log.e("_IMAGEVIEW", "Intent data is null");
+                }
+            }
+    );
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -105,23 +122,6 @@ public class ImagesActivityVIew extends AppCompatActivity implements ImagesOncli
     }
 
 
-    ActivityResultLauncher<Intent> myStartActivityForResult = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getData() != null) {
-                    Uri imageUri = result.getData().getData();
-                    Log.d("_IMAGEVIEW",result.getData().getExtras().toString());
-                    if (imageUri != null) {
-                        Log.d("_IMAGEVIEW", imageUri.toString());
-                        imageLogic.uploadImage(imageUri, itinerary);
-                    } else {
-                        Log.e("_IMAGEVIEW", "Image URI is null");
-                    }
-                } else {
-                    Log.e("_IMAGEVIEW", "Intent data is null");
-                }
-            }
-    );
 
 
     @Override
