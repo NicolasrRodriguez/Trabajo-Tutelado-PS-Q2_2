@@ -66,8 +66,7 @@ public class AddDocumentActivityView extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 uploadDocument.execute(selectedImageUri, documentName, documentDescription,
                         successMessage -> {
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(AddDocumentActivityView.this, successMessage, Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);;
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("documentName", documentName);
                             resultIntent.putExtra("documentDescription", documentDescription);

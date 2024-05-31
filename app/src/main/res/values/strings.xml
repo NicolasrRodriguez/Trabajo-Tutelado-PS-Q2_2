@@ -111,5 +111,6 @@
     <string name="email_incompleto">Email field is incomplete</string>
     <string name="pass_incompleta">Password field is incomplete</string>
     <string name="est_seguro_de_que_desea_eliminar_esta_imagen">Are you sure you want to delete this image?</string>
+    <string name="document_added_successfully">Document added successfully</string>
 
 </resources>

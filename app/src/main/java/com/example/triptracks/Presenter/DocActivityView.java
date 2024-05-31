@@ -90,12 +90,10 @@ public class DocActivityView extends AppCompatActivity {
                     },
                     errorMessage -> {
                         Log.e("DocActivityView", "Error loading documents: " + errorMessage);
-                        Toast.makeText(DocActivityView.this, "Error loading documents: " + errorMessage, Toast.LENGTH_SHORT).show();
                     }
             );
         } else {
             Log.e("DocActivityView", "User is null");
-            Toast.makeText(DocActivityView.this, "User is null", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -110,7 +108,7 @@ public class DocActivityView extends AppCompatActivity {
             Document document = new Document("", documentName, documentDescription, imageUrl, timestamp);
             addDocument(document);
             refreshDocuments();
-            Toast.makeText(this, "Document added successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.document_added_successfully), Toast.LENGTH_SHORT).show();
         }
     }
 

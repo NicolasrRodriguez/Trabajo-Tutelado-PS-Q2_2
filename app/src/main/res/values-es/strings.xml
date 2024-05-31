@@ -107,6 +107,5 @@
     <string name="pass_incompleta">Campo de contraseña incompleto</string>
     <string name="est_seguro_de_que_desea_eliminar_esta_imagen">Está seguro de que desea eliminar esta imagen?</string>
     <string name="athu_fail">El intento de autenticación falló</string>
-
-
+    <string name="document_added_successfully">Documento añadido exitosamente</string>
 </resources>
