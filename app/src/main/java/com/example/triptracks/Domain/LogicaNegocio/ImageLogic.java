@@ -46,10 +46,11 @@ public class ImageLogic {
     }
 
     public File createImageFile() throws IOException {
-
+        Log.d("_IMAGEVIEW","voy a crear la imagen");
         // Create an image file name
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
+        Log.d("_IMAGEVIEW","nombre de la imagen " + imageFileName);
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         Log.d("_IMAGEVIEW","fichero creado");
         return File.createTempFile(

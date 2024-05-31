@@ -81,6 +81,7 @@ public class ImagesActivityView extends AppCompatActivity implements ImagesOncli
         }
 
         imageLogic.setAdapter(imageAdapter);
+        imageLogic.setContext(this);
         imagesRecyclerView = findViewById(R.id.images_list);
         Log.d("_IMAGEVIEW", "Voy a asignar el adapter el adapter");
         imagesRecyclerView.setAdapter(imageAdapter);
@@ -145,13 +146,12 @@ public class ImagesActivityView extends AppCompatActivity implements ImagesOncli
                     ActivityCompat.requestPermissions(this,new String[]{
                             android.Manifest.permission.CAMERA
                     }, 100);
-
-
                 }
                 else {
                     Log.d("_IMAGEVIEW","Tengo permisos");
                     Intent camara = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (camara.resolveActivity(getPackageManager()) != null) {
+                        Log.d("_IMAGEVIEW","hay camara");
                         File imageFile = null;
                         try {
                             imageFile = imageLogic.createImageFile();
